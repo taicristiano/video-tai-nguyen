@@ -494,6 +494,86 @@ export const TEMPLATE_REGISTRY: TemplateRegistryEntry[] = [
         geminiVoice: "Achird",
       },
     },
+
+  {
+      id: "news/beauty-editorial-light",
+      behavior: "fixed",
+      name: "Beauty Editorial Light",
+      category: "news",
+      description: "Bản tin làm đẹp và thẩm mỹ kiểu tạp chí cao cấp: nền kem phấn, serif thanh lịch, rose accent, media có nguồn và block thông tin an toàn.",
+      aspectRatio: "9:16",
+      assetManifestPath: "public/assets/news/manifest.json",
+      defaultBgMusic: "assets/news/music/nastelbom-soft-music.mp3",
+      specDocPath: "docs/templates/news/beauty-editorial-light.md",
+      voice: {
+        elevenLabsVoiceId: "A5w1fw5x0uXded1LDvZp",
+        geminiVoice: "Erinome",
+      },
+    },
+
+  {
+      id: "news/beauty-luxury-noir",
+      behavior: "fixed",
+      name: "Beauty Luxury Noir",
+      category: "news",
+      description: "Chia sẻ thông tin, kiến thức beauty phong cách luxury noir: nền espresso-plum, champagne gold, silk curves, ảnh vòm và glass card mỹ phẩm cao cấp.",
+      aspectRatio: "9:16",
+      assetManifestPath: "public/assets/news/manifest.json",
+      defaultBgMusic: "assets/news/music/nastelbom-soft-music.mp3",
+      specDocPath: "docs/templates/news/beauty-luxury-noir.md",
+      voice: {
+        elevenLabsVoiceId: "A5w1fw5x0uXded1LDvZp",
+        geminiVoice: "Erinome",
+      },
+    },
+
+  {
+      id: "news/media-showcase",
+      behavior: "fixed",
+      name: "News Media Showcase",
+      category: "news",
+      description: "Bản tin trình chiếu ảnh và video từ URL nguồn trong khung đỏ-trắng, kèm ngày đăng, tiêu đề và attribution.",
+      aspectRatio: "9:16",
+      assetManifestPath: "public/assets/news/manifest.json",
+      defaultBgMusic: "assets/news/music/nastelbom-soft-music.mp3",
+      specDocPath: "docs/templates/news/media-showcase.md",
+      voice: {
+        elevenLabsVoiceId: "K7ewtjKRNtwwt3lKQ6M0",
+        geminiVoice: "Achird",
+      },
+    },
+
+  {
+      id: "news/modern-news-canvas",
+      behavior: "fixed",
+      name: "Modern News Canvas",
+      category: "news",
+      description: "Bản tin editorial nền sáng với khung media nguồn chiếm ưu thế, metadata gọn và điểm nhấn cam hiện đại.",
+      aspectRatio: "9:16",
+      assetManifestPath: "public/assets/news/manifest.json",
+      defaultBgMusic: "assets/news/music/nastelbom-soft-music.mp3",
+      specDocPath: "docs/templates/news/modern-news-canvas.md",
+      voice: {
+        elevenLabsVoiceId: "K7ewtjKRNtwwt3lKQ6M0",
+        geminiVoice: "Achird",
+      },
+    },
+
+  {
+      id: "news/real-estate-plex-light",
+      behavior: "fixed",
+      name: "Real Estate Plex Light",
+      category: "news",
+      description: "Bản tin bất động sản sáng, tối giản bằng IBM Plex Sans: nền grid trắng-xanh, headline lớn, ảnh báo, bảng trạng thái và subtitle đáy.",
+      aspectRatio: "9:16",
+      assetManifestPath: "public/assets/news/manifest.json",
+      defaultBgMusic: "assets/news/music/nastelbom-soft-music.mp3",
+      specDocPath: "docs/templates/news/real-estate-plex-light.md",
+      voice: {
+        elevenLabsVoiceId: "K7ewtjKRNtwwt3lKQ6M0",
+        geminiVoice: "Achird",
+      },
+    },
 ];
 
 /** Look up a template entry by ID. Returns undefined if not found. */
