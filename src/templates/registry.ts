@@ -574,6 +574,22 @@ export const TEMPLATE_REGISTRY: TemplateRegistryEntry[] = [
         geminiVoice: "Achird",
       },
     },
+
+  {
+      id: "human-insight/cinematic-light",
+      behavior: "fixed",
+      name: "Cinematic Light",
+      category: "human-insight",
+      description: "Video triet ly, nhan sinh. Nen kem am #FAECD2, chu dam, subtitle amber.",
+      aspectRatio: "9:16",
+      assetManifestPath: "public/assets/human-insight/manifest.json",
+      defaultBgMusic: "assets/human-insight/music/music-bg-2.mp3",
+      specDocPath: "docs/templates/human-insight/cinematic-light.md",
+      voice: {
+        elevenLabsVoiceId: "K7ewtjKRNtwwt3lKQ6M0",
+        geminiVoice: "Achird",
+      },
+    },
 ];
 
 /** Look up a template entry by ID. Returns undefined if not found. */

@@ -1,10 +1,10 @@
 # NẾP. — 10 VIDEO ĐẦU CHO TRẠM AI — REGISTRY VERIFIED
 
-> **Registry local đã xác nhận:** dùng `creative/free-style-sfx`.
+> **Registry local đã xác nhận:** dùng `human-insight/cinematic-light --audio=full`.
 >
 > Template này có `behavior: creative`, hỗ trợ `9:16`, có background music và transition SFX.
 >
-> Các template Human/An Nhiên trên website chưa xuất hiện trong registry local đã kiểm tra, nên batch test đầu dùng `creative/free-style-sfx` để tránh lỗi template not found.
+> Các template Human/An Nhiên trên website chưa xuất hiện trong registry local đã kiểm tra, nên batch test đầu dùng `human-insight/cinematic-light --audio=full` để tránh lỗi template not found.
 >
 > Style bắt buộc trong prompt: warm editorial, sage + ivory, natural light, books/home/workspace, không tech/cyberpunk.
 
@@ -13,7 +13,7 @@
 ## VIDEO 01 — Việc 2 phút nhưng trì hoãn cả tuần
 
 ```text
-/gen-video --template creative/free-style-sfx Video dọc 9:16, khoảng 40–50 giây, warm editorial, ánh sáng tự nhiên, sage và ivory.
+/gen-video --template human-insight/cinematic-light Video dọc 9:16, khoảng 120–150 giây, warm editorial, ánh sáng tự nhiên, sage và ivory.
 
 Tiêu đề: Có những việc chỉ mất 2 phút nhưng ta trì hoãn cả tuần.
 
@@ -57,7 +57,7 @@ End card: NẾP. — Những điều nhỏ tạo nên một đời sống.
 ## VIDEO 02 — Mua sách và đọc sách là hai sở thích khác nhau
 
 ```text
-/gen-video --template creative/free-style-sfx Video dọc 9:16, warm cinematic editorial, sách, ánh sáng cửa sổ, bàn gỗ.
+/gen-video --template human-insight/cinematic-light --audio=full Video dọc 9:16, warm cinematic editorial, sách, ánh sáng cửa sổ, bàn gỗ.
 
 Tiêu đề: Mua sách và đọc sách là hai sở thích khác nhau.
 
@@ -100,7 +100,7 @@ End card: NẾP.
 ## VIDEO 03 — Vì sao việc chưa làm cứ nằm trong đầu?
 
 ```text
-/gen-video --template creative/free-style-sfx Video dọc 9:16, calm editorial, visual notebook, task list, desk, soft shadows.
+/gen-video --template human-insight/cinematic-light --audio=full Video dọc 9:16, calm editorial, visual notebook, task list, desk, soft shadows.
 
 Tiêu đề: Vì sao một việc chưa làm lại nằm trong đầu cả ngày?
 
@@ -139,7 +139,7 @@ End card: NẾP.
 ## VIDEO 04 — Đọc 10 trang mỗi ngày
 
 ```text
-/gen-video --template creative/free-style-sfx Video dọc 9:16, warm reading aesthetic, morning/evening light.
+/gen-video --template human-insight/cinematic-light --audio=full Video dọc 9:16, warm reading aesthetic, morning/evening light.
 
 Tiêu đề: Đọc 10 trang mỗi ngày thực sự tích lũy được bao nhiêu?
 
@@ -181,7 +181,7 @@ End card: NẾP.
 ## VIDEO 05 — Căn phòng bừa bộn lấy của bạn nhiều hơn bạn nghĩ
 
 ```text
-/gen-video --template creative/free-style-sfx Video dọc 9:16, home living editorial, before/after subtle, không quảng cáo.
+/gen-video --template human-insight/cinematic-light --audio=full Video dọc 9:16, home living editorial, before/after subtle, không quảng cáo.
 
 Tiêu đề: Một căn phòng bừa bộn lấy của bạn nhiều thời gian hơn bạn nghĩ.
 
@@ -219,7 +219,7 @@ End card: NẾP.
 ## VIDEO 06 — “Khi nào rảnh tôi sẽ làm”
 
 ```text
-/gen-video --template creative/free-style-sfx Video dọc 9:16, storytelling nhẹ, lịch, đồng hồ, ánh nắng chuyển dần.
+/gen-video --template human-insight/cinematic-light --audio=full Video dọc 9:16, storytelling nhẹ, lịch, đồng hồ, ánh nắng chuyển dần.
 
 Tiêu đề: “Khi nào rảnh tôi sẽ làm” thường có nghĩa là không bao giờ.
 
@@ -260,7 +260,7 @@ End card: NẾP.
 ## VIDEO 07 — Vì sao viết xuống giấy giúp vấn đề rõ hơn?
 
 ```text
-/gen-video --template creative/free-style-sfx Video dọc 9:16, notebook, pen, calm editorial close-ups.
+/gen-video --template human-insight/cinematic-light --audio=full Video dọc 9:16, notebook, pen, calm editorial close-ups.
 
 Tiêu đề: Vì sao viết xuống giấy khiến vấn đề trông rõ hơn?
 
@@ -299,7 +299,7 @@ End card: NẾP.
 ## VIDEO 08 — Ta mua đồ cho “phiên bản tương lai” của mình
 
 ```text
-/gen-video --template creative/free-style-sfx Video dọc 9:16, lifestyle storytelling, tủ đồ, sách, dụng cụ tập, planner.
+/gen-video --template human-insight/cinematic-light --audio=full Video dọc 9:16, lifestyle storytelling, tủ đồ, sách, dụng cụ tập, planner.
 
 Tiêu đề: Có những món đồ ta mua cho một người chưa tồn tại.
 
@@ -335,7 +335,7 @@ End card: NẾP.
 ## VIDEO 09 — Một ngày bỏ lỡ không phá hủy thói quen
 
 ```text
-/gen-video --template creative/free-style-sfx Video dọc 9:16, calendar, habit tracker, calm morning scenes.
+/gen-video --template human-insight/cinematic-light --audio=full Video dọc 9:16, calendar, habit tracker, calm morning scenes.
 
 Tiêu đề: Một ngày bỏ lỡ không phá hủy thói quen.
 
@@ -373,7 +373,7 @@ End card: NẾP.
 ## VIDEO 10 — Bạn không cần thêm thời gian
 
 ```text
-/gen-video --template creative/free-style-sfx Video dọc 9:16, minimal editorial, calendar, phone notifications, choices fading away.
+/gen-video --template human-insight/cinematic-light --audio=full Video dọc 9:16, minimal editorial, calendar, phone notifications, choices fading away.
 
 Tiêu đề: Bạn không cần thêm thời gian; đôi khi bạn cần bớt lựa chọn.
 
