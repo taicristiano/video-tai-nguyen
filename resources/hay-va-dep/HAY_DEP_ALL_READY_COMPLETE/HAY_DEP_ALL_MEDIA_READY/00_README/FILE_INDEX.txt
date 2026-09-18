@@ -1,0 +1,54 @@
+HAY & ĐẸP. — FILE INDEX
+
+00_README
+- FILE_INDEX.txt
+- README_DUNG_FILE_NAO.txt
+
+01_LOGO_AVATAR
+- Avatar_HD_Primary_Square.png
+- Logo_Full_Horizontal_With_Slogan.png
+- Logo_Full_HAY_DEP_Transparent_READY.png
+- Logo_HD_Minimal_Variant.png
+- Logo_HD_Sage_Variant.png
+- Logo_HD_Transparent_256.png
+- Logo_HD_Transparent_512.png
+
+02_YOUTUBE
+- YT_Avatar_HD_READY.png
+- YT_Banner_2560x1440_READY.jpg
+- YT_EndScreen_Calmer_Desk_02.png
+- YT_EndScreen_Calmer_Life_01.png
+- YT_EndScreen_Reading_Nook_03.png
+- YT_Watermark_HD_Transparent_512_READY.png
+
+03_FACEBOOK
+- FB_Avatar_HD_READY.png
+- FB_Cover_1640x624_READY.jpg
+- FB_Cover_820x312_READY.jpg
+
+04_TIKTOK
+- TikTok_Avatar_HD_READY.png
+- TikTok_Watermark_HD_Transparent.png
+
+05_THUMBNAILS
+- Thumbnail_Example_Better_Everyday.png
+- Thumbnail_Example_Habits_Small_Changes.png
+- Thumbnail_Example_Reading_Nook.png
+- Thumbnail_Template_1280x720_READY.jpg
+
+06_OUTRO_ENDCARD
+- Outro_Calmer_Desk_02.png
+- Outro_Calmer_Life_01.png
+- Outro_Reading_Nook_03.png
+
+07_BRAND_GUIDE
+- Brand_Guide_Overview.png
+
+08_MEDIA_VARIANTS
+- Banner_HAY_DEP_A_Calmer_Everyday_Desk_Variant.png
+- Banner_HAY_DEP_A_Calmer_Life_Variant.png
+- Banner_Sunlit_Minimalist_Reading_Nook_Variant.png
+- Logo_HD_Elegant_Sage_Monogram_Variant.png
+- Logo_HD_Minimalist_Sage_Serif_Variant.png
+
+TOTAL: 33 files — 1:1 với cấu trúc bộ NẾP. cũ.
