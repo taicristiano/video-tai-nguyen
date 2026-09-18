@@ -1,7 +1,7 @@
 # NẾP. — BỘ TITLE, DESCRIPTION & HASHTAG CHO 10 VIDEO ĐẦU TIÊN
 > **Chuẩn hóa cho 3 nền tảng:** Facebook (Reels/Feed) • YouTube (Shorts) • TikTok  
 > **Brand tone:** Trầm tĩnh, gần gũi, sâu sắc, tối giản, thực tế — không giáo điều, không sáo rỗng.  
-> **Slogan:** *Những điều nhỏ tạo nên một đời sống.*
+> **Slogan:** *Sống tốt hơn từ những điều nhỏ.*
 
 ---
 
@@ -22,10 +22,8 @@
 ### VIDEO 01 — Việc 2 phút nhưng trì hoãn cả tuần
 
 #### 🔵 FACEBOOK (Reels / Post)
-**Tiêu đề / Hook:**
 Có những việc chỉ mất chưa đầy hai phút, nhưng ta để nó nằm đó cả tuần.
 
-**Nội dung bài đăng:**
 Trả lời một tin nhắn.
 Cất lại món đồ về chỗ cũ.
 Đặt một lịch hẹn.
@@ -39,9 +37,8 @@ Không phải mọi thứ đều cần làm ngay. Nhưng nếu một việc th�
 
 Thứ làm ta mệt đôi khi không phải việc lớn, mà là quá nhiều việc nhỏ chưa khép lại.
 —
-NẾP. — Những điều nhỏ tạo nên một đời sống.
+NẾP. — Sống tốt hơn từ những điều nhỏ.
 
-**Hashtags:**
 #nep #nhungdieunho #thoiquen #phattrienbanthan #songcham #gocnhin #nangsuat #mindset
 
 ---
@@ -50,7 +47,6 @@ NẾP. — Những điều nhỏ tạo nên một đời sống.
 **Title:**
 Việc chỉ mất 2 phút nhưng ta trì hoãn cả tuần? #Shorts
 
-**Description:**
 Thứ làm chúng ta kiệt sức thường không phải việc lớn, mà là quá nhiều việc nhỏ chưa được khép lại trong tâm trí.
 
 Đăng ký kênh NẾP. để cùng chậm lại và lắng nghe những góc nhìn nhỏ giúp cuộc sống nhẹ nhàng hơn mỗi ngày.
@@ -63,7 +59,6 @@ Thứ làm chúng ta kiệt sức thường không phải việc lớn, mà là 
 **Caption:**
 Thứ làm mình mệt không phải việc lớn, mà là quá nhiều việc 2 phút chưa khép lại... Bạn có việc nào đang "để dành" từ tuần trước không? ☕
 
-**Hashtags:**
 #nep #learnontiktok #phattrienbanthan #trihoan #thoiquen #songcham #gocnhin #fyp
 
 ---
@@ -72,10 +67,8 @@ Thứ làm mình mệt không phải việc lớn, mà là quá nhiều việc 2
 ### VIDEO 02 — Mua sách và đọc sách là hai sở thích khác nhau
 
 #### 🔵 FACEBOOK (Reels / Post)
-**Tiêu đề / Hook:**
 Mua sách và đọc sách thực ra là hai sở thích hoàn toàn khác nhau.
 
-**Nội dung bài đăng:**
 Có một cảm giác rất dễ gây nghiện: cầm trên tay một cuốn sách mới tinh.
 
 Giây phút ấy, ta dễ tưởng tượng mình sắp đọc nó, sắp hiểu thêm bao điều và trở thành một phiên bản sâu sắc hơn. Mua sách mang lại cảm giác tiến bộ ngay lập tức.
@@ -88,9 +81,8 @@ Một kệ sách đầy không nhất thiết có nghĩa là ta đã đọc nhi�
 
 Mua sách rất vui. Nhưng chỉ khi lật mở trang đầu tiên, câu chuyện mới thực sự bắt đầu.
 —
-NẾP. — Những điều nhỏ tạo nên một đời sống.
+NẾP. — Sống tốt hơn từ những điều nhỏ.
 
-**Hashtags:**
 #nep #sach #docsach #thoiquendocsach #phattrienbanthan #gocnhin #songcham #sachhay
 
 ---
@@ -99,7 +91,6 @@ NẾP. — Những điều nhỏ tạo nên một đời sống.
 **Title:**
 Mua sách và đọc sách là 2 sở thích khác nhau #Shorts
 
-**Description:**
 Mua sách cho ta cảm giác tiến bộ tức thì, nhưng đọc sách mới là lúc sự chuyển biến bắt đầu. Kệ sách của bạn đang có bao nhiêu cuốn chưa kịp mở?
 
 Đăng ký kênh NẾP. để cùng chia sẻ những thói quen và góc nhìn sống chất lượng hơn.
@@ -112,7 +103,6 @@ Mua sách cho ta cảm giác tiến bộ tức thì, nhưng đọc sách mới l
 **Caption:**
 Mua sách tạo cảm giác tiến bộ ngay lập tức, còn đọc sách thì không. Giá sách của bạn hiện có bao nhiêu cuốn chưa lật trang nào? 📚
 
-**Hashtags:**
 #nep #learnontiktok #sachhay #docsach #booktok #phattrienbanthan #gocnhin #fyp
 
 ---
@@ -121,10 +111,8 @@ Mua sách tạo cảm giác tiến bộ ngay lập tức, còn đọc sách thì
 ### VIDEO 03 — Vì sao việc chưa làm cứ nằm trong đầu?
 
 #### 🔵 FACEBOOK (Reels / Post)
-**Tiêu đề / Hook:**
 Vì sao một việc chưa hoàn thành lại cứ quẩn quanh trong đầu suốt cả ngày?
 
-**Nội dung bài đăng:**
 Bạn có từng vừa nằm xuống giường thì chợt nhớ: "Mai phải gửi chiếc email đó"?
 Hay đang ngồi trò chuyện cùng bạn bè nhưng đầu óc vẫn lơ lửng ở bản kế hoạch chưa xong?
 
@@ -139,9 +127,8 @@ Khi não bộ không còn phải liên tục gồng mình nhắc "đừng quên"
 
 Ghi lại một việc chưa làm, đôi khi đã là bước đầu tiên để lòng nhẹ nhõm hơn.
 —
-NẾP. — Những điều nhỏ tạo nên một đời sống.
+NẾP. — Sống tốt hơn từ những điều nhỏ.
 
-**Hashtags:**
 #nep #tamlyhoc #zeigarnik #phattrienbanthan #gocnhin #ghichep #nangsuat #songcham
 
 ---
@@ -150,7 +137,6 @@ NẾP. — Những điều nhỏ tạo nên một đời sống.
 **Title:**
 Vì sao việc chưa làm cứ nằm trong đầu cả ngày? #Shorts
 
-**Description:**
 Bộ não luôn bận tâm với những điều dang dở. Viết chúng xuống giấy đôi khi là cách nhanh nhất để giải phóng tâm trí và lấy lại sự tập trung.
 
 Đồng hành cùng NẾP. để tìm lại sự nhẹ nhàng trong từng thói quen nhỏ mỗi ngày.
@@ -163,7 +149,6 @@ Bộ não luôn bận tâm với những điều dang dở. Viết chúng xuốn
 **Caption:**
 Não bộ cứ nhắc đi nhắc lại một việc chưa làm lúc nửa đêm? Đôi khi chỉ cần viết nó ra giấy là đầu đã nhẹ đi một nửa rồi. 📝
 
-**Hashtags:**
 #nep #learnontiktok #tamlyhoc #phattrienbanthan #meocuocsong #thoiquen #fyp
 
 ---
@@ -172,10 +157,8 @@ Não bộ cứ nhắc đi nhắc lại một việc chưa làm lúc nửa đêm?
 ### VIDEO 04 — Đọc 10 trang mỗi ngày
 
 #### 🔵 FACEBOOK (Reels / Post)
-**Tiêu đề / Hook:**
 Đọc 10 trang sách mỗi ngày — Nghe rất ít, nhưng sau một năm kết quả sẽ làm bạn bất ngờ.
 
-**Nội dung bài đăng:**
 Mười trang nghe rất ít. Ít đến mức ta thường tặc lưỡi: "Đọc chừng đó thì giải quyết được gì?"
 
 Nhưng hãy thử nhìn lại:
@@ -188,9 +171,8 @@ Không phải vì bạn có những ngày đọc ngấu nghiến phi thường. 
 
 Mục tiêu tốt không phải là đọc thật nhiều, mà là đừng để hôm nay bằng không.
 —
-NẾP. — Những điều nhỏ tạo nên một đời sống.
+NẾP. — Sống tốt hơn từ những điều nhỏ.
 
-**Hashtags:**
 #nep #docsach #thoiquen #10trangmoingay #tichluy #phattrienbanthan #songcham #tuduy
 
 ---
@@ -199,7 +181,6 @@ NẾP. — Những điều nhỏ tạo nên một đời sống.
 **Title:**
 Đọc 10 trang mỗi ngày thực sự tích lũy được bao nhiêu? #Shorts
 
-**Description:**
 10 trang sách mỗi ngày = hơn 10 cuốn sách mỗi năm. Sức mạnh của việc nhỏ khi được lặp lại đủ lâu. Đừng để hôm nay bằng không.
 
 Đăng ký kênh NẾP. để cùng xây dựng những thói quen tích cực và bền bỉ mỗi ngày.
@@ -212,7 +193,6 @@ NẾP. — Những điều nhỏ tạo nên một đời sống.
 **Caption:**
 Đừng xem thường 10 trang sách mỗi ngày. Sau một năm nhìn lại, bạn đã hoàn thành hơn 10 cuốn sách rồi đấy. 📖
 
-**Hashtags:**
 #nep #learnontiktok #docsach #thoiquen #booktok #phattrienbanthan #fyp
 
 ---
@@ -221,10 +201,8 @@ NẾP. — Những điều nhỏ tạo nên một đời sống.
 ### VIDEO 05 — Căn phòng bừa bộn lấy của bạn nhiều hơn bạn nghĩ
 
 #### 🔵 FACEBOOK (Reels / Post)
-**Tiêu đề / Hook:**
 Một căn phòng bừa bộn âm thầm lấy đi của bạn nhiều thời gian hơn bạn nghĩ.
 
-**Nội dung bài đăng:**
 Sự bừa bộn không chỉ lấy mất thời gian của bạn vào những buổi tổng vệ sinh mệt nhoài.
 
 Nó lấy thời gian mỗi lần bạn phải lục tung đồ đạc để tìm chiếc chìa khóa.
@@ -237,9 +215,8 @@ Một không gian gọn gàng không khiến cuộc đời tự nhiên hoàn h�
 
 Gọn không phải để nhà đẹp hơn. Đôi khi chỉ là để đầu óc bớt bận đi một chút.
 —
-NẾP. — Những điều nhỏ tạo nên một đời sống.
+NẾP. — Sống tốt hơn từ những điều nhỏ.
 
-**Hashtags:**
 #nep #gondang #toigian #minimalism #khonggiansong #phattrienbanthan #songcham #gocnhin
 
 ---
@@ -248,7 +225,6 @@ NẾP. — Những điều nhỏ tạo nên một đời sống.
 **Title:**
 Căn phòng bừa bộn lấy đi của bạn nhiều hơn bạn nghĩ #Shorts
 
-**Description:**
 Dọn dẹp không phải chỉ để không gian đẹp hơn, mà là giải phóng tâm trí khỏi những quyết định vụn vặt làm tiêu hao năng lượng mỗi ngày.
 
 Theo dõi NẾP. để cùng xây dựng không gian sống thanh thản và chủ động.
@@ -261,7 +237,6 @@ Theo dõi NẾP. để cùng xây dựng không gian sống thanh thản và ch�
 **Caption:**
 Phòng bừa bộn không chỉ tốn công dọn, mà còn âm thầm rút cạn năng lượng của bạn mỗi ngày. Dọn gọn lại góc bàn ngay thôi! 🌿
 
-**Hashtags:**
 #nep #learnontiktok #toigian #gondang #minimalism #roomtour #songcham #fyp
 
 ---
@@ -270,10 +245,8 @@ Phòng bừa bộn không chỉ tốn công dọn, mà còn âm thầm rút cạ
 ### VIDEO 06 — “Khi nào rảnh tôi sẽ làm”
 
 #### 🔵 FACEBOOK (Reels / Post)
-**Tiêu đề / Hook:**
 "Khi nào rảnh mình sẽ làm" thường là lời nói đồng nghĩa với "không bao giờ".
 
-**Nội dung bài đăng:**
 Có một danh sách những việc ta luôn muốn làm:
 Đọc xong một cuốn sách hay, học một kỹ năng mới, gọi điện hỏi thăm một người bạn, hay dọn dẹp lại căn phòng.
 
@@ -287,9 +260,8 @@ Hai mươi phút cụ thể vào tối thứ Ba có sức mạnh thật hơn r�
 
 Thời gian không tự mở ra. Đôi khi mình phải đặt tên cho nó trước.
 —
-NẾP. — Những điều nhỏ tạo nên một đời sống.
+NẾP. — Sống tốt hơn từ những điều nhỏ.
 
-**Hashtags:**
 #nep #quanlythoigian #lapkehoach #thoiquen #phattrienbanthan #gocnhin #songcham
 
 ---
@@ -298,7 +270,6 @@ NẾP. — Những điều nhỏ tạo nên một đời sống.
 **Title:**
 “Khi nào rảnh tôi sẽ làm” thường có nghĩa là không bao giờ #Shorts
 
-**Description:**
 Thời gian rảnh rỗi không tự nhiên xuất hiện. Nếu muốn làm điều gì đó ý nghĩa cho bản thân, hãy đặt tên và xếp lịch cho nó ngay hôm nay.
 
 Đăng ký NẾP. để đón nhận những góc nhìn tỉnh thức cho đời sống thường nhật.
@@ -311,7 +282,6 @@ Thời gian rảnh rỗi không tự nhiên xuất hiện. Nếu muốn làm đi
 **Caption:**
 20 phút tối thứ Ba cụ thể hơn rất nhiều so với lời hứa "khi nào rảnh mình làm". Việc quan trọng của bạn đang chờ ngày rảnh nào? ⏳
 
-**Hashtags:**
 #nep #learnontiktok #quanlythoigian #trihoan #phattrienbanthan #thoiquen #fyp
 
 ---
@@ -320,10 +290,8 @@ Thời gian rảnh rỗi không tự nhiên xuất hiện. Nếu muốn làm đi
 ### VIDEO 07 — Vì sao viết xuống giấy giúp vấn đề rõ hơn?
 
 #### 🔵 FACEBOOK (Reels / Post)
-**Tiêu đề / Hook:**
 Vì sao chỉ cần viết ra giấy, vấn đề bỗng nhiên trông rõ ràng và nhẹ nhàng hơn?
 
-**Nội dung bài đăng:**
 Một vấn đề ở trong đầu luôn tạo cảm giác rất nặng nề và phức tạp.
 Bởi vì lúc đó nó không có hình dạng cụ thể. Nó trộn lẫn giữa việc phải làm, nỗi lo âu vô cớ và những giả định ta tự vẽ ra.
 
@@ -336,9 +304,8 @@ Không phải cứ viết ra là mọi trắc trở tự biến mất. Nhưng n�
 
 Đôi khi trang giấy không cho ta câu trả lời ngay. Nó chỉ giúp ta nhìn thấy đúng câu hỏi.
 —
-NẾP. — Những điều nhỏ tạo nên một đời sống.
+NẾP. — Sống tốt hơn từ những điều nhỏ.
 
-**Hashtags:**
 #nep #journaling #vietnhatky #tamlyhoc #gocnhin #phattrienbanthan #songcham #tuduy
 
 ---
@@ -347,7 +314,6 @@ NẾP. — Những điều nhỏ tạo nên một đời sống.
 **Title:**
 Vì sao viết ra giấy khiến vấn đề trông rõ hơn? #Shorts
 
-**Description:**
 Vấn đề ở trong đầu thì mơ hồ và choáng ngợp, viết xuống giấy mới thành hình rõ ràng. Trang giấy giúp bạn nhìn thấy đúng câu hỏi để bắt đầu gỡ rối.
 
 Cùng NẾP. khám phá sức mạnh của việc ghi chép và sống có chủ đích mỗi ngày.
@@ -360,7 +326,6 @@ Cùng NẾP. khám phá sức mạnh của việc ghi chép và sống có chủ
 **Caption:**
 Đầu óc đang rối bời? Thử cầm bút viết ra 3 điều này, bạn sẽ thấy mọi chuyện không hề bế tắc như mình từng tưởng tượng. ✍️
 
-**Hashtags:**
 #nep #learnontiktok #journaling #vietnhatky #tamlyhoc #phattrienbanthan #gocnhin #fyp
 
 ---
@@ -369,10 +334,8 @@ Cùng NẾP. khám phá sức mạnh của việc ghi chép và sống có chủ
 ### VIDEO 08 — Ta mua đồ cho “phiên bản tương lai” của mình
 
 #### 🔵 FACEBOOK (Reels / Post)
-**Tiêu đề / Hook:**
 Có những món đồ ta mua không hẳn vì mình cần, mà cho một người chưa từng tồn tại.
 
-**Nội dung bài đăng:**
 Có bao giờ bạn nhìn vào góc phòng và nhận ra:
 Một cuốn sách dày cho "phiên bản chăm đọc hơn".
 Một đôi giày thể thao cho "phiên bản chăm tập hơn".
@@ -384,9 +347,8 @@ Khoảnh khắc chọn mua, ta không chỉ mua món đồ. Ta đang mua hình �
 
 Phiên bản tương lai không bắt đầu từ việc sở hữu thêm một món đồ mới. Nó bắt đầu từ lần đầu tiên ta thực sự sử dụng nó.
 —
-NẾP. — Những điều nhỏ tạo nên một đời sống.
+NẾP. — Sống tốt hơn từ những điều nhỏ.
 
-**Hashtags:**
 #nep #tamlytieudung #toigian #thoiquen #phattrienbanthan #gocnhin #songcham
 
 ---
@@ -395,7 +357,6 @@ NẾP. — Những điều nhỏ tạo nên một đời sống.
 **Title:**
 Có những món đồ ta mua cho một người chưa tồn tại #Shorts
 
-**Description:**
 Ta thường mua đồ cho phiên bản lý tưởng của chính mình. Nhưng món đồ chỉ là lời mời gọi, hành động thực tế mới tạo nên thói quen.
 
 Đăng ký NẾP. để tìm lại những giá trị cốt lõi và lối sống giản dị, chân thực.
@@ -408,7 +369,6 @@ Ta thường mua đồ cho phiên bản lý tưởng của chính mình. Nhưng 
 **Caption:**
 Mua đồ cho phiên bản tương lai, nhưng món đồ không tạo nên thói quen thay mình. Bạn có món đồ nào mua về mà chưa từng đụng đến không? 🛍️
 
-**Hashtags:**
 #nep #learnontiktok #tamlyhoc #tieudungthongminh #toigian #phattrienbanthan #fyp
 
 ---
@@ -417,10 +377,8 @@ Mua đồ cho phiên bản tương lai, nhưng món đồ không tạo nên thó
 ### VIDEO 09 — Một ngày bỏ lỡ không phá hủy thói quen
 
 #### 🔵 FACEBOOK (Reels / Post)
-**Tiêu đề / Hook:**
 Một ngày bỏ lỡ không phá hủy thói quen của bạn. Thứ phá hủy nó là cảm giác bỏ cuộc.
 
-**Nội dung bài đăng:**
 Bạn duy trì tập luyện hoặc đọc sách liên tục suốt 7 ngày.
 Đến ngày thứ 8, vì quá bận nên bạn đành bỏ lỡ.
 
@@ -434,9 +392,8 @@ Nếu hôm nay lỡ nhịp, mục tiêu của ngày mai không phải là gồng
 
 Một ngày trượt không quyết định bạn là ai. Điều quan trọng hơn cả là lần tiếp theo bạn quay lại sớm đến mức nào.
 —
-NẾP. — Những điều nhỏ tạo nên một đời sống.
+NẾP. — Sống tốt hơn từ những điều nhỏ.
 
-**Hashtags:**
 #nep #thoiquen #kỷluat #phattrienbanthan #songcham #gocnhin #tuduytichcuc
 
 ---
@@ -445,7 +402,6 @@ NẾP. — Những điều nhỏ tạo nên một đời sống.
 **Title:**
 Một ngày bỏ lỡ không phá hủy thói quen #Shorts
 
-**Description:**
 Xây dựng thói quen không cần sự hoàn hảo, nó cần khả năng quay lại nhịp cũ. Đừng để cảm giác thất vọng của một ngày lỡ dở làm hỏng cả hành trình.
 
 Theo dõi NẾP. để cùng rèn luyện sự bền bỉ qua từng bước nhỏ mỗi ngày.
@@ -458,7 +414,6 @@ Theo dõi NẾP. để cùng rèn luyện sự bền bỉ qua từng bước nh�
 **Caption:**
 Trượt một ngày không làm hỏng thói quen. Thứ làm hỏng nó là suy nghĩ "thôi đứt chuỗi rồi bỏ luôn". Ngày mai cứ nhẹ nhàng quay lại nhé! 🌱
 
-**Hashtags:**
 #nep #learnontiktok #thoiquen #kyluat #phattrienbanthan #motivation #fyp
 
 ---
@@ -467,10 +422,8 @@ Trượt một ngày không làm hỏng thói quen. Thứ làm hỏng nó là su
 ### VIDEO 10 — Bạn không cần thêm thời gian
 
 #### 🔵 FACEBOOK (Reels / Post)
-**Tiêu đề / Hook:**
 Bạn không thực sự thiếu thời gian; đôi khi bạn chỉ cần bớt đi những lựa chọn.
 
-**Nội dung bài đăng:**
 Ta thường tự nhủ: "Nếu có thêm thời gian, mình sẽ làm được nhiều điều hơn."
 
 Nhưng đôi khi vấn đề không nằm ở việc thiếu giờ. Mà là có quá nhiều thứ đang cùng cạnh tranh cho một khoảng thời gian đó:
@@ -484,9 +437,8 @@ Vì vậy, một ngày trôi qua nhẹ nhõm hơn không nhất thiết phải l
 
 Muốn làm thêm một điều thật sự quan trọng, ta phải chủ động buông bớt vài điều không quan trọng.
 —
-NẾP. — Những điều nhỏ tạo nên một đời sống.
+NẾP. — Sống tốt hơn từ những điều nhỏ.
 
-**Hashtags:**
 #nep #taptrung #quanlythoigian #toigian #phattrienbanthan #songcham #gocnhin #nangsuat
 
 ---
@@ -495,7 +447,6 @@ NẾP. — Những điều nhỏ tạo nên một đời sống.
 **Title:**
 Bạn không thiếu thời gian, bạn chỉ có quá nhiều lựa chọn #Shorts
 
-**Description:**
 Mỗi lựa chọn vụn vặt và thông báo đều bào mòn năng lượng tập trung. Chủ động bớt đi vài điều không cần thiết để nhường chỗ cho điều thực sự quan trọng.
 
 Đăng ký kênh NẾP. để cùng tối giản tâm trí và sống sâu sắc hơn mỗi ngày.
@@ -508,5 +459,4 @@ Mỗi lựa chọn vụn vặt và thông báo đều bào mòn năng lượng t
 **Caption:**
 Một ngày nhẹ đầu không phải là ngày có 48 tiếng, mà là ngày có ít tab mở trong đầu hơn. Tối nay thử đóng bớt vài việc không cần thiết nhé! 🧘‍♂️
 
-**Hashtags:**
 #nep #learnontiktok #quanlythoigian #taptrung #toigian #songcham #phattrienbanthan #fyp

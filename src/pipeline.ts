@@ -33,7 +33,7 @@ export function createPipelineContext(context: string, rootDir: string = process
 }
 
 export function setupDirectories(ctx: PipelineContext): void {
-  mkdirSync(join(ctx.videosDir, 'output'), { recursive: true });
+  mkdirSync(ctx.videosDir, { recursive: true });
   writeFileSync(join(ctx.videosDir, 'context.txt'), ctx.context, 'utf-8');
 }
 
@@ -49,5 +49,5 @@ export async function executePipeline(
     await stepExecutor(step, ctx);
   }
 
-  return `Pipeline complete. Output: videos/${ctx.slug}/output/video.mp4`;
+  return `Pipeline complete. Output: videos/${ctx.slug}/video.mp4`;
 }

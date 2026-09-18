@@ -18,6 +18,7 @@
     "update-config": "node scripts/update-config.mjs",
     "update-logo": "node scripts/update-logo.mjs",
     "update-version": "node scripts/update-version.mjs",
+    "human-insight:image": "node scripts/human-insight-image.mjs",
     "tts": "node scripts/tts.mjs",
     "transcribe": "node scripts/transcribe.mjs"
   },

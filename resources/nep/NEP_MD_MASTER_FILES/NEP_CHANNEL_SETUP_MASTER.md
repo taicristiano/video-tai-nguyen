@@ -27,7 +27,7 @@ N.
 **COPY**
 
 ```text
-Những điều nhỏ tạo nên một đời sống.
+Sống tốt hơn từ những điều nhỏ.
 ```
 
 ## Brand promise
@@ -125,7 +125,7 @@ hello@nep.media
 **COPY**
 
 ```text
-Những điều nhỏ tạo nên một đời sống.
+Sống tốt hơn từ những điều nhỏ.
 ```
 
 ## Bio ngắn
@@ -151,7 +151,7 @@ Sách • Thói quen • Góc sống • Những điều đáng ngẫm.
 ```text
 NẾP. kể những câu chuyện nhỏ về sách, thói quen, không gian sống và những góc nhìn giúp cuộc sống tốt hơn từng chút một.
 
-Những điều nhỏ tạo nên một đời sống.
+Sống tốt hơn từ những điều nhỏ.
 ```
 
 ## Description đầy đủ
@@ -165,7 +165,7 @@ Từ một câu chuyện, một ý tưởng trong sách, một thói quen, một
 
 Không cần thay đổi tất cả trong một ngày.
 
-Những điều nhỏ tạo nên một đời sống.
+Sống tốt hơn từ những điều nhỏ.
 ```
 
 ---
@@ -207,7 +207,7 @@ Personal Blog
 **COPY**
 
 ```text
-Sách, thói quen, góc sống và những câu chuyện nhỏ đáng giữ lại. Những điều nhỏ tạo nên một đời sống.
+Sách, thói quen, góc sống và những câu chuyện nhỏ đáng giữ lại. Sống tốt hơn từ những điều nhỏ.
 ```
 
 ## About
@@ -219,7 +219,7 @@ NẾP. là kênh nội dung faceless về những câu chuyện, thói quen và 
 
 Sách • Thói quen • Góc làm việc • Tổ ấm • Những điều đáng ngẫm.
 
-Những điều nhỏ tạo nên một đời sống.
+Sống tốt hơn từ những điều nhỏ.
 ```
 
 ## Avatar
@@ -295,7 +295,7 @@ Sách • Thói quen • Góc sống • Những điều đáng ngẫm.
 ## Bio — Option B
 
 ```text
-Những điều nhỏ tạo nên một đời sống.
+Sống tốt hơn từ những điều nhỏ.
 ```
 
 ## Bio — Option C
@@ -345,7 +345,7 @@ Từ một câu chuyện, một ý tưởng trong sách, một thói quen, một
 
 Không cần thay đổi tất cả trong một ngày.
 
-Những điều nhỏ tạo nên một đời sống.
+Sống tốt hơn từ những điều nhỏ.
 ```
 
 ## Avatar
@@ -422,7 +422,7 @@ sống tốt hơn
 # 8. DEFAULT VIDEO DESCRIPTION
 
 ```text
-NẾP. — Những điều nhỏ tạo nên một đời sống.
+NẾP. — Sống tốt hơn từ những điều nhỏ.
 
 Sách • Thói quen • Góc sống • Những điều đáng ngẫm.
 

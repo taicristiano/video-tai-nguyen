@@ -30,19 +30,22 @@ At least one STT key is required. Provider priority is Groq, then api.stt.ai.
    - reject unknown/repeated audio values instead of guessing
    - halt with the usage message if no clean context remains
 2. Derive `<slug>` from the clean context:
+   - if context specifies `Phần: {i}` (or `Phan: {i}`, `Part: {i}`), prefix with `phan-{i}-`
+   - normalize Vietnamese accents to ASCII
    - lowercase
    - replace spaces with `-`
    - remove non-`[a-z0-9-]`
    - keep the first 8 tokens
-   - prefix `YYYY-MM-DD`
+   - prefix `YYYY-MM-DD` (resulting in `phan-{i}-{YYYY-MM-DD}-{slug}` or `{YYYY-MM-DD}-{slug}`)
 3. Halt if `videos/<slug>/` already exists.
 4. Create:
 
 ```text
 videos/<slug>/script/
-videos/<slug>/output/
 public/<slug>/
 ```
+
+(Note: Do NOT create an `output/` subfolder; the rendered video will live directly at `videos/<slug>/video.mp4`).
 
 5. Write only the clean context, without command flags, to
    `videos/<slug>/context.txt`.
@@ -74,15 +77,15 @@ Output: `videos/<slug>/plan.json`
     {"title": "Segment title", "content_summary": "Segment purpose"}
   ],
   "ending": "Closing idea",
-  "estimated_duration": 60
+  "estimated_duration": 150
 }
 ```
 
 Rules:
 
 - Vietnamese, informative, and neutral unless context requires another tone.
-- Target 45-100 seconds.
-- Use 3-6 body segments, excluding hook and ending.
+- Target 120-180 seconds (2 - 3 minutes).
+- Use 7-12 body segments, excluding hook and ending, providing deep, detailed, and structured explanations.
 - The hook must create immediate curiosity.
 
 ## Step 3: Teller
@@ -105,7 +108,7 @@ Rules:
 
 - `type` is `hook`, `body`, or `ending`.
 - Every text entry is non-empty Vietnamese.
-- Total spoken duration should remain 45-100 seconds.
+- Total spoken duration must remain 120-180 seconds (2 - 3 minutes, approximately 280-450 words in Vietnamese).
 
 ## Step 4: Audio
 
@@ -125,7 +128,7 @@ Verify `public/<slug>/voice.mp3` exists.
 `voice.mp3` is an expensive generated artifact and is the source of truth once it
 exists. Never regenerate voiceover merely because the duration is longer or
 shorter than the target range. If the generated narration duration is outside the
-45-100 second target, continue with the existing audio and adapt Step 6 timing,
+120-180 second target, continue with the existing audio and adapt Step 6 timing,
 scene count, pacing, and final render duration to `timeline.json`.
 
 Only overwrite `voice.mp3` when the user explicitly asks to regenerate the
@@ -213,12 +216,12 @@ Run from project root:
 
 ```bash
 npx remotion render src/Root.tsx Video \
-  --output "videos/<slug>/output/video.mp4" \
+  --output "videos/<slug>/video.mp4" \
   --codec h264 \
   --props '{"slug":"<slug>"}'
 ```
 
-Verify `videos/<slug>/output/video.mp4` exists.
+Verify `videos/<slug>/video.mp4` exists.
 
 ## Shared Failure Rules
 

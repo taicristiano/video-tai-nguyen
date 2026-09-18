@@ -1,46 +1,33 @@
 /**
  * index.ts — Entry point for human-insight/cinematic-light template.
  *
- * Usage in VideoContent.tsx:
- *
- *   import { Layout, ImageScene } from '../templates/human-insight/cinematic-light';
- *   import type { HumanInsightSpec } from '../templates/human-insight/cinematic-light';
- *   import specData from '../../videos/<slug>/spec.json';
- *
- *   const spec = specData as HumanInsightSpec;
- *
- *   export const VideoContent: React.FC<{ slug: string }> = ({ slug }) => (
- *     <Layout slug={slug} title={spec.video.title} bgMusic={spec.video.bgMusic ?? null}>
- *       <Audio src={staticFile(`${slug}/voice.mp3`)} />
- *       <AbsoluteFill>
- *         <Series>
- *           {spec.scenes.map((scene, i) => (
- *             <Series.Sequence key={i} durationInFrames={scene.durationFrames}>
- *               <ImageScene
- *                 src={scene.image.path}
- *                 durationFrames={scene.durationFrames}
- *                 kenBurns={scene.image.kenBurns}
- *                 fadeInFrames={15}
- *                 fadeOutFrames={0}
- *               />
- *             </Series.Sequence>
- *           ))}
- *         </Series>
- *       </AbsoluteFill>
- *     </Layout>
- *   );
+ * Provides the full Editorial Engine:
+ *   - Layout: fixed frame with dynamic header modes ('full' | 'dimmed' | 'logo-only' | 'hidden')
+ *   - ImageScene: tactile art card supporting 'standard' (1020x638) and 'focus' (1060x740) framing
+ *   - SectionCard: chapter breakdown card (01, 02, 03)
+ *   - InsightCard: statement / visual punctuation card
+ *   - OutroCard: peaceful branding ending
  */
 
 export { Layout } from './Layout';
-export type { LayoutProps } from './Layout';
+export type { LayoutProps, SceneWindowInfo } from './Layout';
 
 export { ImageScene } from './ImageScene';
 export type { ImageSceneProps } from './ImageScene';
 
-export { COLORS, FONT_MAIN, LAYOUT, TYPOGRAPHY, TEMPLATE_META } from './tokens';
+export { SectionCard } from './SectionCard';
+export type { SectionCardProps } from './SectionCard';
+
+export { InsightCard } from './InsightCard';
+export type { InsightCardProps } from './InsightCard';
+
+export { OutroCard } from './OutroCard';
+export type { OutroCardProps } from './OutroCard';
+
+export { COLORS, FONT_MAIN, LAYOUT, TYPOGRAPHY, FRAMING, TEMPLATE_META } from './tokens';
 export type { KenBurnsConfig, KenBurnsDirection } from './tokens';
 
-// ─── Spec types (shared shape with cinematic-dark) ────────────────────────────
+// ─── Editorial Spec Types for human-insight/cinematic-light ───────────────────
 
 export interface HumanInsightImage {
   assetId: string;
@@ -49,9 +36,21 @@ export interface HumanInsightImage {
 }
 
 export type SceneType = 'hook' | 'body' | 'stat' | 'ending';
+export type LayoutType = 'standard' | 'focus' | 'statement' | 'chapter';
+export type HeaderMode = 'full' | 'dimmed' | 'logo-only' | 'hidden';
+export type CaptionMode = 'plain' | 'phrase' | 'statement';
+
+export interface SectionCardConfig {
+  number: string;
+  title: string;
+  subtitle?: string;
+}
 
 export interface HumanInsightScene {
   type: SceneType;
+  layout?: LayoutType;
+  headerMode?: HeaderMode;
+  captionMode?: CaptionMode;
   startFrame: number;
   durationFrames: number;
   audioSegment: {
@@ -60,6 +59,9 @@ export interface HumanInsightScene {
     text: string;
   };
   image: HumanInsightImage;
+  sectionCard?: SectionCardConfig;
+  insightText?: string;
+  isOutro?: boolean;
 }
 
 export interface HumanInsightSpec {

@@ -82,7 +82,7 @@
 **Vì sao chọn:**
 - Typography serif rất hợp brand NẾP.
 - Nhìn giống một trang tản văn / editorial
-- Rất hợp slogan “Những điều nhỏ tạo nên một đời sống.”
+- Rất hợp slogan “Sống tốt hơn từ những điều nhỏ.”
 
 **Lưu ý:**
 - Preview và mô tả của template nghiêng khá rõ về chữa lành / Phật pháp / chiêm nghiệm.

@@ -4,7 +4,7 @@ import { loadFont } from "@remotion/google-fonts/BeVietnamPro";
 
 // Load font once at module level
 const { fontFamily } = loadFont("normal", {
-  weights: ["700"],
+  weights: ["400", "500", "600", "700"],
   subsets: ["latin", "vietnamese"],
 });
 
@@ -27,31 +27,40 @@ interface Timeline {
   words?: WordTimestamp[];
 }
 
+interface Phrase {
+  words: WordTimestamp[];
+  wordIndices: number[];
+  start: number;
+  end: number;
+}
+
 export interface SubtitlesProps {
   /** Slug used to load public/<slug>/timeline.json */
   slug: string;
-  /**
-   * Gap threshold in seconds to split into a new sentence. Default: 0.45s
-   */
+  /** Gap threshold in seconds to split into a new sentence. Default: 0.45s */
   sentenceGap?: number;
-  /**
-   * Max words per line — sentences longer than this are split into chunks. Default: 7
-   */
+  /** Max words per line — sentences longer than this are split into chunks. Default: 7 */
   maxWords?: number;
-  /**
-   * Color for the currently active (highlighted) word. Default: '#FACC15'
-   */
+  /** Highlighting mode: 'phrase' (groups 2-4 words into semantic units), 'plain' (uniform calm sentence), 'statement' (hidden for quote card), or 'word' (karaoke). Default: 'phrase' */
+  mode?: 'phrase' | 'plain' | 'statement' | 'word';
+  /** Color for the currently active (highlighted) phrase/word. Default: '#2C1A0E' */
   activeColor?: string;
-  /**
-   * Font size in px. Default: 38
-   */
+  /** Font size in px. Default: 38 */
   fontSize?: number;
+  /** Color for future / inactive words. */
+  textColor?: string;
+  /** Color for already spoken words. */
+  pastColor?: string;
+  /** Text shadow for inactive words. */
+  textShadow?: string;
+  /** Text shadow for active word/phrase. */
+  activeTextShadow?: string;
 }
 
 // ─── Fixed design constants ───────────────────────────────────────────────────
-const DEFAULT_ACTIVE_COLOR = "#FACC15";
-const TEXT_COLOR = "rgba(255,255,255,0.82)";
-const PAST_COLOR = "rgba(255,255,255,0.35)";
+const DEFAULT_ACTIVE_COLOR = "#2C1A0E";
+const TEXT_COLOR = "#2C1A0E";
+const PAST_COLOR = "#2C1A0E";
 
 // ─── Split words into sentences by silence gap ────────────────────────────────
 function buildSentences(words: WordTimestamp[], gap: number): Sentence[] {
@@ -97,13 +106,52 @@ function chunkSentence(sentence: Sentence, maxWords: number): Sentence[] {
   return chunks;
 }
 
+/**
+ * Split a chunk into 1-2 semantic phrases for graceful group highlighting.
+ */
+function getChunkPhrases(words: WordTimestamp[]): Phrase[] {
+  if (words.length === 0) return [];
+  if (words.length <= 4) {
+    return [
+      {
+        words,
+        wordIndices: words.map((_, i) => i),
+        start: words[0].start,
+        end: words[words.length - 1].end,
+      },
+    ];
+  }
+  const splitAt = Math.ceil(words.length / 2);
+  const p1 = words.slice(0, splitAt);
+  const p2 = words.slice(splitAt);
+  return [
+    {
+      words: p1,
+      wordIndices: p1.map((_, i) => i),
+      start: p1[0].start,
+      end: p1[p1.length - 1].end,
+    },
+    {
+      words: p2,
+      wordIndices: p2.map((_, i) => i + splitAt),
+      start: p2[0].start,
+      end: p2[p2.length - 1].end,
+    },
+  ];
+}
+
 // ─── Component ───────────────────────────────────────────────────────────────
 export const Subtitles: React.FC<SubtitlesProps> = ({
   slug,
   sentenceGap = 0.45,
   maxWords = 7,
+  mode = 'phrase',
   activeColor = DEFAULT_ACTIVE_COLOR,
   fontSize = 38,
+  textColor = TEXT_COLOR,
+  pastColor = PAST_COLOR,
+  textShadow,
+  activeTextShadow,
 }) => {
   const [words, setWords] = useState<WordTimestamp[]>([]);
   const frame = useCurrentFrame();
@@ -114,10 +162,8 @@ export const Subtitles: React.FC<SubtitlesProps> = ({
       .then((r) => r.json())
       .then((data: Timeline | WordTimestamp[]) => {
         if (Array.isArray(data)) {
-          // Legacy: plain array of words
           setWords(data);
         } else if (data.words && data.words.length > 0) {
-          // New format: timeline.json with words array
           setWords(data.words);
         } else {
           setWords([]);
@@ -147,35 +193,44 @@ export const Subtitles: React.FC<SubtitlesProps> = ({
     return active;
   }, [chunks, currentTime]);
 
-  // Active word highlight
-  const highlightIdx = useMemo(() => {
-    if (chunkIdx === -1) return -1;
-    const chunk = chunks[chunkIdx];
-
-    // Find the word currently being spoken
-    const speaking = chunk.words.findIndex(
-      (w) => currentTime >= w.start && currentTime <= w.end,
-    );
-    if (speaking !== -1) return speaking;
-
-    // Between words: highlight the last word whose start has passed
-    let last = -1;
-    for (let i = 0; i < chunk.words.length; i++) {
-      if (chunk.words[i].start <= currentTime) last = i;
-      else break;
-    }
-    return last;
-  }, [chunks, chunkIdx, currentTime]);
-
-  if (chunkIdx === -1) return null;
+  if (mode === 'statement' || chunkIdx === -1) return null;
 
   const chunk = chunks[chunkIdx];
+  const phrases = getChunkPhrases(chunk.words);
+
+  // Active phrase index
+  let activePhraseIdx = -1;
+  const speakingPhraseIdx = phrases.findIndex(
+    (p) => currentTime >= p.start && currentTime <= p.end,
+  );
+  if (speakingPhraseIdx !== -1) {
+    activePhraseIdx = speakingPhraseIdx;
+  } else {
+    for (let i = 0; i < phrases.length; i++) {
+      if (phrases[i].start <= currentTime) activePhraseIdx = i;
+      else break;
+    }
+  }
+
+  // Active word index (used only if mode === 'word')
+  let highlightWordIdx = -1;
+  const speakingWordIdx = chunk.words.findIndex(
+    (w) => currentTime >= w.start && currentTime <= w.end,
+  );
+  if (speakingWordIdx !== -1) {
+    highlightWordIdx = speakingWordIdx;
+  } else {
+    for (let i = 0; i < chunk.words.length; i++) {
+      if (chunk.words[i].start <= currentTime) highlightWordIdx = i;
+      else break;
+    }
+  }
 
   return (
     <div
       style={{
         position: "absolute",
-        bottom: "15%",
+        bottom: "22.0%",
         left: 0,
         right: 0,
         display: "flex",
@@ -195,26 +250,49 @@ export const Subtitles: React.FC<SubtitlesProps> = ({
         }}
       >
         {chunk.words.map((w, i) => {
-          const isActive = i === highlightIdx;
-          const isPast = i < highlightIdx;
+          let isActive = false;
+          let isPast = false;
+          let wordOpacity = 0.52;
+          let wordWeight = 500;
+
+          if (mode === 'plain') {
+            wordOpacity = 0.88;
+            wordWeight = 500;
+          } else if (mode === 'phrase') {
+            const currentPhrase = activePhraseIdx >= 0 ? phrases[activePhraseIdx] : null;
+            isActive = currentPhrase ? currentPhrase.wordIndices.includes(i) : false;
+            isPast = activePhraseIdx > 0 && currentPhrase ? i < currentPhrase.wordIndices[0] : false;
+            wordOpacity = isActive ? 1.0 : isPast ? 0.42 : 0.52;
+            wordWeight = isActive ? 700 : 500;
+          } else {
+            isActive = i === highlightWordIdx;
+            isPast = i < highlightWordIdx;
+            wordOpacity = isActive ? 1.0 : isPast ? 0.42 : 0.52;
+            wordWeight = isActive ? 700 : 500;
+          }
+
           return (
             <span
               key={`${chunkIdx}-${i}`}
               style={{
                 fontFamily,
                 fontSize,
-                fontWeight: 700,
+                fontWeight: wordWeight,
                 lineHeight: 1.4,
                 whiteSpace: "nowrap",
                 color: isActive
                   ? activeColor
                   : isPast
-                    ? PAST_COLOR
-                    : TEXT_COLOR,
+                    ? pastColor
+                    : textColor,
+                opacity: wordOpacity,
                 textShadow: isActive
-                  ? `0 0 12px ${activeColor}88`
-                  : "0 1px 4px rgba(0,0,0,0.7)",
+                  ? (activeTextShadow ?? "0 1px 4px rgba(44, 26, 14, 0.12)")
+                  : (textShadow ?? "none"),
+                // Stable typography: no word-by-word bouncing, peaceful phrase transition
+                transition: "color 0.2s ease, opacity 0.2s ease",
                 display: "inline-block",
+                zIndex: isActive ? 2 : 1,
               }}
             >
               {w.word}

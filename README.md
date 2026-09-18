@@ -126,7 +126,7 @@ create-video-with-ai/
 │   ├── plan.json
 │   ├── script/script.json
 │   ├── spec.json
-│   └── output/video.mp4
+│   └── video.mp4
 └── public/<slug>/
     ├── voice.mp3
     └── timeline.json

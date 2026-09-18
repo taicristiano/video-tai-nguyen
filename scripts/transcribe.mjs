@@ -143,6 +143,24 @@ function normalizeGroqResponse(data) {
       }))
     : [];
 
+  for (let i = 0; i < segments.length; i++) {
+    if (i > 0 && segments[i].start < segments[i - 1].start) {
+      segments[i].start = segments[i - 1].start;
+    }
+    if (segments[i].end < segments[i].start) {
+      segments[i].end = segments[i].start;
+    }
+  }
+
+  for (let i = 0; i < words.length; i++) {
+    if (i > 0 && words[i].start < words[i - 1].start) {
+      words[i].start = words[i - 1].start;
+    }
+    if (words[i].end < words[i].start) {
+      words[i].end = words[i].start;
+    }
+  }
+
   return validateTimeline({
     duration: data.duration ?? null,
     segments,

@@ -3,7 +3,7 @@ NẾP. — ALL MEDIA READY
 
 BRAND
 - Tên kênh: NẾP.
-- Slogan chính: Những điều nhỏ tạo nên một đời sống.
+- Slogan chính: Sống tốt hơn từ những điều nhỏ.
 - Logo ngắn: N.
 - Màu nhận diện: sage / ivory / charcoal
 

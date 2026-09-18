@@ -176,7 +176,7 @@ Process:
 Verify that every scene has audio-derived timing and that scene durations sum to
 `totalFrames`.
 
-If `timeline.json` reports a duration outside the desired short-form target,
+If `timeline.json` reports a duration outside the desired 2-3 minute target,
 adapt the video to the existing audio instead of going back to Step 4. Adjust
 scene grouping, visual pacing, and `defaultDuration`; never regenerate
 `voice.mp3` unless the user explicitly requested an audio overwrite.
@@ -231,12 +231,12 @@ A generation is complete only when:
 - TypeScript compiles.
 - Required representative frames were inspected when required by verification rules.
 - Scene timing matches the audio-derived total duration.
-- `videos/<slug>/output/video.mp4` exists.
+- `videos/<slug>/video.mp4` exists.
 
 On success, report:
 
 ```text
-Pipeline complete. Output: videos/<slug>/output/video.mp4
+Pipeline complete. Output: videos/<slug>/video.mp4
 ```
 
 ## Error Handling

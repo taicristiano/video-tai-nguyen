@@ -38,7 +38,9 @@ const IMAGE_DIR = path.join(ROOT, 'public/assets/human-insight/images');
 const OUTPUT_WIDTH = 688;
 const OUTPUT_HEIGHT = 384;
 const JPEG_QUALITY = 70;
-const DEFAULT_THRESHOLD = 7;
+// Be deliberately conservative when reusing an existing illustration.
+// A single mood/emotion overlap must never be enough to suppress generation.
+const DEFAULT_THRESHOLD = 14;
 const CLOUDFLARE_MODEL = '@cf/black-forest-labs/flux-1-schnell';
 
 const STYLE_PROMPT = [
@@ -81,6 +83,39 @@ const FALLBACK_ASSET_BY_MOOD = {
   stressed: 'office-conflict-01',
 };
 
+const EMOTION_TAGS = new Set([
+  'stress',
+  'pressure',
+  'fatigue',
+  'overworked',
+  'overwhelmed',
+  'sadness',
+  'disappointment',
+]);
+
+const EMOTION_KEYWORDS_VI = new Set([
+  'mệt',
+  'mệt mỏi',
+  'cạn năng lượng',
+  'kiệt sức',
+  'áp lực',
+  'căng thẳng',
+  'quá tải',
+  'khó chịu',
+]);
+
+const GENERIC_MOOD_TAGS = new Set([
+  'reflective',
+  'peaceful',
+  'warm',
+  'introspective',
+  'contemplative',
+  'melancholic',
+  'determined',
+  'hopeful',
+  'stressed',
+]);
+
 function loadEnvFile(filename) {
   const envPath = path.join(ROOT, filename);
   if (!fs.existsSync(envPath)) return;
@@ -104,6 +139,7 @@ function parseArgs(argv) {
     generate: false,
     threshold: DEFAULT_THRESHOLD,
     visual: '',
+    exclude: '',
   };
 
   for (let i = 2; i < argv.length; i++) {
@@ -122,6 +158,8 @@ function parseArgs(argv) {
       args.visual = argv[++i];
     } else if (arg === '--threshold') {
       args.threshold = Number(argv[++i]);
+    } else if (arg === '--exclude') {
+      args.exclude = argv[++i];
     } else if (arg === '--help') {
       printUsage();
       process.exit(0);
@@ -200,14 +238,35 @@ function deriveTags(text, mood, character) {
     }
   }
 
-  for (const token of tokenize(text).slice(0, 8)) {
-    tags.add(token);
-  }
-
   if (mood) tags.add(mood);
   if (character !== 'neutral') tags.add(`character-${character}`);
 
-  return [...tags].slice(0, 14);
+  return [...tags].slice(0, 12);
+}
+
+function keywordMatchesScene(keyword, sceneText) {
+  const normalizedKeyword = normalize(keyword);
+  if (!normalizedKeyword) return false;
+  const normalizedScene = normalize(sceneText);
+  if (hasNormalizedPhrase(normalizedScene, normalizedKeyword)) return true;
+  const tokens = normalizedKeyword.split(/\s+/).filter((t) => t.length >= 2);
+  if (tokens.length >= 2 && tokens.every((t) => hasNormalizedPhrase(normalizedScene, t))) {
+    return true;
+  }
+  return false;
+}
+
+function dedupeKeywordMatches(keywords) {
+  const sorted = [...keywords].sort((a, b) => normalize(b).length - normalize(a).length);
+  const kept = [];
+  for (const keyword of sorted) {
+    const normalizedKeyword = normalize(keyword);
+    if (kept.some(existing => hasNormalizedPhrase(normalize(existing), normalizedKeyword))) {
+      continue;
+    }
+    kept.push(keyword);
+  }
+  return kept;
 }
 
 function inferCharacterFromText(text, requested) {
@@ -222,44 +281,56 @@ function inferCharacterFromText(text, requested) {
   return 'neutral';
 }
 
-function readManifest() {
+export function readManifest() {
   if (!fs.existsSync(MANIFEST_PATH)) {
     throw new Error(`Manifest not found: ${MANIFEST_PATH}`);
   }
   return JSON.parse(fs.readFileSync(MANIFEST_PATH, 'utf-8'));
 }
 
-function writeManifest(manifest) {
+export function writeManifest(manifest) {
   fs.writeFileSync(MANIFEST_PATH, `${JSON.stringify(manifest, null, 2)}\n`, 'utf-8');
 }
 
-function scoreAsset(asset, scene) {
+export function scoreAsset(asset, scene) {
   const sceneTags = deriveTags(scene.text, scene.mood, scene.character);
-  const haystack = [
-    ...(asset.tags || []),
-    asset.mood || '',
-    asset.desc || '',
-    asset.id || '',
-  ].map(normalize).join(' ');
-  const haystackTokens = new Set(tokenize(haystack));
+  const assetTags = new Set((asset.tags || []).map(normalize));
+  const assetDesc = normalize(asset.desc || '');
   let score = 0;
   const reasons = [];
 
   for (const tag of sceneTags) {
     const normalizedTag = normalize(tag);
-    const isPhrase = normalizedTag.includes(' ') || normalizedTag.includes('-');
-    if ((isPhrase && haystack.includes(normalizedTag)) || haystackTokens.has(normalizedTag)) {
-      score += 4;
+    if (assetTags.has(normalizedTag)) {
+      if (EMOTION_TAGS.has(normalizedTag)) {
+        score += 2;
+      } else if (GENERIC_MOOD_TAGS.has(normalizedTag)) {
+        score += 1;
+      } else {
+        score += 6;
+      }
       reasons.push(`tag:${tag}`);
+    } else if (normalizedTag && hasNormalizedPhrase(assetDesc, normalizedTag)) {
+      score += 2;
+      reasons.push(`desc:${tag}`);
     }
   }
 
+  const combinedSceneText = scene.visual ? `${scene.text} ${scene.visual}` : scene.text;
+  const matchedKeywords = dedupeKeywordMatches(
+    (asset.keywordsVi || []).filter(keyword => keywordMatchesScene(keyword, combinedSceneText)),
+  );
+  for (const keyword of matchedKeywords) {
+    const normalizedKeyword = normalize(keyword);
+    score += EMOTION_KEYWORDS_VI.has(normalizedKeyword) ? 4 : 14;
+    reasons.push(`keyword:${keyword}`);
+  }
+
   if (scene.mood && normalize(asset.mood) === normalize(scene.mood)) {
-    score += 4;
+    score += 1;
     reasons.push(`mood:${scene.mood}`);
   }
 
-  const assetTags = new Set(asset.tags || []);
   const assetCharacter = assetTags.has('character-male')
     ? 'male'
     : assetTags.has('character-female')
@@ -277,23 +348,48 @@ function scoreAsset(asset, scene) {
   return {asset, score, reasons};
 }
 
-function selectExistingAsset(manifest, scene) {
+function isReusableAsset(asset) {
+  // Cloudflare images are generated for one very specific narration scene.
+  // Reusing them for another scene was a major source of visually-wrong matches.
+  if (asset.reuse === false) return false;
+  if (String(asset.id || '').startsWith('cf-')) return false;
+  return true;
+}
+
+function isSpecificReason(reason) {
+  if (reason.startsWith('keyword:')) {
+    const keyword = normalize(reason.slice('keyword:'.length));
+    return !EMOTION_KEYWORDS_VI.has(keyword);
+  }
+
+  if (reason.startsWith('tag:')) {
+    const tag = normalize(reason.slice('tag:'.length));
+    return !EMOTION_TAGS.has(tag) && !GENERIC_MOOD_TAGS.has(tag);
+  }
+
+  return false;
+}
+
+export function isConfidentExistingMatch(result, threshold = DEFAULT_THRESHOLD) {
+  if (!result || result.score < threshold) return false;
+
+  const specificReasons = result.reasons.filter(isSpecificReason);
+  const hasSpecificKeyword = specificReasons.some((reason) => reason.startsWith('keyword:'));
+  const specificTagCount = specificReasons.filter((reason) => reason.startsWith('tag:')).length;
+
+  // One concrete Vietnamese keyword (object/action/place) is strong enough.
+  // Otherwise require at least two non-emotional semantic tags.
+  return hasSpecificKeyword || specificTagCount >= 2;
+}
+
+export function selectExistingAsset(manifest, scene, excludeIds = new Set()) {
   const ranked = (manifest.assets || [])
+    .filter((asset) => !excludeIds.has(asset.id) && isReusableAsset(asset))
     .map((asset) => scoreAsset(asset, scene))
     .sort((a, b) => b.score - a.score || a.asset.id.localeCompare(b.asset.id));
 
-  const fallbackId = FALLBACK_ASSET_BY_MOOD[normalize(scene.mood)];
-  if (fallbackId && (!ranked[0] || ranked[0].score <= 0)) {
-    const fallback = (manifest.assets || []).find((asset) => asset.id === fallbackId);
-    if (fallback) {
-      return {
-        asset: fallback,
-        score: 1,
-        reasons: [`mood-fallback:${scene.mood}`],
-      };
-    }
-  }
-
+  // Return the real best candidate, even when weak. The caller decides whether
+  // confidence is high enough to reuse it or whether Cloudflare should generate.
   return ranked[0] || null;
 }
 
@@ -404,10 +500,6 @@ async function generateWithCloudflare(prompt, seed) {
   const url = `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/${CLOUDFLARE_MODEL}`;
   const requestBody = JSON.stringify({
     prompt,
-    width: OUTPUT_WIDTH,
-    height: OUTPUT_HEIGHT,
-    steps: 4,
-    seed,
   });
 
   try {
@@ -425,15 +517,29 @@ async function generateWithCloudflare(prompt, seed) {
 }
 
 function compressJpeg(inputPath, outputPath) {
-  const result = spawnSync('sips', [
-    '--resampleHeightWidth',
-    String(OUTPUT_HEIGHT),
-    String(OUTPUT_WIDTH),
-    '--setProperty',
-    'formatOptions',
-    String(JPEG_QUALITY),
-    inputPath,
-    '--out',
+  if (process.platform === 'darwin') {
+    const result = spawnSync('sips', [
+      '--resampleHeightWidth',
+      String(OUTPUT_HEIGHT),
+      String(OUTPUT_WIDTH),
+      '--setProperty',
+      'formatOptions',
+      String(JPEG_QUALITY),
+      inputPath,
+      '--out',
+      outputPath,
+    ], {
+      cwd: ROOT,
+      encoding: 'utf-8',
+    });
+    if (result.status === 0) return;
+  }
+
+  const result = spawnSync('ffmpeg', [
+    '-y',
+    '-i', inputPath,
+    '-vf', `scale=${OUTPUT_WIDTH}:${OUTPUT_HEIGHT}`,
+    '-q:v', '3',
     outputPath,
   ], {
     cwd: ROOT,
@@ -441,7 +547,7 @@ function compressJpeg(inputPath, outputPath) {
   });
 
   if (result.status !== 0) {
-    throw new Error(`sips failed: ${(result.stderr || result.stdout).trim()}`);
+    fs.copyFileSync(inputPath, outputPath);
   }
 }
 
@@ -479,6 +585,8 @@ function appendGeneratedAsset(manifest, scene, reservedAsset) {
     desc: scene.visual || `AI-generated illustration for: ${scene.text.slice(0, 140)}`,
     tags: deriveTags(scene.text, scene.mood, scene.character),
     mood: scene.mood || 'reflective',
+    source: 'cloudflare',
+    reuse: false,
   };
 
   manifest.assets = [...(manifest.assets || []), asset];
@@ -501,12 +609,14 @@ async function main() {
   };
 
   const manifest = readManifest();
-  const best = selectExistingAsset(manifest, scene);
+  const excludeSet = new Set((args.exclude || '').split(',').map((s) => s.trim()).filter(Boolean));
+  const best = selectExistingAsset(manifest, scene, excludeSet);
 
-  if (best && best.score >= args.threshold) {
+  if (best && isConfidentExistingMatch(best, args.threshold)) {
     console.error(`Using existing asset "${best.asset.id}" (score ${best.score}).`);
     console.log(JSON.stringify({
       source: 'manifest',
+      confidence: 'high',
       score: best.score,
       reasons: best.reasons,
       image: {
@@ -519,7 +629,7 @@ async function main() {
 
   if (!args.generate) {
     if (!best) throw new Error('No manifest assets available');
-    console.error(`No asset passed threshold ${args.threshold}; falling back to "${best.asset.id}" (score ${best.score}).`);
+    console.error(`No asset passed the semantic confidence gate; falling back to "${best.asset.id}" (score ${best.score}).`);
     console.log(JSON.stringify({
       source: 'fallback',
       score: best.score,
@@ -575,7 +685,9 @@ async function main() {
   }
 }
 
-main().catch((err) => {
-  console.error(`Error: ${err.message}`);
-  process.exit(1);
-});
+if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
+  main().catch((err) => {
+    console.error(`Error: ${err.message}`);
+    process.exit(1);
+  });
+}

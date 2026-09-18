@@ -45,7 +45,7 @@ Mà là quá nhiều việc nhỏ chưa khép lại.
 
 Visual: tin nhắn chưa trả lời, chiếc cốc chưa cất, note nhỏ, bàn làm việc sáng tự nhiên, chuyển cảnh chậm nhưng không lê thê.
 
-End card: NẾP. — Những điều nhỏ tạo nên một đời sống.
+End card: NẾP. — Sống tốt hơn từ những điều nhỏ.
 ```
 
 ---
@@ -397,5 +397,5 @@ Kết:
 Đôi khi muốn làm thêm một điều quan trọng,
 ta phải chủ động bỏ bớt vài điều không quan trọng.
 
-End card: NẾP. — Những điều nhỏ tạo nên một đời sống.
+End card: NẾP. — Sống tốt hơn từ những điều nhỏ.
 ```

@@ -153,7 +153,7 @@ The canonical docs in `docs/` are the single source of truth.
   Step 7: Coder        → selected template components and/or src/scenes/Scene*.tsx
                          src/VideoContent.tsx (with <Audio> + <Subtitles> overlay)
                          src/Root.tsx (defaultSlug, defaultDuration)
-  Step 8: Render       → videos/<slug>/output/video.mp4
+  Step 8: Render       → videos/<slug>/video.mp4
 ```
 
 ---
@@ -214,7 +214,7 @@ create-video-with-ai/
 │       ├── plan.json
 │       ├── script/script.json
 │       ├── spec.json
-│       └── output/video.mp4
+│       └── video.mp4
 ├── tmp-music/               ← local ignored staging for /add-music mp3 files
 ├── tmp-logo/                ← local ignored staging for /update-logo png files
 ├── load-templates/          ← local ignored staging for purchased template packages

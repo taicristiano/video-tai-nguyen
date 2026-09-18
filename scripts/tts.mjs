@@ -149,7 +149,7 @@ const outputDir = path.join(ROOT, 'public', slug);
 fs.mkdirSync(outputDir, { recursive: true });
 const outputPath = path.join(outputDir, 'voice.mp3');
 
-if (fs.existsSync(outputPath) && !force) {
+if (fs.existsSync(outputPath) && fs.statSync(outputPath).size > 0 && !force) {
   console.error(`♻️  Reusing existing voice.mp3 at ${outputPath}`);
   console.error('   Pass --force only for an explicit user-approved voice regeneration.');
   console.log(outputPath);
@@ -169,19 +169,40 @@ async function generateWithGemini(narration, outPath) {
   const { GoogleGenAI } = await import('@google/genai');
   const ai = new GoogleGenAI({ apiKey });
 
-  // Use the Interactions API (client.interactions.create) for TTS models
-  const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash-preview-tts',
-    contents: [{ parts: [{ text: narration }] }],
-    config: {
-      responseModalities: ['AUDIO'],
-      speechConfig: {
-        voiceConfig: {
-          prebuiltVoiceConfig: { voiceName: voice },
+  const ttsModels = [
+    'gemini-2.5-flash-preview-tts',
+    'gemini-3.1-flash-tts-preview',
+    'gemini-2.5-pro-preview-tts',
+  ];
+
+  let response;
+  let lastErr;
+  for (const model of ttsModels) {
+    try {
+      response = await ai.models.generateContent({
+        model,
+        contents: [{ parts: [{ text: narration }] }],
+        config: {
+          responseModalities: ['AUDIO'],
+          speechConfig: {
+            voiceConfig: {
+              prebuiltVoiceConfig: { voiceName: voice },
+            },
+          },
         },
-      },
-    },
-  });
+      });
+      if (response.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data) {
+        break;
+      }
+    } catch (err) {
+      console.error(`   ⚠️ Model ${model} failed: ${err.message.slice(0, 120)}`);
+      lastErr = err;
+    }
+  }
+
+  if (!response) {
+    throw lastErr || new Error('All Gemini TTS models failed');
+  }
 
   // Extract audio data from the response
   const data = response.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
@@ -263,6 +284,35 @@ async function generateWithElevenLabs(narration, outPath) {
   console.error(`   ✅ Saved to ${outPath} (${(buffer.length / 1024).toFixed(1)} KB)`);
 }
 
+// ─── Edge TTS Fallback ────────────────────────────────────────────────────────
+async function generateWithEdgeTTS(narration, outPath) {
+  const voice = 'vi-VN-NamMinhNeural';
+  console.error('🎙  TTS provider: Edge TTS (fallback)');
+  console.error(`   Voice: ${voice}`);
+
+  const tmpTextPath = path.join(path.dirname(outPath), 'narration_tmp.txt');
+  fs.writeFileSync(tmpTextPath, narration, 'utf-8');
+
+  await new Promise((resolve, reject) => {
+    const proc = spawn('python', [
+      '-m', 'edge_tts',
+      '--voice', voice,
+      '-f', tmpTextPath,
+      '--write-media', outPath,
+    ], { stdio: ['ignore', 'inherit', 'inherit'] });
+
+    proc.on('error', (err) => reject(new Error(`edge_tts error: ${err.message}`)));
+    proc.on('close', (code) => {
+      try { fs.unlinkSync(tmpTextPath); } catch {}
+      if (code === 0) resolve();
+      else reject(new Error(`edge_tts exited with code ${code}`));
+    });
+  });
+
+  const stat = fs.statSync(outPath);
+  console.error(`   ✅ Saved to ${outPath} (${(stat.size / 1024).toFixed(1)} KB)`);
+}
+
 // ─── Router ───────────────────────────────────────────────────────────────────
 console.error(`\n📝 Script text (${fullText.length} chars):`);
 console.error(`   "${fullText.slice(0, 80)}${fullText.length > 80 ? '...' : ''}"`);
@@ -283,8 +333,16 @@ if (process.env.GEMINI_API_KEY) {
     console.log(outputPath);
     process.exit(0);
   } catch (err) {
-    console.error(`\n⚠️  Gemini TTS failed: ${err.message}`);
+    console.error(`\n⚠️  Gemini TTS failed: ${err.message} — falling back to Edge TTS`);
   }
+}
+
+try {
+  await generateWithEdgeTTS(fullText, outputPath);
+  console.log(outputPath);
+  process.exit(0);
+} catch (err) {
+  console.error(`\n⚠️  Edge TTS failed: ${err.message}`);
 }
 
 console.error(
