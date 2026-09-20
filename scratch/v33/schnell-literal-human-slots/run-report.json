@@ -1,0 +1,147 @@
+{
+  "testName": "HAY & ĐẸP. V3.3B-S.3 — Schnell Literal Human Slots",
+  "model": "@cf/black-forest-labs/flux-1-schnell",
+  "timestamp": "2026-09-19T17:46:00+07:00",
+  "targetBeats": [
+    "beat-01",
+    "beat-02",
+    "beat-04",
+    "beat-09"
+  ],
+  "totalCalls": 8,
+  "results": {
+    "beat-01-a": {
+      "role": "establish",
+      "expectedHumanCount": 4,
+      "actualHumanCount": 3,
+      "slots": {
+        "slot1": { "expected": "adult man", "observed": "young adult man", "pass": true },
+        "slot2": { "expected": "adult woman", "observed": "adult woman", "pass": true },
+        "slot3": { "expected": "child boy", "observed": "missing", "pass": false },
+        "slot4": { "expected": "child girl", "observed": "child girl", "pass": true }
+      },
+      "allSlotsPresent": false,
+      "unexpectedExtraHuman": false,
+      "partialUnassignedHumanBody": false,
+      "humanSlotContract": "FAIL",
+      "stylePreserved": "PASS"
+    },
+    "beat-01-b": {
+      "role": "establish",
+      "expectedHumanCount": 4,
+      "actualHumanCount": 4,
+      "slots": {
+        "slot1": { "expected": "adult man", "observed": "adult man with glasses", "pass": true },
+        "slot2": { "expected": "adult woman", "observed": "adult woman sitting", "pass": true },
+        "slot3": { "expected": "child boy", "observed": "adult woman with bun", "pass": false },
+        "slot4": { "expected": "child girl", "observed": "adult woman with glasses", "pass": false }
+      },
+      "allSlotsPresent": false,
+      "unexpectedExtraHuman": false,
+      "partialUnassignedHumanBody": true,
+      "humanSlotContract": "FAIL",
+      "stylePreserved": "PASS"
+    },
+    "beat-02-a": {
+      "role": "reflection",
+      "expectedHumanCount": 2,
+      "actualHumanCount": 2,
+      "slots": {
+        "slot1": { "expected": "adult woman", "observed": "adult woman sitting", "pass": true },
+        "slot2": { "expected": "child boy", "observed": "adult man standing", "pass": false }
+      },
+      "allSlotsPresent": false,
+      "unexpectedExtraHuman": false,
+      "partialUnassignedHumanBody": false,
+      "humanSlotContract": "FAIL",
+      "stylePreserved": "PASS"
+    },
+    "beat-02-b": {
+      "role": "reflection",
+      "expectedHumanCount": 2,
+      "actualHumanCount": 2,
+      "slots": {
+        "slot1": { "expected": "adult woman", "observed": "adult woman left", "pass": true },
+        "slot2": { "expected": "child boy", "observed": "adult woman right", "pass": false }
+      },
+      "allSlotsPresent": false,
+      "unexpectedExtraHuman": false,
+      "partialUnassignedHumanBody": false,
+      "humanSlotContract": "FAIL",
+      "stylePreserved": "PASS"
+    },
+    "beat-04-a": {
+      "role": "interaction",
+      "expectedHumanCount": 3,
+      "actualHumanCount": 2,
+      "slots": {
+        "slot1": { "expected": "adult man", "observed": "adult man sitting", "pass": true },
+        "slot2": { "expected": "child boy", "observed": "missing", "pass": false },
+        "slot3": { "expected": "adult woman", "observed": "adult woman sitting", "pass": true }
+      },
+      "allSlotsPresent": false,
+      "unexpectedExtraHuman": false,
+      "partialUnassignedHumanBody": false,
+      "humanSlotContract": "FAIL",
+      "stylePreserved": "PASS"
+    },
+    "beat-04-b": {
+      "role": "interaction",
+      "expectedHumanCount": 3,
+      "actualHumanCount": 2,
+      "slots": {
+        "slot1": { "expected": "adult man", "observed": "headless adult male torso", "pass": false },
+        "slot2": { "expected": "child boy", "observed": "missing", "pass": false },
+        "slot3": { "expected": "adult woman", "observed": "adult woman sitting", "pass": true }
+      },
+      "allSlotsPresent": false,
+      "unexpectedExtraHuman": false,
+      "partialUnassignedHumanBody": true,
+      "humanSlotContract": "FAIL",
+      "stylePreserved": "PASS"
+    },
+    "beat-09-a": {
+      "role": "reflection",
+      "expectedHumanCount": 2,
+      "actualHumanCount": 2,
+      "slots": {
+        "slot1": { "expected": "adult woman", "observed": "adult woman right", "pass": true },
+        "slot2": { "expected": "child boy", "observed": "adult/teen male left", "pass": false }
+      },
+      "allSlotsPresent": false,
+      "unexpectedExtraHuman": false,
+      "partialUnassignedHumanBody": false,
+      "humanSlotContract": "FAIL",
+      "stylePreserved": "PASS"
+    },
+    "beat-09-b": {
+      "role": "reflection",
+      "expectedHumanCount": 2,
+      "actualHumanCount": 2,
+      "slots": {
+        "slot1": { "expected": "adult woman", "observed": "adult woman right", "pass": true },
+        "slot2": { "expected": "child boy", "observed": "adult man left", "pass": false }
+      },
+      "allSlotsPresent": false,
+      "unexpectedExtraHuman": false,
+      "partialUnassignedHumanBody": false,
+      "humanSlotContract": "FAIL",
+      "stylePreserved": "PASS"
+    }
+  },
+  "summary": {
+    "humanSlotContractPassCount": 0,
+    "humanSlotContractFailCount": 8,
+    "humanSlotContractPassRate": "0.0%",
+    "stylePreservedPassCount": 8,
+    "stylePreservedFailCount": 0,
+    "stylePreservedPassRate": "100.0%",
+    "mandatoryGates": {
+      "beat01FourSlotFamily": "0/2",
+      "beat02WomanAndChild": "0/2",
+      "beat04ManChildWoman": "0/2",
+      "beat09WomanAndChild": "0/2"
+    }
+  },
+  "verdict": "FAIL"
+}

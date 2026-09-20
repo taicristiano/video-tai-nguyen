@@ -5,12 +5,14 @@ export function deriveSlug(context: string): string {
   const partMatch = context.match(/(?:phần|phan|part)\s*:\s*([a-zA-Z0-9_-]+)/i);
   const partPrefix = partMatch ? `phan-${partMatch[1].toLowerCase()}-` : '';
 
-  // Filter out system metadata lines (aspect ratio, duration, brand, slogan, part)
+  // Filter out system metadata lines (aspect ratio, duration, brand, slogan, series, part, title label)
   const topicContext = context
     .replace(/video\s+(?:dọc|doc|ngang)?[^,\n]*/gi, '')
     .replace(/(?:thời\s+lượng|thoi\s+luong)[^\n.]*(?:giây|phút|\.)?/gi, '')
     .replace(/(?:brand|thương\s+hiệu)\s*:[^\n]*/gi, '')
     .replace(/(?:slogan|khẩu\s+hiệu)\s*:[^\n]*/gi, '')
+    .replace(/(?:series|dòng|pillar)\s*:[^\n]*/gi, '')
+    .replace(/(?:nhóm\s+nội\s+dung|nhom\s+noi\s+dung|category)\s*:[^\n]*/gi, '')
     .replace(/(?:phần|phan|part)\s*:\s*([a-zA-Z0-9_-]+)/gi, '')
     .replace(/(?:sweet\s+spot)[^\n.]*(?:giây|phút|\.)?/gi, '')
     .replace(/(?:tiêu\s+đề|tieu\s+de)\s*:[^\n]*/gi, '')

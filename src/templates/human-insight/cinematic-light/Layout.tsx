@@ -1,26 +1,22 @@
 /**
- * Layout.tsx — Persistent frame for human-insight/cinematic-light template.
+ * Layout.tsx — Persistent frame for human-insight/cinematic-light template (V2).
  *
- * Renders fixed elements across scenes:
- *   - Flat warm cream background (#FAECD2)
- *   - Minimalist top progress bar (2px thin)
- *   - Mindful breathing header logo + 28px legible slogan
- *   - Dynamic Header Modes ('full' | 'dimmed' | 'logo-only' | 'hidden'):
- *       • full:      Intro, Prominent 56px, opacity 1.0
- *       • dimmed:    Standard narrative: 70% scale, opacity 0.45
- *       • logo-only: Focus Shot, Chapter, Statement: Title hides completely (opacity 0)
- *       • hidden:    Outro: Entire header hidden
- *   - Dynamic Caption Modes ('phrase' | 'plain' | 'statement'):
- *       • phrase:    Phrase-level highlight in dark charcoal
- *       • plain:     Uniform calm sentence without jumping
- *       • statement: Subtitle bar hidden for central quote card
+ * Upgrades in V2:
+ *   - Normal headline opacity target: 0.82–0.90 (0.86) — stable visual anchor
+ *   - Slogan only during intro (0–4.5s) and outro; hidden in normal narrative scenes
+ *   - Logo mark uses dark-sage transparent asset (assets/human-insight/brand/hay-dep-mark-sage.png)
+ *   - Logo mark is small, persistent, opacity ~0.82, never competing with headline
+ *   - Header breathing is gentle and restricted (<= ±0.4%)
+ *   - Statement and Question cards suppress headline cleanly during card holds
  */
 
 import React from 'react';
 import { AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame, useVideoConfig } from 'remotion';
 import { BackgroundMusic } from '../../../components/BackgroundMusic';
 import { Subtitles } from '../../../components/Subtitles';
+import { AtmosphericCanvas } from './AtmosphericCanvas';
 import { COLORS, FONT_MAIN, LAYOUT, TYPOGRAPHY } from './tokens';
+import { BRAND_WATERMARK, TITLE_TYPOGRAPHY, SUBTITLE_TYPOGRAPHY, SAFE_ZONES } from './brandTypographyTokens';
 
 export interface SceneWindowInfo {
   startFrame: number;
@@ -29,6 +25,8 @@ export interface SceneWindowInfo {
   layout?: 'standard' | 'focus' | 'statement' | 'chapter';
   headerMode?: 'full' | 'dimmed' | 'logo-only' | 'hidden';
   captionMode?: 'plain' | 'phrase' | 'statement';
+  titleMode?: 'intro-only' | 'scene' | 'hidden';
+  captionPlacement?: 'below-visual' | 'overlay-bottom' | 'overlay-top' | 'hidden';
   hasSectionCard?: boolean;
   hasInsightCard?: boolean;
   cardDuration?: number;
@@ -49,8 +47,8 @@ export const Layout: React.FC<LayoutProps> = ({
   slug,
   title,
   bgMusic = null,
-  watermarkSrc = 'watermark.png',
-  slogan = 'Sống tốt hơn từ những điều nhỏ.',
+  watermarkSrc = BRAND_WATERMARK.staticPath,
+  slogan = 'Điều hay để biết. Điều đẹp để giữ.',
   scenes,
   children,
 }) => {
@@ -60,144 +58,80 @@ export const Layout: React.FC<LayoutProps> = ({
   // Progress from 0 to 100%
   const progress = durationInFrames > 0 ? (frame / durationInFrames) * 100 : 0;
 
-  // Subtle mindful breathing motion for header watermark (amplitude ±1.2%, cycle ~4s)
-  const headerBreath = 1 + Math.sin((frame / 30) * Math.PI * 0.5) * 0.012;
+  // ── Header Breathing Contract V2: Restrained subtle motion (amplitude <= ±0.4%, cycle ~4s) ──
+  const headerBreath = 1 + Math.sin((frame / 30) * Math.PI * 0.5) * 0.004;
 
-  // ── Headline Geometry (Intro 0-4s full, settled compact from 4.5s onwards) ──
-  // 0s - 3.67s (0-110f): prominent full size (scale 1.0, translateY 0)
-  // 3.67s - 4.5s (110-135f): smooth interpolation to compact (scale 0.78, translateY -30)
-  // 4.5s onwards (135f+): permanently fixed at compact (scale 0.78, translateY -30)
-  const introShrinkProgress = interpolate(frame, [110, 135], [0, 1], {
+  // ── Slogan Contract: Only present during intro (frames 0 to 110), fades out by frame 125 ──
+  const sloganIntroOpacity = interpolate(frame, [100, 125], [0.88, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
-  const titleScale = interpolate(introShrinkProgress, [0, 1], [1.0, 0.78]);
-  const titleTranslateY = interpolate(introShrinkProgress, [0, 1], [0, -30]);
+  const showSlogan = slogan && frame < 125 && sloganIntroOpacity > 0.01;
 
-  // ── Semi-Persistent Headline Opacity Computation (Production Contract) ──
-  // Rule Engine:
-  //   intro: 1.0 (0-3.67s, fades 3.67s-4.5s)
-  //   normal: 0.46 (calibrated legible breadcrumb across standard illustrations)
-  //   question / statement: 0 (fades out in 9f, hidden during hold, fades back in 10f)
-  //   conclusion: 0.25 (fades from 0.46 at 64s to 0.25 at 66s, then to 0 at 68s)
-  //   outro: 0 (68.8s-71s clean centered branding)
-  const HEADLINE_OPACITY = {
-    intro: 1.0,
-    normal: 0.46,
-    question: 0,
-    statement: 0,
-    conclusion: 0.25,
-    outro: 0,
-  };
+  const outroScene = scenes?.find((s) => s.isOutro);
+  const currentScene = scenes?.find(
+    (s) => frame >= s.startFrame && frame < s.startFrame + s.durationFrames,
+  );
+  const isOutroActive = Boolean(currentScene?.isOutro || (outroScene && frame >= outroScene.startFrame));
 
-  let finalTitleOpacity = HEADLINE_OPACITY.normal;
+  // Derive questionStartFrame from first scene where type === 'ending' && !isOutro
+  const questionScene = scenes?.find((s) => s.type === 'ending' && !s.isOutro);
+  const questionStartFrame = questionScene
+    ? questionScene.startFrame
+    : (outroScene ? outroScene.startFrame : durationInFrames);
+  const isQuestionScene = frame >= questionStartFrame && !isOutroActive;
+
+  // ── Persistent Topic Title Anchor (P0.2) ──
+  // Visible across narrative from frame 0 until questionStartFrame
+  // Stable opacity ~0.92, hidden on Question & Outro
+  let finalTitleOpacity = 0;
+  if (!isQuestionScene && !isOutroActive && frame < questionStartFrame) {
+    if (frame < 12) {
+      finalTitleOpacity = interpolate(frame, [0, 12], [0, 0.92], {
+        extrapolateLeft: 'clamp',
+        extrapolateRight: 'clamp',
+      });
+    } else if (frame >= questionStartFrame - 12) {
+      finalTitleOpacity = interpolate(frame, [questionStartFrame - 12, questionStartFrame], [0.92, 0], {
+        extrapolateLeft: 'clamp',
+        extrapolateRight: 'clamp',
+      });
+    } else {
+      finalTitleOpacity = 0.92;
+    }
+  }
+
   let headerOpacity = 1.0;
   let activeCaptionMode: 'phrase' | 'plain' | 'statement' = 'phrase';
+  let activeCaptionPlacement: 'below-visual' | 'overlay-bottom' | 'overlay-top' | 'hidden' =
+    currentScene?.captionPlacement ?? 'below-visual';
 
-  if (frame < 110) {
-    // Intro baseline: 100% full strength
-    finalTitleOpacity = HEADLINE_OPACITY.intro;
-    headerOpacity = 1.0;
-    activeCaptionMode = 'phrase';
-  } else if (frame <= 135) {
-    // Intro transition to compact breadcrumb (0.35s fade)
-    finalTitleOpacity = interpolate(frame, [110, 135], [HEADLINE_OPACITY.intro, HEADLINE_OPACITY.normal], {
-      extrapolateLeft: 'clamp',
-      extrapolateRight: 'clamp',
-    });
-    headerOpacity = 1.0;
-    activeCaptionMode = 'phrase';
-  } else if (frame >= 1920) {
-    // ── Conclusion & Outro Sequence (64s onwards) ──────────────────────────
-    // 64s - 66s (1920 - 1980f): fade from 0.43 to 0.25
-    // 66s - 68s (1980 - 2040f): fade from 0.25 to 0
-    // 68s - 68.8s (2040 - 2065f): top header logo dissolves smoothly into outro
-    // 68.8s - 71s (2065 - 2130f): clean centered NẾP. outro
-    if (frame < 1980) {
-      finalTitleOpacity = interpolate(frame, [1920, 1980], [HEADLINE_OPACITY.normal, HEADLINE_OPACITY.conclusion], {
-        extrapolateLeft: 'clamp',
-        extrapolateRight: 'clamp',
-      });
-      headerOpacity = 1.0;
-      activeCaptionMode = 'phrase';
-    } else if (frame < 2040) {
-      finalTitleOpacity = interpolate(frame, [1980, 2040], [HEADLINE_OPACITY.conclusion, 0], {
-        extrapolateLeft: 'clamp',
-        extrapolateRight: 'clamp',
-      });
-      headerOpacity = 1.0;
-      activeCaptionMode = 'phrase';
-    } else if (frame < 2065) {
-      finalTitleOpacity = 0;
-      headerOpacity = interpolate(frame, [2040, 2065], [1.0, 0], {
-        extrapolateLeft: 'clamp',
-        extrapolateRight: 'clamp',
-      });
-      activeCaptionMode = 'phrase';
-    } else {
-      finalTitleOpacity = 0;
-      headerOpacity = 0;
-      activeCaptionMode = 'statement';
-    }
-  } else if (scenes && scenes.length > 0) {
-    const currentScene = scenes.find(
-      (s) => frame >= s.startFrame && frame < s.startFrame + s.durationFrames,
+  if (isOutroActive) {
+    // Dedicated Outro Scene: header & subtitle hidden for clean centered branding
+    headerOpacity = 0;
+    finalTitleOpacity = 0;
+    activeCaptionMode = 'statement';
+    activeCaptionPlacement = 'hidden';
+  } else if (outroScene && frame >= outroScene.startFrame - 20 && frame < outroScene.startFrame) {
+    // Smooth dissolution into outro (last 20 frames before outro starts)
+    const outroTransition = interpolate(
+      frame,
+      [outroScene.startFrame - 20, outroScene.startFrame],
+      [0, 1],
+      { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' },
     );
-
-    if (currentScene) {
-      const cardLimit =
-        currentScene.cardDuration ??
-        (currentScene.hasSectionCard ? 76 : currentScene.hasInsightCard ? 66 : 0);
-      const sceneFrame = frame - currentScene.startFrame;
-
-      if (cardLimit > 0) {
-        // Scene with an overlay Question Card or Insight Card
-        const cardExitStart = cardLimit - 9;
-        const cardExitEnd = cardLimit + 3;
-
-        if (sceneFrame < 9) {
-          // Card entering: fade headline out smoothly in ~0.30s
-          finalTitleOpacity = interpolate(sceneFrame, [0, 9], [HEADLINE_OPACITY.normal, 0], {
-            extrapolateLeft: 'clamp',
-            extrapolateRight: 'clamp',
-          });
-          activeCaptionMode = 'statement';
-        } else if (sceneFrame < cardExitStart) {
-          // Card actively held: headline completely hidden
-          finalTitleOpacity = 0;
-          activeCaptionMode = 'statement';
-        } else if (sceneFrame < cardExitEnd) {
-          // Card dissolving: headline smoothly fades back in to normal breadcrumb
-          finalTitleOpacity = interpolate(sceneFrame, [cardExitStart, cardExitEnd], [0, HEADLINE_OPACITY.normal], {
-            extrapolateLeft: 'clamp',
-            extrapolateRight: 'clamp',
-          });
-          activeCaptionMode = 'statement';
-        } else {
-          // Card complete: steady compact breadcrumb
-          finalTitleOpacity = HEADLINE_OPACITY.normal;
-          activeCaptionMode = currentScene.captionMode ?? 'phrase';
-        }
-      } else {
-        // Normal illustration scene without overlay card
-        finalTitleOpacity = HEADLINE_OPACITY.normal;
-        activeCaptionMode = currentScene.captionMode ?? 'phrase';
-      }
-    } else {
-      // Fallback outside defined scenes
-      headerOpacity = 1.0;
-      finalTitleOpacity = HEADLINE_OPACITY.normal;
-      activeCaptionMode = 'phrase';
-    }
-  } else {
-    headerOpacity = 1.0;
-    finalTitleOpacity = HEADLINE_OPACITY.normal;
+    headerOpacity = interpolate(outroTransition, [0, 1], [1.0, 0]);
+    finalTitleOpacity = 0;
     activeCaptionMode = 'phrase';
+  } else if (isQuestionScene) {
+    finalTitleOpacity = 0;
+    headerOpacity = 1.0;
+    activeCaptionMode = 'statement';
+    activeCaptionPlacement = 'hidden';
   }
 
   return (
-    <AbsoluteFill style={{ background: COLORS.bg }}>
-
+    <AtmosphericCanvas>
       {/* ── Minimalist Top Progress Bar (2px thin) ───────────────────── */}
       <div
         style={{
@@ -224,145 +158,106 @@ export const Layout: React.FC<LayoutProps> = ({
       {/* ── Background music ─────────────────────────────────────────────── */}
       <BackgroundMusic src={bgMusic} />
 
-      {/* ── Image zone — full frame ──────────────────────────────────────── */}
-      <AbsoluteFill>
+      {/* ── Image zone — center-focused ──────────────────────────────────── */}
+      <AbsoluteFill style={{ zIndex: 5 }}>
         {children}
       </AbsoluteFill>
 
-      {/* ── Watermark logo & 28px Slogan ─────────────────────────────────── */}
-      {watermarkSrc ? (
+      {/* ── Persistent Watermark Logo (Fixed top-right, static, V1.2.1 0.34 opacity) ── */}
+      {watermarkSrc && !isOutroActive ? (
         <div
           style={{
             position: 'absolute',
-            top: 80,
-            left: 0,
-            right: 0,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            top: BRAND_WATERMARK.insetTop,
+            right: BRAND_WATERMARK.insetRight,
+            width: BRAND_WATERMARK.width,
             pointerEvents: 'none',
-            zIndex: 20,
-            transform: `scale(${headerBreath})`,
-            transformOrigin: 'center top',
-            opacity: headerOpacity,
-            transition: 'opacity 0.25s ease',
+            zIndex: 25,
+            opacity: BRAND_WATERMARK.opacity,
+            filter: BRAND_WATERMARK.dropShadow
+              ? `drop-shadow(${BRAND_WATERMARK.dropShadow})`
+              : undefined,
           }}
         >
           <Img
             src={staticFile(watermarkSrc)}
             style={{
-              height: 115,
-              width: 'auto',
-              opacity: 0.95,
+              width: '100%',
+              height: 'auto',
+              display: 'block',
               objectFit: 'contain',
             }}
           />
-          {slogan ? (
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 16,
-                marginTop: 15,
-              }}
-            >
-              <div
-                style={{
-                  width: 36,
-                  height: 1,
-                  background: 'rgba(44, 26, 14, 0.25)',
-                }}
-              />
-              <div
-                style={{
-                  fontFamily: FONT_MAIN,
-                  fontSize: TYPOGRAPHY.sloganSize,
-                  fontWeight: '500',
-                  color: COLORS.text,
-                  opacity: 0.88,
-                  letterSpacing: '0.06em',
-                  textAlign: 'center',
-                }}
-              >
-                {slogan}
-              </div>
-              <div
-                style={{
-                  width: 36,
-                  height: 1,
-                  background: 'rgba(44, 26, 14, 0.25)',
-                }}
-              />
-            </div>
-          ) : null}
         </div>
       ) : null}
 
-      {/* ── Title — prominent during intro, shrinks after 3s, hides on Focus/Chapter ── */}
+      {/* ── Persistent Topic Title Anchor (top=120px, max 2 lines, maxWidth 880px) ── */}
       <div
         style={{
           position: 'absolute',
-          top: 360,
+          top: TITLE_TYPOGRAPHY.top,
           left: 0,
           right: 0,
           display: 'flex',
           justifyContent: 'center',
-          paddingLeft: LAYOUT.paddingH,
-          paddingRight: LAYOUT.paddingH,
-          zIndex: 10,
-          transform: `scale(${titleScale}) translateY(${titleTranslateY}px)`,
+          alignItems: 'center',
+          zIndex: 20,
           opacity: finalTitleOpacity,
-          transformOrigin: 'center top',
+          pointerEvents: 'none',
         }}
       >
         <div
           style={{
+            width: '100%',
+            maxWidth: TITLE_TYPOGRAPHY.maxWidth,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+            padding: '0 40px',
+            boxSizing: 'border-box',
           }}
         >
           <div
             style={{
               fontFamily: FONT_MAIN,
-              fontSize: TYPOGRAPHY.titleSize,
-              fontWeight: TYPOGRAPHY.titleWeight,
+              fontSize: TITLE_TYPOGRAPHY.fontSize,
+              fontWeight: TITLE_TYPOGRAPHY.fontWeight,
               color: COLORS.text,
-              letterSpacing: TYPOGRAPHY.titleLetterSpacing,
+              opacity: 0.92,
+              lineHeight: TITLE_TYPOGRAPHY.lineHeight,
               textAlign: 'center',
-              lineHeight: 1.25,
-              textTransform: 'capitalize',
-              textShadow: '0 2px 10px rgba(44, 26, 14, 0.18)',
-              whiteSpace: 'normal',
+              letterSpacing: TITLE_TYPOGRAPHY.letterSpacing,
+              textShadow: TITLE_TYPOGRAPHY.textShadow,
               wordBreak: 'break-word',
+              display: '-webkit-box',
+              WebkitLineClamp: TITLE_TYPOGRAPHY.maxLines,
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden',
             }}
           >
             {title}
           </div>
-          <div
-            style={{
-              width: 48,
-              height: 2,
-              background: 'rgba(44, 26, 14, 0.25)',
-              borderRadius: 1,
-              marginTop: 18,
-            }}
-          />
         </div>
       </div>
 
-      {/* ── Subtitles — dynamic phrase/plain/statement mode in dark charcoal ── */}
-      <Subtitles
-        slug={slug}
-        mode={activeCaptionMode}
-        activeColor="#2C1A0E"
-        fontSize={TYPOGRAPHY.subtitleSize}
-        textColor="#2C1A0E"
-        pastColor="#2C1A0E"
-        textShadow="none"
-        activeTextShadow="0 1px 4px rgba(44, 26, 14, 0.12)"
-      />
-
-    </AbsoluteFill>
+      {/* ── Subtitles — dynamic phrase/plain/statement mode with adaptive placement ── */}
+      {!isOutroActive && activeCaptionPlacement !== 'hidden' ? (
+        <Subtitles
+          slug={slug}
+          mode={activeCaptionMode}
+          placement={activeCaptionPlacement}
+          bottomPlacement={SUBTITLE_TYPOGRAPHY.bottomPlacement}
+          maxWidth={SUBTITLE_TYPOGRAPHY.maxWidth}
+          lineHeight={SUBTITLE_TYPOGRAPHY.lineHeight}
+          maxWords={SUBTITLE_TYPOGRAPHY.maxWords}
+          activeColor={SUBTITLE_TYPOGRAPHY.activeColor}
+          fontSize={SUBTITLE_TYPOGRAPHY.fontSize}
+          textColor={SUBTITLE_TYPOGRAPHY.textColor}
+          pastColor={SUBTITLE_TYPOGRAPHY.pastColor}
+          textShadow="none"
+          activeTextShadow={SUBTITLE_TYPOGRAPHY.activeTextShadow}
+        />
+      ) : null}
+    </AtmosphericCanvas>
   );
 };

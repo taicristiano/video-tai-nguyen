@@ -8152,6 +8152,714 @@
       "mood": "calm",
       "source": "cloudflare",
       "reuse": false
+    },
+    {
+      "id": "cf-muon-bo-thoi-quen-93472403",
+      "path": "assets/human-insight/images/muon-bo-thoi-quen-93472403.jpg",
+      "desc": "A stick figure firmly pushing away a smartphone on a table, wanting to break and quit a bad habit",
+      "tags": [
+        "resolute",
+        "character-male"
+      ],
+      "mood": "resolute",
+      "source": "cloudflare",
+      "reuse": false
+    },
+    {
+      "id": "cf-muon-doi-moi-truong-326c6196",
+      "path": "assets/human-insight/images/muon-doi-moi-truong-326c6196.jpg",
+      "desc": "A stick figure standing with a packed suitcase looking towards an open doorway, wanting to change surroundings and environment",
+      "tags": [
+        "longing"
+      ],
+      "mood": "longing",
+      "source": "cloudflare",
+      "reuse": false
+    },
+    {
+      "id": "cf-muon-cat-het-thu-dang-2e286eb4",
+      "path": "assets/human-insight/images/muon-cat-het-thu-dang-2e286eb4.jpg",
+      "desc": "A stick figure firmly closing multiple notebooks and putting down a pen, wanting to stop and cut all ongoing tasks",
+      "tags": [
+        "frustrated"
+      ],
+      "mood": "frustrated",
+      "source": "cloudflare",
+      "reuse": false
+    },
+    {
+      "id": "cf-viec-nao-trong-so-do-7bdc1027",
+      "path": "assets/human-insight/images/viec-nao-trong-so-do-7bdc1027.jpg",
+      "desc": "A stick figure standing quietly by a window with a cup of tea, calm and ordinary",
+      "tags": [
+        "peaceful"
+      ],
+      "mood": "peaceful",
+      "source": "cloudflare",
+      "reuse": false
+    },
+    {
+      "id": "cf-cam-giac-kho-chiu-phai-83009302-2",
+      "path": "assets/human-insight/images/cam-giac-kho-chiu-phai-83009302-2.jpg",
+      "desc": "A stick figure pausing thoughtfully before making a big life choice, realizing uncomfortable feelings are temporary",
+      "tags": [
+        "reflective"
+      ],
+      "mood": "reflective",
+      "source": "cloudflare",
+      "reuse": false
+    },
+    {
+      "id": "cf-neu-no-giup-minh-doi-aa59bfa9",
+      "path": "assets/human-insight/images/neu-no-giup-minh-doi-aa59bfa9.jpg",
+      "desc": "A stick figure holding hands out in a gentle balancing gesture, testing what works simply and keeping what helps",
+      "tags": [
+        "calm"
+      ],
+      "mood": "calm",
+      "source": "cloudflare",
+      "reuse": false
+    },
+    {
+      "id": "cf-doi-song-tot-hon-nhat-e86db218",
+      "path": "assets/human-insight/images/doi-song-tot-hon-nhat-e86db218.jpg",
+      "desc": "A stick figure sitting peacefully in an armchair with a warm cup, content with ordinary everyday life",
+      "tags": [
+        "peaceful"
+      ],
+      "mood": "peaceful",
+      "source": "cloudflare",
+      "reuse": false
+    },
+    {
+      "id": "cf-doi-thu-can-thay-doi-65ec32be",
+      "path": "assets/human-insight/images/doi-thu-can-thay-doi-65ec32be.jpg",
+      "desc": "A calm stick figure taking a deep breath in soft warm morning daylight, tranquil room",
+      "tags": [
+        "finance",
+        "investment",
+        "wealth",
+        "peaceful"
+      ],
+      "mood": "peaceful",
+      "source": "cloudflare",
+      "reuse": false
+    },
+    {
+      "id": "cf-chi-muc-nang-luong-hom-709cefd7",
+      "path": "assets/human-insight/images/chi-muc-nang-luong-hom-709cefd7.jpg",
+      "desc": "A quiet serene room with soft natural sunlight through window, a stick figure sitting peacefully with lots of negative space and breathing room",
+      "tags": [
+        "peaceful",
+        "character-female"
+      ],
+      "mood": "peaceful",
+      "source": "cloudflare",
+      "reuse": false
+    },
+    {
+      "id": "cf-su-gan-ket-chi-den-47627a73",
+      "path": "assets/human-insight/images/su-gan-ket-chi-den-47627a73.jpg",
+      "desc": "A stick figure looking at a travel suitcase and vacation tickets, reflecting on everyday connection",
+      "tags": [
+        "reflective",
+        "character-female"
+      ],
+      "mood": "reflective",
+      "source": "cloudflare",
+      "reuse": false
+    },
+    {
+      "id": "cf-cau-hoi-kha-huu-ich-fb55382b",
+      "path": "assets/human-insight/images/cau-hoi-kha-huu-ich-fb55382b.jpg",
+      "desc": "A stick figure sitting thoughtfully at a table with a warm cup, reflecting on making tomorrow a little easier",
+      "tags": [
+        "reflective"
+      ],
+      "mood": "reflective",
+      "source": "cloudflare",
+      "reuse": false
+    },
+    {
+      "id": "cf-phai-hon-trong-tuong-tuong-c20cf72b",
+      "path": "assets/human-insight/images/phai-hon-trong-tuong-tuong-c20cf72b.jpg",
+      "desc": "A stick figure in an ordinary home kitchen in morning sunlight preparing breakfast, experiencing real life",
+      "tags": [
+        "peaceful"
+      ],
+      "mood": "peaceful",
+      "source": "cloudflare",
+      "reuse": false
+    },
+    {
+      "id": "cf-bua-chung-d96d19d6",
+      "path": "assets/human-insight/images/bua-chung-d96d19d6.jpg",
+      "desc": "A family gathered warmly around a dining table sharing a simple home cooked dinner",
+      "tags": [
+        "warm"
+      ],
+      "mood": "warm",
+      "source": "cloudflare",
+      "reuse": false
+    },
+    {
+      "id": "cf-chi-tiet-nhu-vay-hiem-c8be6033",
+      "path": "assets/human-insight/images/chi-tiet-nhu-vay-hiem-c8be6033.jpg",
+      "desc": "A stick figure looking thoughtfully at a simple calendar on the wall with small repeated checkmarks",
+      "tags": [
+        "reflective",
+        "character-female"
+      ],
+      "mood": "reflective",
+      "source": "cloudflare",
+      "reuse": false
+    },
+    {
+      "id": "cf-diem-lap-nho-tao-cam-4314ad21",
+      "path": "assets/human-insight/images/diem-lap-nho-tao-cam-4314ad21.jpg",
+      "desc": "A stick figure stepping inside a warm cozy home in the evening, feeling the familiarity and belonging of home",
+      "tags": [
+        "peaceful"
+      ],
+      "mood": "peaceful",
+      "source": "cloudflare",
+      "reuse": false
+    },
+    {
+      "id": "cf-thu-trong-tuan-chon-nghi-318c4a9f",
+      "path": "assets/human-insight/images/thu-trong-tuan-chon-nghi-318c4a9f.jpg",
+      "desc": "A small family sharing tea and relaxing on the floor together, an effortless simple daily ritual",
+      "tags": [
+        "warm"
+      ],
+      "mood": "warm",
+      "source": "cloudflare",
+      "reuse": false
+    },
+    {
+      "id": "cf-nhin-lai-xem-minh-da-55c3d6e8",
+      "path": "assets/human-insight/images/nhin-lai-xem-minh-da-55c3d6e8.jpg",
+      "desc": "A stick figure exhaling calmly with relaxed shoulders, feeling relieved from decision fatigue and tension",
+      "tags": [
+        "peaceful"
+      ],
+      "mood": "peaceful",
+      "source": "cloudflare",
+      "reuse": false
+    },
+    {
+      "id": "cf-moi-quan-he-thuong-xay-18478146",
+      "path": "assets/human-insight/images/moi-quan-he-thuong-xay-18478146.jpg",
+      "desc": "Two stick figures sitting warmly together on a porch in gentle afternoon light, choosing to be present",
+      "tags": [
+        "warm"
+      ],
+      "mood": "warm",
+      "source": "cloudflare",
+      "reuse": false
+    },
+    {
+      "id": "cf-nep-dieu-nho-tao-nen-7136dffa",
+      "path": "assets/human-insight/images/nep-dieu-nho-tao-nen-7136dffa.jpg",
+      "desc": "A tranquil serene living space with sheer curtains fluttering in morning sunlight, a warm cup of tea on a low wooden table, abundant negative space and breathing room",
+      "tags": [
+        "peaceful"
+      ],
+      "mood": "peaceful",
+      "source": "cloudflare",
+      "reuse": false
+    },
+    {
+      "id": "cf-ta-thuong-bo-qua-viec-98e7c84e",
+      "path": "assets/human-insight/images/ta-thuong-bo-qua-viec-98e7c84e.jpg",
+      "desc": "A stick figure hesitating by the door overlooking a brief 5-minute walk because it feels too short",
+      "tags": [
+        "reflective",
+        "character-male"
+      ],
+      "mood": "reflective",
+      "source": "cloudflare",
+      "reuse": false
+    },
+    {
+      "id": "cf-van-thuong-nam-minh-biet-80f443c7-3",
+      "path": "assets/human-insight/images/van-thuong-nam-minh-biet-80f443c7-3.jpg",
+      "desc": "A simple stick-figure sitting at a desk with a blank notepad, thinking peacefully about daily choices.",
+      "tags": [
+        "introspective"
+      ],
+      "mood": "introspective",
+      "source": "cloudflare",
+      "reuse": false
+    },
+    {
+      "id": "cf-chi-di-bo-10-phut-dd88aee4",
+      "path": "assets/human-insight/images/chi-di-bo-10-phut-dd88aee4.jpg",
+      "desc": "A stick-figure standing up from office chair and walking gently for 10 minutes to stretch.",
+      "tags": [
+        "calm",
+        "character-male"
+      ],
+      "mood": "calm",
+      "source": "cloudflare",
+      "reuse": false
+    },
+    {
+      "id": "cf-hoac-di-vong-quanh-khu-bff91479",
+      "path": "assets/human-insight/images/hoac-di-vong-quanh-khu-bff91479.jpg",
+      "desc": "A stick-figure strolling peacefully around small neighborhood houses and quiet trees.",
+      "tags": [
+        "peaceful"
+      ],
+      "mood": "peaceful",
+      "source": "cloudflare",
+      "reuse": false
+    },
+    {
+      "id": "cf-hoac-don-gian-xuong-xe-df5bc8bb",
+      "path": "assets/human-insight/images/hoac-don-gian-xuong-xe-df5bc8bb.jpg",
+      "desc": "A stick-figure stepping down from a bus stop and walking comfortably along a peaceful sidewalk.",
+      "tags": [
+        "calm"
+      ],
+      "mood": "calm",
+      "source": "cloudflare",
+      "reuse": false
+    },
+    {
+      "id": "cf-chung-loi-minh-quay-lai-a4ea8f47",
+      "path": "assets/human-insight/images/chung-loi-minh-quay-lai-a4ea8f47.jpg",
+      "desc": "A stick-figure smiling gently looking forward to tomorrow path, calm continuity.",
+      "tags": [
+        "hopeful"
+      ],
+      "mood": "hopeful",
+      "source": "cloudflare",
+      "reuse": false
+    },
+    {
+      "id": "cf-khoang-van-dong-ngan-van-6ca28f72",
+      "path": "assets/human-insight/images/khoang-van-dong-ngan-van-6ca28f72.jpg",
+      "desc": "A small calendar with simple repeat marks showing daily short walks, realistic and steady.",
+      "tags": [
+        "encouraging"
+      ],
+      "mood": "encouraging",
+      "source": "cloudflare",
+      "reuse": false
+    },
+    {
+      "id": "cf-neu-muon-thu-chon-thoi-6deb421b",
+      "path": "assets/human-insight/images/neu-muon-thu-chon-thoi-6deb421b.jpg",
+      "desc": "A simple clock next to walking shoes by the doorway, ready for a set walk time.",
+      "tags": [
+        "practical",
+        "character-male"
+      ],
+      "mood": "practical",
+      "source": "cloudflare",
+      "reuse": false
+    },
+    {
+      "id": "cf-dung-danh-gia-no-sau-62846618",
+      "path": "assets/human-insight/images/dung-danh-gia-no-sau-62846618.jpg",
+      "desc": "A small seedling plant growing quietly day by day beside walking shoes, calm progress over days.",
+      "tags": [
+        "patient"
+      ],
+      "mood": "patient",
+      "source": "cloudflare",
+      "reuse": false
+    },
+    {
+      "id": "cf-nep-dieu-nho-tao-nen-507d09a0-2",
+      "path": "assets/human-insight/images/nep-dieu-nho-tao-nen-507d09a0-2.jpg",
+      "desc": "A quiet serene open window with gentle warm breeze and empty quiet tea table, spacious breathing room.",
+      "tags": [
+        "peaceful"
+      ],
+      "mood": "peaceful",
+      "source": "cloudflare",
+      "reuse": false
+    },
+    {
+      "id": "cf-van-giai-phap-trong-dau-c8f6104c-3",
+      "path": "assets/human-insight/images/van-giai-phap-trong-dau-c8f6104c-3.jpg",
+      "desc": "A stick-figure looking at a heavy mountain of tasks compared to small energy cup.",
+      "tags": [
+        "overwhelmed"
+      ],
+      "mood": "overwhelmed",
+      "source": "cloudflare",
+      "reuse": false
+    },
+    {
+      "id": "cf-viec-nay-nho-muc-tao-f316a100-2",
+      "path": "assets/human-insight/images/viec-nay-nho-muc-tao-f316a100-2.jpg",
+      "desc": "A stick-figure looking down at small gentle footsteps on a plain dirt path, simple and unassuming.",
+      "tags": [
+        "reflective"
+      ],
+      "mood": "reflective",
+      "source": "cloudflare",
+      "reuse": false
+    },
+    {
+      "id": "cf-bua-com-con-nho-4b0413dd",
+      "path": "assets/human-insight/images/bua-com-con-nho-4b0413dd.jpg",
+      "desc": "The recurring family shares an ordinary simple dinner at home; people are eating and talking naturally, not posing for camera.",
+      "tags": [
+        "peaceful"
+      ],
+      "mood": "peaceful",
+      "source": "cloudflare",
+      "tier": "HAYDEP_CORE",
+      "castId": "family-young-01",
+      "storyRole": "establish",
+      "worldId": "home-family-01",
+      "reuse": false
+    },
+    {
+      "id": "cf-con-nho-bua-com-du-ca821e23",
+      "path": "assets/human-insight/images/con-nho-bua-com-du-ca821e23.jpg",
+      "desc": "The recurring family shares an ordinary simple dinner at home; people are eating and talking naturally, not posing for camera. Visual priority hint: một mâm cơm đơn giản có đủ người.. Convert this priority into a specific visible human action whenever possible; avoid posed or decorative imagery.",
+      "tags": [
+        "peaceful",
+        "character-female"
+      ],
+      "mood": "peaceful",
+      "source": "cloudflare",
+      "tier": "HAYDEP_CORE",
+      "castId": "family-young-01",
+      "storyRole": "establish",
+      "worldId": "home-family-01",
+      "reuse": false
+    },
+    {
+      "id": "cf-gia-tri-bua-com-nam-824a3350",
+      "path": "assets/human-insight/images/gia-tri-bua-com-nam-824a3350.jpg",
+      "desc": "The same recurring family performs one concrete dinner action: serving rice, passing a bowl, using chopsticks, listening to a child, or clearing the table.",
+      "tags": [
+        "reflective"
+      ],
+      "mood": "reflective",
+      "source": "cloudflare",
+      "tier": "HAYDEP_CORE",
+      "castId": "family-young-01",
+      "storyRole": "reflection",
+      "worldId": "home-family-01",
+      "reuse": false
+    },
+    {
+      "id": "cf-ma-viec-moi-nguoi-cung-a4693f88",
+      "path": "assets/human-insight/images/ma-viec-moi-nguoi-cung-a4693f88.jpg",
+      "desc": "A parent has just returned home and places a work bag or keys near the chair while the child brings a school notebook; the family reconnects around the same dining table. Visual priority hint: câu chuyện nhỏ sau một ngày đi học, đi làm.. Convert this priority into a specific visible human action whenever possible; avoid posed or decorative imagery.",
+      "tags": [
+        "reflective"
+      ],
+      "mood": "reflective",
+      "source": "cloudflare",
+      "tier": "HAYDEP_CORE",
+      "castId": "family-young-01",
+      "storyRole": "reflection",
+      "worldId": "home-family-01",
+      "reuse": false
+    },
+    {
+      "id": "cf-mam-com-don-gian-du-46f408b6",
+      "path": "assets/human-insight/images/mam-com-don-gian-du-46f408b6.jpg",
+      "desc": "A family remains the main subject while one hand deliberately places the phone away from the dining table on a side shelf; the phone is secondary, not the hero object. Visual priority hint: chiếc điện thoại được đặt sang một bên.. Convert this priority into a specific visible human action whenever possible; avoid posed or decorative imagery.",
+      "tags": [
+        "reflective"
+      ],
+      "mood": "reflective",
+      "source": "cloudflare",
+      "tier": "HAYDEP_CORE",
+      "castId": "family-young-01",
+      "storyRole": "context",
+      "worldId": "home-family-01",
+      "reuse": false
+    },
+    {
+      "id": "cf-chi-cau-chuyen-nho-sau-d66209d8",
+      "path": "assets/human-insight/images/chi-cau-chuyen-nho-sau-d66209d8.jpg",
+      "desc": "A parent has just returned home and places a work bag or keys near the chair while the child brings a school notebook; the family reconnects around the same dining table.",
+      "tags": [
+        "learning",
+        "studying",
+        "coding",
+        "reflective",
+        "character-female"
+      ],
+      "mood": "reflective",
+      "source": "cloudflare",
+      "tier": "HAYDEP_CORE",
+      "castId": "family-young-01",
+      "storyRole": "context",
+      "worldId": "home-family-01",
+      "reuse": false
+    },
+    {
+      "id": "cf-chi-tiet-nhu-vay-tao-f6d1ad6a",
+      "path": "assets/human-insight/images/chi-tiet-nhu-vay-tao-f6d1ad6a.jpg",
+      "desc": "The recurring family performs a specific small domestic action in the same home; no posed family portrait.",
+      "tags": [
+        "reflective",
+        "character-female"
+      ],
+      "mood": "reflective",
+      "source": "cloudflare",
+      "tier": "HAYDEP_CORE",
+      "castId": "family-young-01",
+      "storyRole": "context",
+      "worldId": "home-family-01",
+      "reuse": false
+    },
+    {
+      "id": "cf-chinh-vi-nho-chung-hoi-2588cc18",
+      "path": "assets/human-insight/images/chinh-vi-nho-chung-hoi-2588cc18.jpg",
+      "desc": "The recurring family performs a specific small domestic action in the same home; no posed family portrait. (Specific moment: \"Nhưng chính vì nhỏ, chúng có cơ hội xuất hiện\").",
+      "tags": [
+        "reflective"
+      ],
+      "mood": "reflective",
+      "source": "cloudflare",
+      "tier": "HAYDEP_CORE",
+      "castId": "family-young-01",
+      "storyRole": "reflection",
+      "worldId": "home-family-01",
+      "reuse": false
+    },
+    {
+      "id": "cf-tuan-nay-thu-giu-lai-cae064a5",
+      "path": "assets/human-insight/images/tuan-nay-thu-giu-lai-cae064a5.jpg",
+      "desc": "The same recurring family performs one concrete dinner action: serving rice, passing a bowl, using chopsticks, listening to a child, or clearing the table.",
+      "tags": [
+        "reflective"
+      ],
+      "mood": "reflective",
+      "source": "cloudflare",
+      "tier": "HAYDEP_CORE",
+      "castId": "family-young-01",
+      "storyRole": "context",
+      "worldId": "home-family-01",
+      "reuse": false
+    },
+    {
+      "id": "cf-moi-nguoi-ngoi-cung-nhau-f975d292",
+      "path": "assets/human-insight/images/moi-nguoi-ngoi-cung-nhau-f975d292.jpg",
+      "desc": "A family remains the main subject while one hand deliberately places the phone away from the dining table on a side shelf; the phone is secondary, not the hero object.",
+      "tags": [
+        "reflective"
+      ],
+      "mood": "reflective",
+      "source": "cloudflare",
+      "tier": "HAYDEP_CORE",
+      "castId": "family-young-01",
+      "storyRole": "context",
+      "worldId": "home-family-01",
+      "reuse": false
+    },
+    {
+      "id": "cf-den-lich-moi-nguoi-khac-d9a99956",
+      "path": "assets/human-insight/images/den-lich-moi-nguoi-khac-d9a99956.jpg",
+      "desc": "A quiet after-moment in the same family home with clear human traces from the shared activity; calm, lived-in, not showroom-clean.",
+      "tags": [
+        "contemplative"
+      ],
+      "mood": "contemplative",
+      "source": "cloudflare",
+      "tier": "HAYDEP_CORE",
+      "castId": "family-young-01",
+      "storyRole": "release",
+      "worldId": "home-family-01",
+      "reuse": false
+    },
+    {
+      "id": "cf-nha-bua-an-nao-du-3fbbe6e9",
+      "path": "assets/human-insight/images/nha-bua-an-nao-du-3fbbe6e9.jpg",
+      "desc": "The same recurring family performs one concrete dinner action: serving rice, passing a bowl, using chopsticks, listening to a child, or clearing the table.",
+      "tags": [
+        "peaceful"
+      ],
+      "mood": "peaceful",
+      "source": "cloudflare",
+      "tier": "HAYDEP_CORE",
+      "castId": "family-young-01",
+      "storyRole": "question",
+      "worldId": "home-family-01",
+      "reuse": false
+    },
+    {
+      "id": "cf-con-nho-bua-com-du-ca821e23-2",
+      "path": "assets/human-insight/images/con-nho-bua-com-du-ca821e23-2.jpg",
+      "desc": "The recurring family shares an ordinary simple dinner at home; people are eating and talking naturally, not posing for camera. Visual priority hint: một mâm cơm đơn giản có đủ người.. Convert this priority into a specific visible human action whenever possible; avoid posed or decorative imagery.",
+      "tags": [
+        "peaceful",
+        "character-female"
+      ],
+      "mood": "peaceful",
+      "source": "cloudflare",
+      "tier": "HAYDEP_CANDIDATE",
+      "castId": "family-young-01",
+      "storyRole": "establish",
+      "worldId": "home-family-01",
+      "reuse": false
+    },
+    {
+      "id": "cf-gia-tri-bua-com-nam-824a3350-2",
+      "path": "assets/human-insight/images/gia-tri-bua-com-nam-824a3350-2.jpg",
+      "desc": "The same recurring family performs one concrete dinner action: serving rice, passing a bowl, using chopsticks, listening to a child, or clearing the table.",
+      "tags": [
+        "reflective"
+      ],
+      "mood": "reflective",
+      "source": "cloudflare",
+      "tier": "HAYDEP_CANDIDATE",
+      "castId": "family-young-01",
+      "storyRole": "reflection",
+      "worldId": "home-family-01",
+      "reuse": false
+    },
+    {
+      "id": "cf-ma-viec-moi-nguoi-cung-a4693f88-2",
+      "path": "assets/human-insight/images/ma-viec-moi-nguoi-cung-a4693f88-2.jpg",
+      "desc": "A parent has just returned home and places a work bag or keys near the chair while the child brings a school notebook; the family reconnects around the same dining table. Visual priority hint: câu chuyện nhỏ sau một ngày đi học, đi làm.. Convert this priority into a specific visible human action whenever possible; avoid posed or decorative imagery.",
+      "tags": [
+        "reflective"
+      ],
+      "mood": "reflective",
+      "source": "cloudflare",
+      "tier": "HAYDEP_CANDIDATE",
+      "castId": "family-young-01",
+      "storyRole": "interaction",
+      "worldId": "home-family-01",
+      "reuse": false
+    },
+    {
+      "id": "cf-mam-com-don-gian-du-46f408b6-2",
+      "path": "assets/human-insight/images/mam-com-don-gian-du-46f408b6-2.jpg",
+      "desc": "A family remains the main subject while one hand deliberately places the phone away from the dining table on a side shelf; the phone is secondary, not the hero object. Visual priority hint: chiếc điện thoại được đặt sang một bên.. Convert this priority into a specific visible human action whenever possible; avoid posed or decorative imagery.",
+      "tags": [
+        "reflective"
+      ],
+      "mood": "reflective",
+      "source": "cloudflare",
+      "tier": "HAYDEP_CANDIDATE",
+      "castId": "family-young-01",
+      "storyRole": "detail-action",
+      "worldId": "home-family-01",
+      "reuse": false
+    },
+    {
+      "id": "cf-chi-cau-chuyen-nho-sau-d66209d8-2",
+      "path": "assets/human-insight/images/chi-cau-chuyen-nho-sau-d66209d8-2.jpg",
+      "desc": "A parent has just returned home and places a work bag or keys near the chair while the child brings a school notebook; the family reconnects around the same dining table.",
+      "tags": [
+        "learning",
+        "studying",
+        "coding",
+        "reflective",
+        "character-female"
+      ],
+      "mood": "reflective",
+      "source": "cloudflare",
+      "tier": "HAYDEP_CANDIDATE",
+      "castId": "family-young-01",
+      "storyRole": "action",
+      "worldId": "home-family-01",
+      "reuse": false
+    },
+    {
+      "id": "cf-chi-tiet-nhu-vay-tao-f6d1ad6a-2",
+      "path": "assets/human-insight/images/chi-tiet-nhu-vay-tao-f6d1ad6a-2.jpg",
+      "desc": "The recurring family performs a specific small domestic action in the same home; no posed family portrait.",
+      "tags": [
+        "reflective",
+        "character-female"
+      ],
+      "mood": "reflective",
+      "source": "cloudflare",
+      "tier": "HAYDEP_CANDIDATE",
+      "castId": "family-young-01",
+      "storyRole": "context",
+      "worldId": "home-family-01",
+      "reuse": false
+    },
+    {
+      "id": "cf-chinh-vi-nho-chung-hoi-2588cc18-2",
+      "path": "assets/human-insight/images/chinh-vi-nho-chung-hoi-2588cc18-2.jpg",
+      "desc": "The recurring family performs a specific small domestic action in the same home; no posed family portrait. (Specific moment: \"Nhưng chính vì nhỏ, chúng có cơ hội xuất hiện\").",
+      "tags": [
+        "reflective"
+      ],
+      "mood": "reflective",
+      "source": "cloudflare",
+      "tier": "HAYDEP_CANDIDATE",
+      "castId": "family-young-01",
+      "storyRole": "reflection",
+      "worldId": "home-family-01",
+      "reuse": false
+    },
+    {
+      "id": "cf-tuan-nay-thu-giu-lai-cae064a5-2",
+      "path": "assets/human-insight/images/tuan-nay-thu-giu-lai-cae064a5-2.jpg",
+      "desc": "The same recurring family performs one concrete dinner action: serving rice, passing a bowl, using chopsticks, listening to a child, or clearing the table.",
+      "tags": [
+        "reflective"
+      ],
+      "mood": "reflective",
+      "source": "cloudflare",
+      "tier": "HAYDEP_CANDIDATE",
+      "castId": "family-young-01",
+      "storyRole": "context",
+      "worldId": "home-family-01",
+      "reuse": false
+    },
+    {
+      "id": "cf-moi-nguoi-ngoi-cung-nhau-f975d292-2",
+      "path": "assets/human-insight/images/moi-nguoi-ngoi-cung-nhau-f975d292-2.jpg",
+      "desc": "A family remains the main subject while one hand deliberately places the phone away from the dining table on a side shelf; the phone is secondary, not the hero object.",
+      "tags": [
+        "reflective"
+      ],
+      "mood": "reflective",
+      "source": "cloudflare",
+      "tier": "HAYDEP_CANDIDATE",
+      "castId": "family-young-01",
+      "storyRole": "detail-action",
+      "worldId": "home-family-01",
+      "reuse": false
+    },
+    {
+      "id": "cf-den-lich-moi-nguoi-khac-d9a99956-2",
+      "path": "assets/human-insight/images/den-lich-moi-nguoi-khac-d9a99956-2.jpg",
+      "desc": "A quiet after-moment in the same family home with clear human traces from the shared activity; calm, lived-in, not showroom-clean.",
+      "tags": [
+        "contemplative"
+      ],
+      "mood": "contemplative",
+      "source": "cloudflare",
+      "tier": "HAYDEP_CANDIDATE",
+      "castId": "family-young-01",
+      "storyRole": "release",
+      "worldId": "home-family-01",
+      "reuse": false
+    },
+    {
+      "id": "cf-nha-bua-an-nao-du-3fbbe6e9-2",
+      "path": "assets/human-insight/images/nha-bua-an-nao-du-3fbbe6e9-2.jpg",
+      "desc": "The same recurring family performs one concrete dinner action: serving rice, passing a bowl, using chopsticks, listening to a child, or clearing the table.",
+      "tags": [
+        "peaceful"
+      ],
+      "mood": "peaceful",
+      "source": "cloudflare",
+      "tier": "HAYDEP_CANDIDATE",
+      "castId": "family-young-01",
+      "storyRole": "question",
+      "worldId": "home-family-01",
+      "reuse": false
     }
   ]
 }

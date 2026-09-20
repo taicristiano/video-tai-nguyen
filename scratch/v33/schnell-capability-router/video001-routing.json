@@ -1,0 +1,210 @@
+[
+  {
+    "beatId": "beat-01",
+    "storyRole": "establish",
+    "presentMembers": [
+      "father",
+      "mother",
+      "boy",
+      "girl"
+    ],
+    "assetStrategy": "library-or-generate",
+    "route": "SIMPLIFY_OR_CANONICAL",
+    "peopleCount": 4,
+    "hasChildMember": true,
+    "reason": "complex multi-person composition; Schnell failed exact role/count binding in S.2/S.3"
+  },
+  {
+    "beatId": "beat-02",
+    "storyRole": "reflection",
+    "presentMembers": [
+      "mother",
+      "boy"
+    ],
+    "assetStrategy": "library-or-generate",
+    "route": "SIMPLIFY_OR_CANONICAL",
+    "peopleCount": 2,
+    "hasChildMember": true,
+    "reason": "mixed adult-child role binding failed repeatedly in S.2/S.3"
+  },
+  {
+    "beatId": "beat-03",
+    "storyRole": "interaction",
+    "presentMembers": [
+      "mother",
+      "boy"
+    ],
+    "assetStrategy": "library-or-generate",
+    "route": "SIMPLIFY_OR_CANONICAL",
+    "peopleCount": 2,
+    "hasChildMember": true,
+    "reason": "mixed adult-child role binding failed repeatedly in S.2/S.3"
+  },
+  {
+    "beatId": "beat-04",
+    "storyRole": "interaction",
+    "presentMembers": [
+      "boy",
+      "father",
+      "mother"
+    ],
+    "assetStrategy": "library-or-generate",
+    "route": "SIMPLIFY_OR_CANONICAL",
+    "peopleCount": 3,
+    "hasChildMember": true,
+    "reason": "complex multi-person composition; Schnell failed exact role/count binding in S.2/S.3"
+  },
+  {
+    "beatId": "beat-05",
+    "storyRole": "detail-action",
+    "presentMembers": [
+      "mother",
+      "boy"
+    ],
+    "assetStrategy": "library-or-generate",
+    "route": "SIMPLIFY_OR_CANONICAL",
+    "peopleCount": 2,
+    "hasChildMember": true,
+    "reason": "mixed adult-child role binding failed repeatedly in S.2/S.3"
+  },
+  {
+    "beatId": "beat-06",
+    "storyRole": "detail-action",
+    "presentMembers": [
+      "father"
+    ],
+    "assetStrategy": "library-or-generate",
+    "route": "SCHNELL_SAFE",
+    "peopleCount": 1,
+    "hasChildMember": false,
+    "reason": "single-person composition"
+  },
+  {
+    "beatId": "beat-07",
+    "storyRole": "action",
+    "presentMembers": [
+      "father",
+      "boy"
+    ],
+    "assetStrategy": "library-or-generate",
+    "route": "SIMPLIFY_OR_CANONICAL",
+    "peopleCount": 2,
+    "hasChildMember": true,
+    "reason": "mixed adult-child role binding failed repeatedly in S.2/S.3"
+  },
+  {
+    "beatId": "beat-08",
+    "storyRole": "context",
+    "presentMembers": [
+      "mother",
+      "boy"
+    ],
+    "assetStrategy": "library-or-generate",
+    "route": "SIMPLIFY_OR_CANONICAL",
+    "peopleCount": 2,
+    "hasChildMember": true,
+    "reason": "mixed adult-child role binding failed repeatedly in S.2/S.3"
+  },
+  {
+    "beatId": "beat-09",
+    "storyRole": "reflection",
+    "presentMembers": [
+      "mother",
+      "boy"
+    ],
+    "assetStrategy": "library-or-generate",
+    "route": "SIMPLIFY_OR_CANONICAL",
+    "peopleCount": 2,
+    "hasChildMember": true,
+    "reason": "mixed adult-child role binding failed repeatedly in S.2/S.3"
+  },
+  {
+    "beatId": "beat-10",
+    "storyRole": "context",
+    "presentMembers": [
+      "mother",
+      "boy"
+    ],
+    "assetStrategy": "library-or-generate",
+    "route": "SIMPLIFY_OR_CANONICAL",
+    "peopleCount": 2,
+    "hasChildMember": true,
+    "reason": "mixed adult-child role binding failed repeatedly in S.2/S.3"
+  },
+  {
+    "beatId": "beat-11",
+    "storyRole": "interaction",
+    "presentMembers": [
+      "mother",
+      "boy"
+    ],
+    "assetStrategy": "library-or-generate",
+    "route": "SIMPLIFY_OR_CANONICAL",
+    "peopleCount": 2,
+    "hasChildMember": true,
+    "reason": "mixed adult-child role binding failed repeatedly in S.2/S.3"
+  },
+  {
+    "beatId": "beat-12",
+    "storyRole": "detail-action",
+    "presentMembers": [
+      "father"
+    ],
+    "assetStrategy": "library-or-generate",
+    "route": "SCHNELL_SAFE",
+    "peopleCount": 1,
+    "hasChildMember": false,
+    "reason": "single-person composition"
+  },
+  {
+    "beatId": "beat-13",
+    "storyRole": "memory",
+    "presentMembers": [
+      "mother",
+      "boy"
+    ],
+    "assetStrategy": "reuse-canonical",
+    "route": "REUSE_CANONICAL",
+    "peopleCount": 2,
+    "hasChildMember": true,
+    "reason": "existing canonical strategy"
+  },
+  {
+    "beatId": "beat-14",
+    "storyRole": "memory",
+    "presentMembers": [
+      "mother",
+      "boy"
+    ],
+    "assetStrategy": "reuse-canonical",
+    "route": "REUSE_CANONICAL",
+    "peopleCount": 2,
+    "hasChildMember": true,
+    "reason": "existing canonical strategy"
+  },
+  {
+    "beatId": "beat-15",
+    "storyRole": "release",
+    "presentMembers": [],
+    "assetStrategy": "library-or-generate",
+    "route": "SCHNELL_SAFE",
+    "peopleCount": 0,
+    "hasChildMember": false,
+    "reason": "no people / object-environment composition"
+  },
+  {
+    "beatId": "beat-16",
+    "storyRole": "question",
+    "presentMembers": [
+      "father",
+      "mother",
+      "boy",
+      "girl"
+    ],
+    "assetStrategy": "reuse-canonical",
+    "route": "REUSE_CANONICAL",
+    "peopleCount": 4,
+    "hasChildMember": true,
+    "reason": "existing canonical strategy"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "shotCount": 19,
+  "durationFrames": 1572,
+  "durationSeconds": 52.4,
+  "durationMinutes": 0.873,
+  "changesPerMinute": 21.76,
+  "uniqueScales": 6,
+  "uniqueSilhouettes": 9,
+  "maxHoldSeconds": 3.93,
+  "medianHoldSeconds": 2.97,
+  "scaleDistribution": {
+    "WIDE": 2,
+    "MEDIUM": 8,
+    "CLOSE": 1,
+    "DETAIL": 3,
+    "SYMBOLIC": 3,
+    "RELEASE": 2
+  },
+  "silhouetteDistribution": {
+    "room-wide": 2,
+    "single-left": 3,
+    "face-close": 1,
+    "single-right": 3,
+    "hands-detail": 1,
+    "tabletop-topdown": 1,
+    "object-detail": 3,
+    "single-centered": 3,
+    "empty-space": 2
+  },
+  "reuseCount": 0,
+  "newImageCount": 18,
+  "componentCount": 1
+}

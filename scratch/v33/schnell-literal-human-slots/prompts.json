@@ -1,0 +1,93 @@
+{
+  "beat-01": {
+    "role": "establish",
+    "expectedHumanCount": 4,
+    "slots": [
+      {
+        "id": "slot1",
+        "desc": "Vietnamese adult man, age 35–40, adult male build, short black hair, sage shirt",
+        "position": "left"
+      },
+      {
+        "id": "slot2",
+        "desc": "Vietnamese adult woman, age 32–38, adult female build, tied black hair, warm cardigan",
+        "position": "right"
+      },
+      {
+        "id": "slot3",
+        "desc": "Vietnamese boy, age 8–10, child body, 2/3 adult seated height, short black hair, sage top",
+        "position": "front-left"
+      },
+      {
+        "id": "slot4",
+        "desc": "Vietnamese girl, age 6–8, child body, smaller than adults, dark hair, cream clothing",
+        "position": "front-right"
+      }
+    ],
+    "charCount": 2032,
+    "voiceClause": "khi còn nhỏ, một bữa cơm đủ người thường chỉ là chuyện rất bình thường.",
+    "prompt": "MEDIUM LOCK:\n2D EDITORIAL DRAWING ONLY.\nHand-drawn magazine illustration on warm paper.\nVisible ink contour lines around faces, bodies, hands, furniture and objects.\nOpaque matte color shapes with restrained soft shading.\nClearly drawn and illustrated, never camera-rendered.\nMature contemporary editorial illustration for adults.\n\nRENDERING RECIPE:\nCharcoal / sepia contour drawing.\nMatte gouache-like color fills.\nOne restrained soft shadow layer.\nSubtle paper grain visible across the image.\nSimplified but believable adult facial features.\nNatural Vietnamese / East Asian proportions.\nEdges remain visibly illustrated instead of photographic.\nBackground details are simplified into clean drawn shapes.\nNo lens effects, no bokeh, no cinematic camera realism.\n\nPALETTE:\nWarm ivory and cream background.\nMuted sage clothing or accents.\nWarm medium wood.\nCharcoal / sepia linework.\nSmall restrained terracotta or amber accents.\nLow saturation.\nNo glossy surfaces.\n\nHUMAN LAYOUT:\nVISIBLE HUMAN COUNT = 4.\nSLOT 1 (left): Vietnamese adult man, age 35–40, adult male build, short black hair, sage shirt.\nSLOT 2 (right): Vietnamese adult woman, age 32–38, adult female build, tied black hair, warm cardigan.\nSLOT 3 (front-left): Vietnamese boy, age 8–10, child body, 2/3 adult seated height, short black hair, sage top.\nSLOT 4 (front-right): Vietnamese girl, age 6–8, child body, smaller than adults, dark hair, cream clothing.\nThe entire illustration contains these four human figures only, all clearly visible as separate coherent bodies.\n\nCAST CONSISTENCY:\nKeep clothing colors and age appearance consistent with slots above.\n\nPRIMARY ACTION:\nFour family members eat dinner at the wooden table.\nMEANING:\nOrdinary simple dinner.\n\nWORLD:\nVietnamese dining room. Wood table, ivory walls, pendant lamp.\n\nFRAMING:\nWide drawn establishing composition.\n\nHARD EXCLUSIONS:\nNo words, signs, labels, logos, signatures or watermarks.\nNo anime, chibi, children's-book, corporate vector or 3D rendering.\nNo glossy skin or decorative wall lettering."
+  },
+  "beat-02": {
+    "role": "reflection",
+    "expectedHumanCount": 2,
+    "slots": [
+      {
+        "id": "slot1",
+        "desc": "Vietnamese adult woman, age 32–38, adult female build, tied black hair, warm cardigan",
+        "position": "left"
+      },
+      {
+        "id": "slot2",
+        "desc": "Vietnamese boy, age 8–10, child body, 2/3 adult seated height, short black hair, sage top",
+        "position": "right"
+      }
+    ],
+    "charCount": 1819,
+    "voiceClause": "Giá trị của bữa cơm không nằm ở món ăn cầu kỳ",
+    "prompt": "MEDIUM LOCK:\n2D EDITORIAL DRAWING ONLY.\nHand-drawn magazine illustration on warm paper.\nVisible ink contour lines around faces, bodies, hands, furniture and objects.\nOpaque matte color shapes with restrained soft shading.\nClearly drawn and illustrated, never camera-rendered.\nMature contemporary editorial illustration for adults.\n\nRENDERING RECIPE:\nCharcoal / sepia contour drawing.\nMatte gouache-like color fills.\nOne restrained soft shadow layer.\nSubtle paper grain visible across the image.\nSimplified but believable adult facial features.\nNatural Vietnamese / East Asian proportions.\nEdges remain visibly illustrated instead of photographic.\nBackground details are simplified into clean drawn shapes.\nNo lens effects, no bokeh, no cinematic camera realism.\n\nPALETTE:\nWarm ivory and cream background.\nMuted sage clothing or accents.\nWarm medium wood.\nCharcoal / sepia linework.\nSmall restrained terracotta or amber accents.\nLow saturation.\nNo glossy surfaces.\n\nHUMAN LAYOUT:\nVISIBLE HUMAN COUNT = 2.\nSLOT 1 (left): Vietnamese adult woman, age 32–38, adult female build, tied black hair, warm cardigan.\nSLOT 2 (right): Vietnamese boy, age 8–10, child body, 2/3 adult seated height, short black hair, sage top.\nThe entire illustration contains these two human figures only, both clearly visible as separate coherent bodies.\n\nCAST CONSISTENCY:\nKeep clothing colors and age appearance consistent with slots above.\n\nPRIMARY ACTION:\nMother serves rice into child’s bowl at the table.\nMEANING:\nSimple dinner action.\n\nWORLD:\nVietnamese dining room. Wood table, ivory walls, pendant lamp.\n\nFRAMING:\nMedium drawn reflection composition.\n\nHARD EXCLUSIONS:\nNo words, signs, labels, logos, signatures or watermarks.\nNo anime, chibi, children's-book, corporate vector or 3D rendering.\nNo glossy skin or decorative wall lettering."
+  },
+  "beat-04": {
+    "role": "interaction",
+    "expectedHumanCount": 3,
+    "slots": [
+      {
+        "id": "slot1",
+        "desc": "Vietnamese adult man, age 35–40, adult male build, short black hair, muted sage shirt",
+        "position": "left"
+      },
+      {
+        "id": "slot2",
+        "desc": "Vietnamese boy, age 8–10, child body, smaller than adults, short black hair, sage top",
+        "position": "center"
+      },
+      {
+        "id": "slot3",
+        "desc": "Vietnamese adult woman, age 32–38, adult female build, tied black hair, warm cardigan",
+        "position": "right"
+      }
+    ],
+    "charCount": 2000,
+    "voiceClause": "nghe vài câu chuyện vụn và nhìn thấy nhau sau một ngày dài.",
+    "prompt": "MEDIUM LOCK:\n2D EDITORIAL DRAWING ONLY.\nHand-drawn magazine illustration on warm paper.\nVisible ink contour lines around faces, bodies, hands, furniture and objects.\nOpaque matte color shapes with restrained soft shading.\nClearly drawn and illustrated, never camera-rendered.\nMature contemporary editorial illustration for adults.\n\nRENDERING RECIPE:\nCharcoal / sepia contour drawing.\nMatte gouache-like color fills.\nOne restrained soft shadow layer.\nSubtle paper grain visible across the image.\nSimplified but believable adult facial features.\nNatural Vietnamese / East Asian proportions.\nEdges remain visibly illustrated instead of photographic.\nBackground details are simplified into clean drawn shapes.\nNo lens effects, no bokeh, no cinematic camera realism.\n\nPALETTE:\nWarm ivory and cream background.\nMuted sage clothing or accents.\nWarm medium wood.\nCharcoal / sepia linework.\nSmall restrained terracotta or amber accents.\nLow saturation.\nNo glossy surfaces.\n\nHUMAN LAYOUT:\nVISIBLE HUMAN COUNT = 3.\nSLOT 1 (left): Vietnamese adult man, age 35–40, adult male build, short black hair, muted sage shirt.\nSLOT 2 (center): Vietnamese boy, age 8–10, child body, smaller than adults, short black hair, sage top.\nSLOT 3 (right): Vietnamese adult woman, age 32–38, adult female build, tied black hair, warm cardigan.\nFigures arranged left-center-right with child visibly between adults.\nThe entire illustration contains these three human figures only, all clearly visible as separate coherent bodies.\n\nCAST CONSISTENCY:\nKeep clothing colors and age appearance consistent with slots above.\n\nPRIMARY ACTION:\nBoy speaks with hand gesture while parents listen warmly.\nMEANING:\nWarm reactive exchange.\n\nWORLD:\nVietnamese dining room. Wood table, ivory walls, pendant lamp.\n\nFRAMING:\nMedium drawn interaction composition.\n\nHARD EXCLUSIONS:\nNo words, signs, labels, logos, signatures or watermarks.\nNo anime, chibi, children's-book, corporate vector or 3D rendering.\nNo glossy skin or decorative wall lettering."
+  },
+  "beat-09": {
+    "role": "reflection",
+    "expectedHumanCount": 2,
+    "slots": [
+      {
+        "id": "slot1",
+        "desc": "Vietnamese adult woman, age 32–38, adult female build, tied black hair, warm cardigan",
+        "position": "left"
+      },
+      {
+        "id": "slot2",
+        "desc": "Vietnamese boy, age 8–10, child body, 2/3 adult seated height, short black hair, sage top",
+        "position": "right"
+      }
+    ],
+    "charCount": 1834,
+    "voiceClause": "Nhưng chính vì nhỏ, chúng có cơ hội xuất hiện trong những ngày thật.",
+    "prompt": "MEDIUM LOCK:\n2D EDITORIAL DRAWING ONLY.\nHand-drawn magazine illustration on warm paper.\nVisible ink contour lines around faces, bodies, hands, furniture and objects.\nOpaque matte color shapes with restrained soft shading.\nClearly drawn and illustrated, never camera-rendered.\nMature contemporary editorial illustration for adults.\n\nRENDERING RECIPE:\nCharcoal / sepia contour drawing.\nMatte gouache-like color fills.\nOne restrained soft shadow layer.\nSubtle paper grain visible across the image.\nSimplified but believable adult facial features.\nNatural Vietnamese / East Asian proportions.\nEdges remain visibly illustrated instead of photographic.\nBackground details are simplified into clean drawn shapes.\nNo lens effects, no bokeh, no cinematic camera realism.\n\nPALETTE:\nWarm ivory and cream background.\nMuted sage clothing or accents.\nWarm medium wood.\nCharcoal / sepia linework.\nSmall restrained terracotta or amber accents.\nLow saturation.\nNo glossy surfaces.\n\nHUMAN LAYOUT:\nVISIBLE HUMAN COUNT = 2.\nSLOT 1 (left): Vietnamese adult woman, age 32–38, adult female build, tied black hair, warm cardigan.\nSLOT 2 (right): Vietnamese boy, age 8–10, child body, 2/3 adult seated height, short black hair, sage top.\nThe entire illustration contains these two human figures only, both clearly visible as separate coherent bodies.\n\nCAST CONSISTENCY:\nKeep clothing colors and age appearance consistent with slots above.\n\nPRIMARY ACTION:\nMother and child perform a calm dinner action together.\nMEANING:\nSmall domestic everyday moment.\n\nWORLD:\nVietnamese dining room. Wood table, ivory walls, pendant lamp.\n\nFRAMING:\nMedium drawn reflection composition.\n\nHARD EXCLUSIONS:\nNo words, signs, labels, logos, signatures or watermarks.\nNo anime, chibi, children's-book, corporate vector or 3D rendering.\nNo glossy skin or decorative wall lettering."
+  }
+}

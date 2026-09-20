@@ -1,0 +1,922 @@
+<USER_REQUEST>
+# GEMINI 3.8 FLASH HIGH
+# HAY & ĐẸP. — V3.3B-S.5
+# SINGLE GOAL: FULFILL SIMPLIFY_OR_CANONICAL BEATS OFFLINE
+# NO IMAGE GENERATION
+
+## CONTEXT
+
+V3.3B-S.4 capability routing is complete.
+
+Current routing evidence:
+
+```text
+REUSE_CANONICAL
+SCHNELL_SAFE
+SCHNELL_PAIR_UNPROVEN
+SIMPLIFY_OR_CANONICAL
+```
+
+Video 001:
+- 16 beats total
+- 3 REUSE_CANONICAL
+- 3 SCHNELL_SAFE
+- 10 SIMPLIFY_OR_CANONICAL
+
+Video 028:
+- 14 beats total
+- 1 REUSE_CANONICAL
+- 1 SCHNELL_SAFE
+- 12 SIMPLIFY_OR_CANONICAL
+
+Video 007 and 013 are already fully safe/reusable.
+Video 005 is mostly SCHNELL_PAIR_UNPROVEN and is NOT part of this task.
+
+This task has ONE GOAL ONLY:
+
+> Convert each `SIMPLIFY_OR_CANONICAL` family beat into a deterministic fulfillment plan that either:
+> 1. requires/reuses a curated canonical group asset, or
+> 2. simplifies the visual into a Schnell-safe single-person or zero-person/object shot,
+> while preserving the narration meaning.
+
+Do NOT generate images.
+Do NOT modify production pipeline.
+Do NOT solve two-adult dialogue.
+Do NOT render video.
+
+---
+
+# 1. HARD SCOPE LOCK
+
+Allowed new file:
+
+```text
+scripts/test-hay-dep-schnell-fulfillment-planner.mjs
+```
+
+Optional focused tests:
+
+```text
+src/schnell-fulfillment-planner.test.ts
+```
+
+Allowed outputs:
+
+```text
+scratch/v33/schnell-fulfillment-planner/
+```
+
+You may READ:
+- current Story Planner;
+- current capability router;
+- cast registry;
+- current Video 001 and Video 028 plans.
+
+Do NOT modify:
+
+```text
+scripts/human-insight-image.mjs
+scripts/batch-engine.mjs
+scripts/human-insight-story-planner.mjs
+scripts/test-hay-dep-schnell-capability-router.mjs
+```
+
+Do NOT modify:
+- cast registry;
+- world presets;
+- subtitle;
+- SFX;
+- Remotion;
+- production manifests/assets.
+
+No Cloudflare calls.
+No MP4.
+
+---
+
+# 2. FULFILLMENT OUTPUT CONTRACT
+
+Create a pure exported helper:
+
+```js
+planSchnellFulfillment({
+  beat,
+  route,
+  cast,
+  plan,
+})
+```
+
+For beats that are NOT `SIMPLIFY_OR_CANONICAL`,
+return them unchanged with:
+
+```js
+{
+  sourceRoute: route,
+  fulfillment: 'UNCHANGED',
+}
+```
+
+For `SIMPLIFY_OR_CANONICAL`,
+return exactly one of:
+
+```text
+CANONICAL_REQUIRED
+REUSE_CANONICAL
+SCHNELL_SINGLE
+SCHNELL_OBJECT
+```
+
+Return this shape:
+
+```js
+{
+  sourceRoute: 'SIMPLIFY_OR_CANONICAL',
+  fulfillment: 'CANONICAL_REQUIRED' | 'REUSE_CANONICAL' | 'SCHNELL_SINGLE' | 'SCHNELL_OBJECT',
+
+  targetPeopleCount: 0 | 1,
+  selectedMember: string | null,
+
+  simplifiedVisualIntent: string,
+  simplifiedVisualAction: string,
+
+  canonicalSourceRole: string | null,
+  reason: string,
+
+  semanticAnchorsPreserved: string[],
+}
+```
+
+No side effects.
+
+---
+
+# 3. CORE PRINCIPLE
+
+Do NOT try to preserve every literal person in the original visual.
+
+Preserve the meaning of the narration using a simpler visual.
+
+Good:
+
+```text
+Narration:
+"nghe vài câu chuyện vụn và nhìn thấy nhau sau một ngày dài"
+
+Original unsafe visual:
+boy + father + mother listening together
+
+Safe simplification:
+single child speaking with a small hand gesture
+OR
+single parent listening with a warm attentive expression
+```
+
+Good:
+
+```text
+Narration:
+"sau một ngày đi học, đi làm"
+
+Unsafe:
+father + boy together
+
+Safe object shot:
+school bag + work bag placed near the doorway
+```
+
+Bad:
+
+```text
+remove the key semantic idea entirely
+```
+
+---
+
+# 4. CANONICAL-ASSET RULES
+
+## Rule A — Group-establish beat
+
+If all are true:
+
+```text
+storyRole === 'establish'
+needsRecurringCast === true
+original peopleCount >= 3
+```
+
+return:
+
+```text
+CANONICAL_REQUIRED
+```
+
+Reason:
+
+```text
+opening group identity must be established once using a curated/stronger-model canonical asset
+```
+
+Do NOT simplify the opening family establish to a single person.
+
+This canonical asset becomes the recurring group master.
+
+---
+
+## Rule B — Explicit whole-group meaning
+
+If narration / visual intent clearly depends on the whole family/group being together, such as:
+
+```text
+đủ người
+mọi người cùng có mặt
+mọi người ngồi cùng nhau
+cả nhà
+cả gia đình
+```
+
+prefer:
+
+```text
+REUSE_CANONICAL
+```
+
+provided a group canonical source exists or is planned from the establish beat.
+
+Do NOT dynamically generate a new 3–4 person group via Schnell.
+
+---
+
+## Rule C — Existing assetStrategy reuse remains authoritative
+
+If beat already has:
+
+```text
+assetStrategy === 'reuse-canonical'
+```
+
+do not transform it here.
+
+It remains:
+
+```text
+UNCHANGED
+```
+
+This task only fulfills beats routed `SIMPLIFY_OR_CANONICAL`.
+
+---
+
+# 5. SINGLE-PERSON SIMPLIFICATION RULES
+
+Use:
+
+```text
+SCHNELL_SINGLE
+```
+
+only when the narration can still be represented by one focal human.
+
+Choose the focal person deterministically.
+
+Priority:
+
+## A. Explicit speaking / telling
+
+If clause contains:
+
+```text
+kể
+nói
+chia sẻ
+câu chuyện
+```
+
+prefer the current child member if present:
+
+```text
+boy
+girl
+```
+
+Otherwise choose the first requested member.
+
+Example:
+
+```text
+boy speaks with a small hand gesture
+```
+
+---
+
+## B. Explicit listening / seeing / reacting
+
+If clause contains:
+
+```text
+nghe
+lắng nghe
+nhìn
+phản ứng
+```
+
+prefer an adult listener if present:
+
+```text
+mother
+father
+listener
+```
+
+Use only one.
+
+Example:
+
+```text
+mother pauses and listens attentively, eyes turned toward someone outside frame
+```
+
+Important:
+the other person may be implied OFF-FRAME.
+Do not ask Schnell to draw them.
+
+---
+
+## C. Reflection / emotional everyday moment
+
+For abstract/reflection beats with no whole-group anchor,
+prefer a single adult already present in the original beat.
+
+Example:
+
+```text
+mother quietly straightens a bowl after dinner
+```
+
+Do not invent a new person.
+
+---
+
+# 6. ZERO-PERSON / OBJECT SIMPLIFICATION RULES
+
+Use:
+
+```text
+SCHNELL_OBJECT
+```
+
+when the idea can be carried by an object/environment trace more reliably than a person.
+
+Preferred cases:
+
+## A. School/work context
+
+For:
+
+```text
+đi học
+đi làm
+sau một ngày đi học, đi làm
+```
+
+use:
+
+```text
+school bag and work bag resting near the doorway / dining chair
+```
+
+No people.
+
+---
+
+## B. Simple-meal / ordinary-life detail
+
+For narration about:
+
+```text
+món ăn không cầu kỳ
+mâm cơm đơn giản
+chi tiết nhỏ
+đời sống thật
+```
+
+if the sentence does NOT explicitly require all people together,
+use:
+
+```text
+simple bowls of rice, chopsticks, soup bowl, used chairs, warm dining table
+```
+
+No people.
+
+---
+
+## C. Phone-away detail
+
+For:
+
+```text
+điện thoại được đặt sang một bên
+điện thoại không nằm giữa bàn
+```
+
+prefer:
+
+```text
+phone face-down on a small side shelf away from the dining table
+```
+
+No hand/person required.
+
+This is safer than generating fingers/hands.
+
+---
+
+## D. Empty-after-activity trace
+
+For release/reflection where human presence is not semantically necessary:
+
+```text
+two used bowls, chairs slightly pulled back, warm pendant lamp
+```
+
+No people.
+
+---
+
+# 7. DO NOT CREATE NEW NARRATION
+
+The canonical authored voice text must remain untouched.
+
+Do NOT:
+- rewrite subtitle text;
+- rewrite voiceover;
+- add narration;
+- delete narration.
+
+Only change visual fulfillment metadata.
+
+---
+
+# 8. SEMANTIC ANCHOR EXTRACTION
+
+Create a small deterministic helper:
+
+```js
+extractSemanticAnchors(beat)
+```
+
+Use only a compact set of anchors relevant to this task:
+
+```text
+GROUP_PRESENCE
+LISTENING
+SPEAKING
+SIMPLE_MEAL
+PHONE_AWAY
+SCHOOL_WORK
+EVERYDAY_DETAIL
+MEMORY
+QUESTION
+```
+
+Do not build a large NLP engine.
+
+Each transformed beat must preserve at least one primary anchor.
+
+For whole-group beats routed to canonical reuse:
+
+```text
+GROUP_PRESENCE
+```
+
+must be preserved.
+
+---
+
+# 9. VIDEO 001 REQUIRED DRY RUN
+
+Build the CURRENT Video 001 plan and current S.4 routing.
+
+For every beat output:
+
+```text
+beatId
+storyRole
+sourceRoute
+fulfillment
+targetPeopleCount
+selectedMember
+semanticAnchorsPreserved
+simplifiedVisualAction
+reason
+```
+
+Save:
+
+```text
+scratch/v33/schnell-fulfillment-planner/video001-fulfillment.json
+video001-fulfillment.md
+```
+
+### Required intent examples
+
+The exact wording may differ, but these structural outcomes are expected:
+
+```text
+beat-01
+SIMPLIFY_OR_CANONICAL
+→ CANONICAL_REQUIRED
+```
+
+because it establishes the recurring 4-person family.
+
+```text
+beat-03 or any clause meaning "mọi người cùng có mặt"
+→ REUSE_CANONICAL
+```
+
+```text
+beat-04 conversation/listening
+→ SCHNELL_SINGLE
+```
+
+with exactly one requested family member,
+not 3 people.
+
+```text
+beat-06 phone-away
+```
+
+is already SCHNELL_SAFE and remains unchanged.
+
+```text
+beat-07 school/work context
+→ SCHNELL_OBJECT
+```
+
+with bag/doorway cues, no people.
+
+```text
+beat-10 / beat-11 if meaning requires everyone sitting together
+→ REUSE_CANONICAL
+```
+
+Do not force a single-person rewrite if it destroys GROUP_PRESENCE.
+
+---
+
+# 10. VIDEO 028 DRY RUN
+
+Run the same family fulfillment planner on Video 028.
+
+Save:
+
+```text
+video028-fulfillment.json
+video028-fulfillment.md
+```
+
+Do not hardcode Video 028 sentences.
+
+Use generic rules.
+
+Acceptance:
+all `SIMPLIFY_OR_CANONICAL` beats must end as:
+
+```text
+CANONICAL_REQUIRED
+REUSE_CANONICAL
+SCHNELL_SINGLE
+SCHNELL_OBJECT
+```
+
+No unresolved family beat remains.
+
+---
+
+# 11. OTHER VIDEOS
+
+For:
+
+```text
+007
+013
+```
+
+no transformation is expected because they are already safe/reusable.
+
+For:
+
+```text
+005
+```
+
+do NOT transform `SCHNELL_PAIR_UNPROVEN`.
+
+Leave it explicitly unresolved for a separate two-adult validation task.
+
+---
+
+# 12. REQUIRED UNIT TESTS
+
+Add focused deterministic tests.
+
+## Test 1 — complex establish becomes canonical required
+
+Input:
+family establish with 4 members.
+
+Expected:
+
+```text
+CANONICAL_REQUIRED
+```
+
+---
+
+## Test 2 — whole-group presence reuses canonical
+
+Text contains:
+
+```text
+mọi người cùng có mặt
+```
+
+Expected:
+
+```text
+REUSE_CANONICAL
+```
+
+---
+
+## Test 3 — listening interaction becomes single-person listener
+
+Original members:
+
+```text
+mother,boy
+```
+
+Text contains:
+
+```text
+nghe
+```
+
+Expected:
+
+```text
+SCHNELL_SINGLE
+targetPeopleCount = 1
+selectedMember = mother
+```
+
+or the deterministic adult listener defined by the helper.
+
+---
+
+## Test 4 — child storytelling becomes single child
+
+Original members include boy.
+
+Text contains:
+
+```text
+kể chuyện
+```
+
+Expected:
+
+```text
+SCHNELL_SINGLE
+selectedMember = boy
+```
+
+---
+
+## Test 5 — school/work becomes object
+
+Expected:
+
+```text
+SCHNELL_OBJECT
+targetPeopleCount = 0
+```
+
+Visual action references school/work bags or comparable traces.
+
+---
+
+## Test 6 — phone-away becomes object
+
+Expected:
+
+```text
+SCHNELL_OBJECT
+targetPeopleCount = 0
+```
+
+No hand/person required.
+
+---
+
+## Test 7 — explicit group togetherness is NOT simplified to single person
+
+Text:
+
+```text
+mọi người ngồi cùng nhau
+```
+
+Expected:
+
+```text
+REUSE_CANONICAL
+```
+
+---
+
+## Test 8 — canonical strategy beat remains unchanged
+
+Existing:
+
+```text
+assetStrategy = reuse-canonical
+```
+
+Expected:
+
+```text
+UNCHANGED
+```
+
+---
+
+## Test 9 — non-SIMPLIFY route remains unchanged
+
+`SCHNELL_SAFE` input:
+
+```text
+UNCHANGED
+```
+
+---
+
+# 13. VALIDATION RULES
+
+For every transformed beat:
+
+## If `SCHNELL_SINGLE`
+
+Require:
+
+```text
+targetPeopleCount === 1
+selectedMember !== null
+selectedMember exists in cast
+```
+
+`presentMembers` is NOT mutated in the original beat;
+this is only fulfillment metadata.
+
+---
+
+## If `SCHNELL_OBJECT`
+
+Require:
+
+```text
+targetPeopleCount === 0
+selectedMember === null
+```
+
+and visual action must not mention visible people.
+
+---
+
+## If `REUSE_CANONICAL`
+
+Require:
+
+```text
+canonicalSourceRole !== null
+```
+
+Normally:
+
+```text
+establish
+```
+
+---
+
+## If `CANONICAL_REQUIRED`
+
+Require:
+- recurring cast;
+- group composition;
+- no dynamic Schnell generation.
+
+---
+
+# 14. OUTPUT SUMMARY
+
+Create:
+
+```text
+scratch/v33/schnell-fulfillment-planner/summary.md
+```
+
+For Video 001 and 028 report counts:
+
+```text
+CANONICAL_REQUIRED
+REUSE_CANONICAL
+SCHNELL_SINGLE
+SCHNELL_OBJECT
+UNCHANGED
+```
+
+Also calculate:
+
+```text
+How many formerly unsafe family beats become Schnell-safe via simplification?
+How many require canonical group asset?
+```
+
+Do not generate any image.
+
+---
+
+# 15. ACCEPTANCE CRITERIA
+
+PASS only if:
+
+1. every Video 001 `SIMPLIFY_OR_CANONICAL` beat gets a deterministic fulfillment;
+2. every Video 028 `SIMPLIFY_OR_CANONICAL` beat gets a deterministic fulfillment;
+3. group-establish stays canonical-required;
+4. explicit group-togetherness uses canonical reuse;
+5. listening/speaking can become one-person shots;
+6. school/work and phone-away can become object shots;
+7. voice/subtitle text is untouched;
+8. Video 005 pair-unproven beats remain untouched;
+9. no image generation;
+10. no production code modified.
+
+---
+
+# 16. FINAL REPORT
+
+Return:
+
+## A. Scope Confirmation
+
+## B. Fulfillment Rules
+
+## C. Unit Tests
+
+## D. Video 001 Fulfillment Table
+
+## E. Video 028 Fulfillment Summary
+
+## F. Unchanged Videos
+State:
+- 007/013 unchanged;
+- 005 pair-unproven unresolved.
+
+## G. Family Fulfillment Counts
+
+## H. Next Separate Task
+
+State exactly:
+
+```text
+The next separate task is to validate the transformed Video 001 fulfillment plan with a small image-generation pilot before production integration.
+```
+
+Do NOT start it automatically.
+
+## I. Verdict
+
+Exactly one:
+
+```text
+V3.3B-S.5 SCHNELL FAMILY FULFILLMENT PLANNER — PASS
+```
+
+or:
+
+```text
+V3.3B-S.5 SCHNELL FAMILY FULFILLMENT PLANNER — FAIL
+```
+
+Then STOP.
+
+Wait for human review.
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-09-19T18:15:01+07:00.
+</ADDITIONAL_METADATA>

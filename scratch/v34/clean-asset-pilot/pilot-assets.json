@@ -1,0 +1,91 @@
+{
+  "model": "@cf/black-forest-labs/flux-1-schnell",
+  "identityConsistencyRequired": false,
+  "styleTarget": "clean-2d-cartoon-illustration",
+  "shots": [
+    {
+      "pilotShotIndex": 0,
+      "sourceSceneOrBeatId": "scene-0",
+      "storyRole": "establish",
+      "selectedAttempt": 1,
+      "file": "assets/shot-01.jpg",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS"
+      }
+    },
+    {
+      "pilotShotIndex": 1,
+      "sourceSceneOrBeatId": "scene-1",
+      "storyRole": "reflection",
+      "selectedAttempt": 3,
+      "file": "assets/shot-02.jpg",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS"
+      }
+    },
+    {
+      "pilotShotIndex": 2,
+      "sourceSceneOrBeatId": "scene-2",
+      "storyRole": "interaction",
+      "selectedAttempt": 3,
+      "file": "assets/shot-03.jpg",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS"
+      }
+    },
+    {
+      "pilotShotIndex": 3,
+      "sourceSceneOrBeatId": "scene-3",
+      "storyRole": "detail-action",
+      "selectedAttempt": 2,
+      "file": "assets/shot-04.jpg",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS"
+      }
+    },
+    {
+      "pilotShotIndex": 4,
+      "sourceSceneOrBeatId": "scene-4",
+      "storyRole": "action",
+      "selectedAttempt": 1,
+      "file": "assets/shot-05.jpg",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS"
+      }
+    },
+    {
+      "pilotShotIndex": 5,
+      "sourceSceneOrBeatId": "scene-5",
+      "storyRole": "context",
+      "selectedAttempt": 1,
+      "file": "assets/shot-06.jpg",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS"
+      }
+    }
+  ]
+}

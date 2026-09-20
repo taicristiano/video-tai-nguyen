@@ -1,12 +1,13 @@
 /**
- * index.ts — Entry point for human-insight/cinematic-light template.
+ * index.ts — Entry point for human-insight/cinematic-light template (V2).
  *
- * Provides the full Editorial Engine:
+ * Provides the full Editorial Engine V2:
  *   - Layout: fixed frame with dynamic header modes ('full' | 'dimmed' | 'logo-only' | 'hidden')
- *   - ImageScene: tactile art card supporting 'standard' (1020x638) and 'focus' (1060x740) framing
- *   - SectionCard: chapter breakdown card (01, 02, 03)
+ *   - ImageScene: micro-motion presets, visual beats, and container mix ('canvas' | 'paper' | 'statement')
+ *   - SectionCard: chapter breakdown card (01, 02, 03 or custom)
  *   - InsightCard: statement / visual punctuation card
- *   - OutroCard: peaceful branding ending
+ *   - OutroCard: 9:16 branded artwork outro
+ *   - Character Universe: cast definitions and continuity locks
  */
 
 export { Layout } from './Layout';
@@ -24,10 +25,53 @@ export type { InsightCardProps } from './InsightCard';
 export { OutroCard } from './OutroCard';
 export type { OutroCardProps } from './OutroCard';
 
-export { COLORS, FONT_MAIN, LAYOUT, TYPOGRAPHY, FRAMING, TEMPLATE_META } from './tokens';
-export type { KenBurnsConfig, KenBurnsDirection } from './tokens';
+export {
+  COLORS,
+  FONT_MAIN,
+  LAYOUT,
+  TYPOGRAPHY,
+  FRAMING,
+  COMPOSITIONS,
+  SHOT_SCALE,
+  TEMPLATE_META,
+} from './tokens';
+export {
+  BRAND_WATERMARK,
+  TITLE_TYPOGRAPHY,
+  SUBTITLE_TYPOGRAPHY,
+  SAFE_ZONES,
+} from './brandTypographyTokens';
+export type {
+  CompositionPreset,
+  ShotScale,
+  BeatTransition,
+  CaptionPlacement,
+  FocalPoint,
+  TitleMode,
+  KenBurnsConfig,
+  KenBurnsDirection,
+  MotionPreset,
+  VisualBeat,
+  VisualContainer,
+} from './tokens';
 
-// ─── Editorial Spec Types for human-insight/cinematic-light ───────────────────
+export {
+  MOTION_PROFILES,
+  MOTION_RANGES,
+  computeMotionGrammar,
+  resolveMotionProfile,
+  normalizeMotionProfile,
+} from './motionGrammar';
+export type {
+  MotionProfile,
+  MotionConfig,
+  MotionState,
+} from './motionGrammar';
+
+export { CHARACTER_CASTS, inferCastId } from './characters';
+export type { CharacterCast } from './characters';
+
+// ─── Editorial Spec Types for human-insight/cinematic-light V2.1 ──────────────
 
 export interface HumanInsightImage {
   assetId: string;
@@ -46,9 +90,30 @@ export interface SectionCardConfig {
   subtitle?: string;
 }
 
+export type StoryRole =
+  | 'establish'
+  | 'action'
+  | 'interaction'
+  | 'detail-action'
+  | 'context'
+  | 'reflection'
+  | 'memory'
+  | 'release'
+  | 'question';
+
 export interface HumanInsightScene {
   type: SceneType;
   layout?: LayoutType;
+  composition?: import('./tokens').CompositionPreset;
+  shotScale?: import('./tokens').ShotScale;
+  focalPoint?: import('./tokens').FocalPoint;
+  titleMode?: import('./tokens').TitleMode;
+  captionPlacement?: import('./tokens').CaptionPlacement;
+  visualContainer?: import('./tokens').VisualContainer;
+  motionPreset?: import('./tokens').MotionPreset;
+  motionProfile?: import('./motionGrammar').MotionProfile;
+  visualBeats?: import('./tokens').VisualBeat[];
+  castId?: string;
   headerMode?: HeaderMode;
   captionMode?: CaptionMode;
   startFrame: number;
@@ -61,6 +126,12 @@ export interface HumanInsightScene {
   image: HumanInsightImage;
   sectionCard?: SectionCardConfig;
   insightText?: string;
+  insightVariant?: 'overlay' | 'card';
+  storyRole?: StoryRole;
+  narrativePurpose?: string;
+  visualIntent?: string;
+  worldId?: string;
+  continuityGroup?: string;
   isOutro?: boolean;
 }
 
@@ -68,6 +139,7 @@ export interface HumanInsightSpec {
   templateId: 'human-insight/cinematic-light';
   slug: string;
   totalFrames: number;
+  castId?: string;
   video: {
     title: string;
     bgMusic?: string | null;

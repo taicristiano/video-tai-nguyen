@@ -1,0 +1,61 @@
+{
+  "status": "PASS",
+  "updatedAt": "2026-09-20T07:31:17.616Z",
+  "summary": {
+    "totalVideos": 5,
+    "passVideos": 5,
+    "pendingVideos": 0,
+    "needsRegenVideos": 0,
+    "totalShots": 30,
+    "passShots": 30,
+    "pendingShots": 0,
+    "needsRegenShots": 0
+  },
+  "videos": [
+    {
+      "videoKey": "video001",
+      "category": "family-emotional",
+      "title": "Có những bữa cơm sau này mới hiểu là rất quý",
+      "qaStatus": "PASS",
+      "passShots": 6,
+      "pendingShots": 0,
+      "needsRegenShots": 0
+    },
+    {
+      "videoKey": "video005",
+      "category": "relationship-dialogue",
+      "title": "Mười Phút Reset Cuối Ngày Đáng Giá Hơn Một Giờ Dọn Cuối Tuần",
+      "qaStatus": "PASS",
+      "passShots": 6,
+      "pendingShots": 0,
+      "needsRegenShots": 0
+    },
+    {
+      "videoKey": "video007",
+      "category": "home-living",
+      "title": "Hai Mươi Bốn Giờ Trước Một Món Mua Không Cần Gấp",
+      "qaStatus": "PASS",
+      "passShots": 6,
+      "pendingShots": 0,
+      "needsRegenShots": 0
+    },
+    {
+      "videoKey": "video013",
+      "category": "books-ideas",
+      "title": "Không Phải Lúc Nào Người Khác Kể Chuyện Cũng Cần Sửa Giúp",
+      "qaStatus": "PASS",
+      "passShots": 6,
+      "pendingShots": 0,
+      "needsRegenShots": 0
+    },
+    {
+      "videoKey": "video028",
+      "category": "family-emotional",
+      "title": "Không Cần Trả Lời Mọi Thông Báo",
+      "qaStatus": "PASS",
+      "passShots": 6,
+      "pendingShots": 0,
+      "needsRegenShots": 0
+    }
+  ]
+}

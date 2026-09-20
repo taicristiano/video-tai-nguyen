@@ -1,0 +1,106 @@
+{
+  "videoKey": "video028",
+  "slug": "phan-28-2026-09-17-khong-can-tra-loi-moi-thong-bao-ngay",
+  "title": "Không Cần Trả Lời Mọi Thông Báo",
+  "category": "family-emotional",
+  "evaluatedAt": "2026-09-20T07:27:51.739Z",
+  "overallStatus": "PASS",
+  "shots": [
+    {
+      "index": 1,
+      "file": "assets/shot-01.jpg",
+      "qaStatus": "PASS",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS",
+        "overall": "PASS",
+        "reason": "One adult distracted at desk; clean composition and semantics.",
+        "recordedAt": "2026-09-20T04:27:32.211Z"
+      },
+      "notes": "One adult distracted at desk; clean composition and semantics."
+    },
+    {
+      "index": 2,
+      "file": "assets/shot-02.jpg",
+      "qaStatus": "PASS",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS",
+        "overall": "PASS",
+        "reason": "One adult pausing by window; clean and readable.",
+        "recordedAt": "2026-09-20T04:27:32.225Z"
+      },
+      "notes": "One adult pausing by window; clean and readable."
+    },
+    {
+      "index": 3,
+      "file": "assets/shot-03.jpg",
+      "qaStatus": "PASS",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS",
+        "overall": "PASS",
+        "reason": "One adult writing in notebook; clean scene and anatomy.",
+        "recordedAt": "2026-09-20T04:27:32.240Z"
+      },
+      "notes": "One adult writing in notebook; clean scene and anatomy."
+    },
+    {
+      "index": 4,
+      "file": "assets/shot-04.jpg",
+      "qaStatus": "PASS",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS",
+        "overall": "PASS",
+        "reason": "Clean full-frame 2D illustration, exactly one adult at laptop, no side bars, laptop exterior is visually plain enough, no material text pollution.",
+        "recordedAt": "2026-09-20T06:01:18.671Z"
+      },
+      "notes": "Clean full-frame 2D illustration, exactly one adult at laptop, no side bars, laptop exterior is visually plain enough, no material text pollution."
+    },
+    {
+      "index": 5,
+      "file": "assets/shot-05.jpg",
+      "qaStatus": "PASS",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS",
+        "overall": "PASS",
+        "reason": "One adult pausing at keyboard; clean scene and semantics.",
+        "recordedAt": "2026-09-20T04:27:32.297Z"
+      },
+      "notes": "One adult pausing at keyboard; clean scene and semantics."
+    },
+    {
+      "index": 6,
+      "file": "assets/shot-06.jpg",
+      "qaStatus": "PASS",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS",
+        "overall": "PASS",
+        "reason": "Apple-like logo was fully removed from the laptop lid.\nNo letterbox/side-bar artifact remains.\nThe scene clearly communicates one adult leaning back and disengaging from work;\nthe laptop is a separate secondary object and is acceptable at production threshold.",
+        "recordedAt": "2026-09-20T07:27:51.739Z"
+      },
+      "notes": "Apple-like logo was fully removed from the laptop lid.\nNo letterbox/side-bar artifact remains.\nThe scene clearly communicates one adult leaning back and disengaging from work;\nthe laptop is a separate secondary object and is acceptable at production threshold."
+    }
+  ]
+}

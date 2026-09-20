@@ -1,0 +1,8 @@
+{
+  "style": "PASS",
+  "peopleContract": "PASS",
+  "semanticFidelity": "PASS",
+  "anatomy": "PASS",
+  "textPollution": "FAIL",
+  "reasons": ["bottom-right text/watermark mark ('@210')"]
+}

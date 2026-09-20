@@ -51,6 +51,14 @@ export interface SubtitlesProps {
   textColor?: string;
   /** Color for already spoken words. */
   pastColor?: string;
+  /** Subtitle placement: 'below-visual' (default bottom: 10.5%), 'overlay-bottom' (bottom: 10%), 'overlay-top' (top: 18%), or 'hidden'. */
+  placement?: 'below-visual' | 'overlay-bottom' | 'overlay-top' | 'hidden';
+  /** Bottom placement percentage / px string override. Default: '10.5%' */
+  bottomPlacement?: string;
+  /** Max container width. Default: 920 */
+  maxWidth?: number;
+  /** Line height. Default: 1.30 */
+  lineHeight?: number;
   /** Text shadow for inactive words. */
   textShadow?: string;
   /** Text shadow for active word/phrase. */
@@ -69,7 +77,11 @@ function buildSentences(words: WordTimestamp[], gap: number): Sentence[] {
   let current: WordTimestamp[] = [words[0]];
 
   for (let i = 1; i < words.length; i++) {
-    if (words[i].start - words[i - 1].end >= gap) {
+    const prevWord = words[i - 1].word.trim();
+    const hasTerminalPunctuation = /[.?!…]$/.test(prevWord);
+    const hasSilenceGap = words[i].start - words[i - 1].end >= gap;
+
+    if (hasTerminalPunctuation || hasSilenceGap) {
       sentences.push({
         words: current,
         start: current[0].start,
@@ -147,9 +159,13 @@ export const Subtitles: React.FC<SubtitlesProps> = ({
   maxWords = 7,
   mode = 'phrase',
   activeColor = DEFAULT_ACTIVE_COLOR,
-  fontSize = 38,
+  fontSize = 44,
   textColor = TEXT_COLOR,
   pastColor = PAST_COLOR,
+  placement = 'below-visual',
+  bottomPlacement = '10.5%',
+  maxWidth = 920,
+  lineHeight = 1.30,
   textShadow,
   activeTextShadow,
 }) => {
@@ -226,11 +242,22 @@ export const Subtitles: React.FC<SubtitlesProps> = ({
     }
   }
 
+  if (placement === 'hidden') {
+    return null;
+  }
+
+  const isOverlay = placement === 'overlay-bottom' || placement === 'overlay-top';
+  const containerPositionStyle: React.CSSProperties =
+    placement === 'overlay-top'
+      ? { top: '18%', bottom: 'auto' }
+      : placement === 'overlay-bottom'
+        ? { bottom: '10%' }
+        : { bottom: bottomPlacement };
+
   return (
     <div
       style={{
         position: "absolute",
-        bottom: "22.0%",
         left: 0,
         right: 0,
         display: "flex",
@@ -238,6 +265,7 @@ export const Subtitles: React.FC<SubtitlesProps> = ({
         padding: "0 48px",
         pointerEvents: "none",
         zIndex: 30,
+        ...containerPositionStyle,
       }}
     >
       <div
@@ -247,6 +275,16 @@ export const Subtitles: React.FC<SubtitlesProps> = ({
           alignItems: "baseline",
           gap: "0 10px",
           flexWrap: "nowrap",
+          maxWidth,
+          ...(isOverlay
+            ? {
+                background: "rgba(246, 241, 232, 0.72)",
+                padding: "8px 24px",
+                borderRadius: 24,
+                backdropFilter: "blur(8px)",
+                boxShadow: "0 2px 12px rgba(48, 45, 40, 0.08)",
+              }
+            : {}),
         }}
       >
         {chunk.words.map((w, i) => {
@@ -278,7 +316,7 @@ export const Subtitles: React.FC<SubtitlesProps> = ({
                 fontFamily,
                 fontSize,
                 fontWeight: wordWeight,
-                lineHeight: 1.4,
+                lineHeight,
                 whiteSpace: "nowrap",
                 color: isActive
                   ? activeColor

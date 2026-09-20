@@ -4,42 +4,44 @@ Read this document before running Step 6 (Spec) and Step 7 (Coder) when `--templ
 
 ---
 
-## What this template is: Editorial Engine
+## What this template is: Editorial Engine V2
 
-Philosophy, life wisdom, editorial lifestyle, and personal growth videos. Built as a multi-layout **Editorial Engine** to prevent visual fatigue across 2–3 minute videos while preserving the quiet, tactile minimalism of `NẾP.`:
+Philosophy, life wisdom, editorial lifestyle, and personal growth videos. Built as a multi-layout **Editorial Engine V2** to prevent slideshow feel while preserving the quiet, tactile minimalism of `HAY & ĐẸP.`:
 
-- **Background**: flat warm cream `#FAECD2` — no gradient
-- **Tactile Art Card**: Photos placed in an elegant white paper frame with soft 3D shadow, subtle natural tilt angle (`±1.1°`), and Washi Tape accent.
-- **Physical Paper & Viewport Camera**: The physical paper card stays stable on the background while the camera moves *inside* the image viewport using distinct held shots rather than continuous creeping zoom.
-- **Editorial Held Shots & Mid-Scene Reframes**: Scenes > 6s use 2 distinct held shots (Shot A held at 1.00 -> 18f (~0.60s) mid-scene reframe -> Shot B held at 1.055, pan -14px, translateY -4.5px) delivering the clear perception that the camera reframed to a closer medium shot without continuous creeping zoom. Short scenes (< 6s) hold steady at 1.01.
-- **Header Dynamics (Semi-Persistent Headline Contract)**:
-  - `intro: 1.0`: 0–4s, full strength (`opacity: 1.0`, `scale: 1.0`), fades 3.7s–4.5s.
-  - `normal: 0.46`: Settles smoothly into a compact breadcrumb (`opacity: 0.46`, `scale: 0.78`, fixed position) across standard illustrations.
-  - `question: 0` / `statement: 0`: Fades out in ~9f, completely hidden during card hold, fades back in over 10f to `0.46`.
-  - `conclusion: 0.25`: 64s (~0.46) -> 66s (~0.25) -> 68s (0).
-  - `outro: 0`: Entire header hidden (`opacity: 0`), giving way to pure centered `NẾP.` outro.
-- **4 Layout Variations**:
-  - `standard` (~60%): Card `1020x638`, `top: 640`. Balanced layout with title and caption.
-  - `focus` (~20%): Big Card `1060x740`, `top: 560`. Title hidden. Camera closer into concrete items/details.
-  - `statement` (~10%): Central typography quote card for 2.2s (66 frames) with 1.80s clean still hold before text and card dissolve synchronously together into the underlying illustration (zero blank card frames).
-  - `chapter` (~10%): Numbered question break card (`01`, `02`, `03`) for 2.53–2.87s (76–86 frames), title hidden, text fades out 4 frames before blank card dissolves into image.
-- **3 Caption Modes**:
-  - `phrase` (~70%): Phrase-level highlight (2–4 words) in dark charcoal (`#2C1A0E`, 700 bold), unread text at `opacity: 0.45`.
-  - `plain` (~20%): Calm uniform sentence (opacity 0.88, weight 500, no karaoke highlight).
-  - `statement` (~10%): Caption bar hidden (quote displayed in center card).
-  - Position: `bottom: 22.0%` (calm editorial placement directly below art card).
-- **Peaceful Branding Outro**: Final ~2.0s screen with centered `NẾP.` logo and slogan.
+- **Brand**: **HAY & ĐẸP.** (H&Đ.)
+- **Slogan**: **Điều hay để biết. Điều đẹp để giữ.** (intro-only, hidden in normal narrative scenes)
+- **Brand Asset**: `public/assets/human-insight/brand/hay-dep-mark-sage.png` (Deep Sage `#465B49` mark on cream, opacity ~0.82)
+- **Palette**: Ivory `#F6F1E8`, Warm Cream `#F7F2EA`, Charcoal `#302D28`, Deep Sage `#465B49`, Muted Sage `#71806C`, Warm Accent `#C79A72`
+- **Container Mix (`visualContainer`)**:
+  - `canvas` (Default ~60–70%): Seamless borderless canvas integration with soft natural frame.
+  - `paper` (~20–30%): Tactile paper card with washi tape accent (`#FFFCF7`), subtle natural tilt (`±1.1°`).
+  - `statement` (≤10%): Full quote/milestone card.
+- **Micro-Motion Contract**: Every normal image scene has deterministic micro-motion (scale 1.010–1.035, max pan ±8px, translateY ±4px).
+- **9 Deterministic Motion Presets**:
+  `still-breathe`, `slow-push`, `slow-pull`, `drift-left`, `drift-right`, `rise-soft`, `foreground-parallax`, `focus-shift`, `emotional-hold`.
+- **Secondary Framing Shift**: Scenes > 3.5s (105f) feature an intentional mid-scene reframe over 18f using Hermite smoothstep (`3x² - 2x³`), keeping scenes dynamic without aggressive zoom.
+- **Visual Beats (`visualBeats`)**: Backward-compatible multi-beat clauses per narration segment (1.5–3.2s standard beat, 3.2–4.5s emotional hold).
+- **Character Universe & Cast Lock**: 8 registered cast IDs (`family-young-01`, `couple-young-01`, `parents-middleage-01`, etc.) with deterministic seed hierarchy (`videoSeed -> castSeed -> sceneSeed`).
+- **Header Dynamics (V2 Hierarchy)**:
+  - `intro`: Full logo mark + headline + slogan (slogan fades out frames 105–132, completely hidden 135+).
+  - `normal`: Headline visible at `opacity: 0.86`, persistent dark-sage mark at `opacity: 0.82`, slogan hidden.
+  - `statement` / `question`: Headline dimmed or hidden, focusing attention on the core message.
+  - `outro`: Header dissolves 20f before outro.
+- **Dedicated 9:16 Outro V2**: Branded vertical artwork (`public/assets/human-insight/brand/outro-9-16.png`) held for 60 frames (2.0s), 8–10f fade-in, scale 1.02 -> 1.00, no voiceover. Fallback to React typography if missing.
+- **Asset Tiers Priority**: `HAYDEP_CORE` (+25) → `HAYDEP_COMPATIBLE` (+10) → generate → `LEGACY_NEP` (0). `REJECT_OFFSTYLE` excluded.
+- **Duration Policy**: Never artificially stretch scenes. Render duration = `voice + natural pauses + question + 60f outro`.
 
 ---
 
-## Content Format Contract: NẾP. Insight vs Deep
+## Content Format Contract: HAY & ĐẸP.
 
-| Format | Target Duration | Word Count | Use Case |
+| Format | Recommended Duration | Word Count | Use Case |
 |---|---|---|---|
-| **`NẾP. Insight` (Default)** | **70–80s** | ~210–240 words | 1 single core insight, 3 questions or principles. Crisp, profound, leaves breathing space. |
-| **`NẾP. Story / Deep`** | 120–180s | ~360–500 words | Narrative development, multi-step storytelling with payoff. |
+| **Family / Emotional Insight** | **30–50s** | ~80–130 words | Intimate personal reflection, family dinner, home values |
+| **Practical HAY.** | **45–65s** | ~120–170 words | Daily life habits, practical wisdom, work-life balance |
+| **Explanatory / Deep** | **65–85s** | ~170–230 words | Multi-part perspectives, philosophical essays |
 
-*Rule*: Unless explicitly requested otherwise, always format as **`NẾP. Insight` (70–80s)**. When script exceeds 90s, cut redundant explanations and keep only the single strongest real-world example per point.
+*Voice & Ending Rule*: Natural voice pacing. Interactive question ending. Slogan and branding are never spoken in voiceover; they appear visually in the layout and OutroCard.
 
 ## Step 6 Output (Spec)
 
@@ -88,13 +90,12 @@ Create `videos/<slug>/spec.json`:
      * Reframe Transition: 20–21 frames (~0.67–0.70s) Hermite cubic easeInOut step.
      * Shot B: `scale: 1.08`, `x: -20`, `y: -6` (Medium / Detail) held steady until scene end.
    - **Scenes < 6.0s**: Held steady baseline at `1.01` (zero camera drift).
-9. **Conclusion & Outro Flow (MANDATORY)**:
-   - 64s: Article title opacity ~0.46
-   - 66s: Article title fades to ~0.25
-   - 68s: Article title fades to 0
-   - 68.8s: Final illustration finishes fading completely.
-   - 68.9–69.3s: Logo emerges gracefully (13 frames fade-in) eliminating any blank gap.
-   - 69.3–71.0s: Pure centered `NẾP.` outro screen (Logo + Slogan) held tranquil.
+9. **Conclusion & Outro Flow (Dynamic via scene.isOutro / headerMode)**:
+   - Final narration scene ends with the interactive question.
+   - Last 20 frames before outro: Title and top header logo dissolve smoothly (1.0 -> 0).
+   - Outro Scene (`isOutro: true`, `headerMode: 'hidden'`, 60 frames / 2.0s):
+     * Logo `assets/human-insight/brand/hay-dep-mark.png` + `HAY & ĐẸP.` + slogan `Điều hay để biết. Điều đẹp để giữ.`
+     * Tranquil ending visual without voiceover.
 
 ---
 

@@ -1,0 +1,281 @@
+{
+  "runStatus": "IN_PROGRESS",
+  "updatedAt": "2026-09-19T13:13:00.952Z",
+  "migrationNote": "Previous run was reported quota-blocked; no exact historical per-beat API event imported.",
+  "operationalMetrics": {
+    "baselineImagesReused": 9,
+    "apiRequestsSinceMigration": 3,
+    "successfulGenerationCallsSinceMigration": 3,
+    "failedApiRequestsSinceMigration": 0
+  },
+  "beats": [
+    {
+      "beatId": "beat-02",
+      "status": "SELECTED",
+      "nextAttempt": null,
+      "selectedAttempt": 1,
+      "selectedFile": "beat-02-attempt-01.jpg",
+      "attempts": [
+        {
+          "attempt": 1,
+          "file": "beat-02-attempt-01.jpg",
+          "generationStatus": "SUCCESS",
+          "qaStatus": "COMPLETED",
+          "style": "PASS",
+          "peopleContract": "PASS",
+          "semanticFidelity": "PASS",
+          "anatomy": "PASS",
+          "textPollution": "PASS",
+          "overall": "PASS",
+          "reasons": []
+        }
+      ],
+      "generationErrors": []
+    },
+    {
+      "beatId": "beat-04",
+      "status": "SELECTED",
+      "nextAttempt": null,
+      "selectedAttempt": 1,
+      "selectedFile": "beat-04-attempt-01.jpg",
+      "attempts": [
+        {
+          "attempt": 1,
+          "file": "beat-04-attempt-01.jpg",
+          "generationStatus": "SUCCESS",
+          "qaStatus": "COMPLETED",
+          "style": "PASS",
+          "peopleContract": "PASS",
+          "semanticFidelity": "PASS",
+          "anatomy": "PASS",
+          "textPollution": "PASS",
+          "overall": "PASS",
+          "reasons": []
+        }
+      ],
+      "generationErrors": []
+    },
+    {
+      "beatId": "beat-06",
+      "status": "SELECTED",
+      "nextAttempt": null,
+      "selectedAttempt": 2,
+      "selectedFile": "beat-06-attempt-02.jpg",
+      "attempts": [
+        {
+          "attempt": 1,
+          "file": "beat-06-attempt-01.jpg",
+          "generationStatus": "SUCCESS",
+          "qaStatus": "COMPLETED",
+          "style": "PASS",
+          "peopleContract": "PASS",
+          "semanticFidelity": "PASS",
+          "anatomy": "PASS",
+          "textPollution": "FAIL",
+          "overall": "FAIL",
+          "reasons": [
+            "pseudo-writing / text pollution"
+          ]
+        },
+        {
+          "attempt": 2,
+          "file": "beat-06-attempt-02.jpg",
+          "generationStatus": "SUCCESS",
+          "qaStatus": "COMPLETED",
+          "timestamp": "2026-09-19T13:08:52.956Z",
+          "style": "PASS",
+          "peopleContract": "PASS",
+          "semanticFidelity": "PASS",
+          "anatomy": "PASS",
+          "textPollution": "PASS",
+          "overall": "PASS",
+          "reasons": []
+        }
+      ],
+      "generationErrors": []
+    },
+    {
+      "beatId": "beat-07",
+      "status": "EXHAUSTED",
+      "nextAttempt": null,
+      "selectedAttempt": null,
+      "selectedFile": null,
+      "attempts": [
+        {
+          "attempt": 1,
+          "file": "beat-07-attempt-01.jpg",
+          "generationStatus": "SUCCESS",
+          "qaStatus": "COMPLETED",
+          "style": "PASS",
+          "peopleContract": "FAIL",
+          "semanticFidelity": "PASS",
+          "anatomy": "PASS",
+          "textPollution": "FAIL",
+          "overall": "FAIL",
+          "reasons": [
+            "people contract violation",
+            "pseudo-writing / text pollution"
+          ]
+        },
+        {
+          "attempt": 2,
+          "file": "beat-07-attempt-02.jpg",
+          "generationStatus": "SUCCESS",
+          "qaStatus": "COMPLETED",
+          "timestamp": "2026-09-19T13:10:36.794Z",
+          "style": "PASS",
+          "peopleContract": "FAIL",
+          "semanticFidelity": "PASS",
+          "anatomy": "PASS",
+          "textPollution": "PASS",
+          "overall": "FAIL",
+          "reasons": [
+            "wall frame contains drawn human figure (head, face, arm) violating zero-people contract"
+          ]
+        },
+        {
+          "attempt": 3,
+          "file": "beat-07-attempt-03.jpg",
+          "generationStatus": "SUCCESS",
+          "qaStatus": "COMPLETED",
+          "timestamp": "2026-09-19T13:12:04.503Z",
+          "style": "PASS",
+          "peopleContract": "PASS",
+          "semanticFidelity": "PASS",
+          "anatomy": "PASS",
+          "textPollution": "FAIL",
+          "overall": "FAIL",
+          "reasons": [
+            "bottom-right text/watermark mark ('@210')"
+          ]
+        }
+      ],
+      "generationErrors": []
+    },
+    {
+      "beatId": "beat-08",
+      "status": "SELECTED",
+      "nextAttempt": null,
+      "selectedAttempt": 1,
+      "selectedFile": "beat-08-attempt-01.jpg",
+      "attempts": [
+        {
+          "attempt": 1,
+          "file": "beat-08-attempt-01.jpg",
+          "generationStatus": "SUCCESS",
+          "qaStatus": "COMPLETED",
+          "style": "PASS",
+          "peopleContract": "PASS",
+          "semanticFidelity": "PASS",
+          "anatomy": "PASS",
+          "textPollution": "PASS",
+          "overall": "PASS",
+          "reasons": []
+        }
+      ],
+      "generationErrors": []
+    },
+    {
+      "beatId": "beat-09",
+      "status": "NEEDS_GENERATION",
+      "nextAttempt": 2,
+      "selectedAttempt": null,
+      "selectedFile": null,
+      "attempts": [
+        {
+          "attempt": 1,
+          "file": "beat-09-attempt-01.jpg",
+          "generationStatus": "SUCCESS",
+          "qaStatus": "COMPLETED",
+          "style": "PASS",
+          "peopleContract": "PASS",
+          "semanticFidelity": "PASS",
+          "anatomy": "PASS",
+          "textPollution": "FAIL",
+          "overall": "FAIL",
+          "reasons": [
+            "pseudo-writing / text pollution"
+          ]
+        }
+      ],
+      "generationErrors": []
+    },
+    {
+      "beatId": "beat-10",
+      "status": "NEEDS_GENERATION",
+      "nextAttempt": 2,
+      "selectedAttempt": null,
+      "selectedFile": null,
+      "attempts": [
+        {
+          "attempt": 1,
+          "file": "beat-10-attempt-01.jpg",
+          "generationStatus": "SUCCESS",
+          "qaStatus": "COMPLETED",
+          "style": "PASS",
+          "peopleContract": "FAIL",
+          "semanticFidelity": "PASS",
+          "anatomy": "PASS",
+          "textPollution": "FAIL",
+          "overall": "FAIL",
+          "reasons": [
+            "people contract violation",
+            "pseudo-writing / text pollution"
+          ]
+        }
+      ],
+      "generationErrors": []
+    },
+    {
+      "beatId": "beat-12",
+      "status": "NEEDS_GENERATION",
+      "nextAttempt": 2,
+      "selectedAttempt": null,
+      "selectedFile": null,
+      "attempts": [
+        {
+          "attempt": 1,
+          "file": "beat-12-attempt-01.jpg",
+          "generationStatus": "SUCCESS",
+          "qaStatus": "COMPLETED",
+          "style": "PASS",
+          "peopleContract": "FAIL",
+          "semanticFidelity": "PASS",
+          "anatomy": "FAIL",
+          "textPollution": "PASS",
+          "overall": "FAIL",
+          "reasons": [
+            "people contract violation",
+            "anatomy failure"
+          ]
+        }
+      ],
+      "generationErrors": []
+    },
+    {
+      "beatId": "beat-15",
+      "status": "NEEDS_GENERATION",
+      "nextAttempt": 2,
+      "selectedAttempt": null,
+      "selectedFile": null,
+      "attempts": [
+        {
+          "attempt": 1,
+          "file": "beat-15-attempt-01.jpg",
+          "generationStatus": "SUCCESS",
+          "qaStatus": "COMPLETED",
+          "style": "PASS",
+          "peopleContract": "PASS",
+          "semanticFidelity": "PASS",
+          "anatomy": "PASS",
+          "textPollution": "FAIL",
+          "overall": "FAIL",
+          "reasons": [
+            "pseudo-writing / text pollution"
+          ]
+        }
+      ],
+      "generationErrors": []
+    }
+  ]
+}

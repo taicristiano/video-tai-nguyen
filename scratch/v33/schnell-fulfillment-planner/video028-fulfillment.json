@@ -1,0 +1,194 @@
+[
+  {
+    "beatId": "beat-01",
+    "storyRole": "establish",
+    "sourceRoute": "SIMPLIFY_OR_CANONICAL",
+    "fulfillment": "CANONICAL_REQUIRED",
+    "targetPeopleCount": null,
+    "selectedMember": null,
+    "semanticAnchorsPreserved": [
+      "GROUP_PRESENCE"
+    ],
+    "simplifiedVisualAction": "Show one specific domestic action that directly demonstrates the spoken clause.",
+    "reason": "opening group identity must be established once using a curated/stronger-model canonical asset",
+    "voiceClause": "Trẻ con học rất nhiều từ cách người lớn xử lý khi mình sai."
+  },
+  {
+    "beatId": "beat-02",
+    "storyRole": "context",
+    "sourceRoute": "SIMPLIFY_OR_CANONICAL",
+    "fulfillment": "SCHNELL_SINGLE",
+    "targetPeopleCount": 1,
+    "selectedMember": "mother",
+    "semanticAnchorsPreserved": [
+      "SPEAKING"
+    ],
+    "simplifiedVisualAction": "mother speaks with a calm, reassuring, and gentle expression, facing someone off-frame.",
+    "reason": "narration carried by single focal speaker without unsafe multi-person Schnell generation",
+    "voiceClause": "Một người bố hay mẹ nói “lúc nãy bố/mẹ nói hơi nặng” không làm họ mất uy."
+  },
+  {
+    "beatId": "beat-03",
+    "storyRole": "context",
+    "sourceRoute": "SIMPLIFY_OR_CANONICAL",
+    "fulfillment": "SCHNELL_SINGLE",
+    "targetPeopleCount": 1,
+    "selectedMember": "mother",
+    "semanticAnchorsPreserved": [
+      "EVERYDAY_DETAIL"
+    ],
+    "simplifiedVisualAction": "mother quietly pauses at the dining table with a calm reflective expression, other family members implied off-frame.",
+    "reason": "abstract reflection beat carried by single adult without unsafe multi-person Schnell generation",
+    "voiceClause": "Ngược lại, nó cho trẻ thấy người lớn cũng có thể nhận trách nhiệm và sửa cách cư xử."
+  },
+  {
+    "beatId": "beat-04",
+    "storyRole": "detail-action",
+    "sourceRoute": "SIMPLIFY_OR_CANONICAL",
+    "fulfillment": "SCHNELL_SINGLE",
+    "targetPeopleCount": 1,
+    "selectedMember": "mother",
+    "semanticAnchorsPreserved": [
+      "EVERYDAY_DETAIL"
+    ],
+    "simplifiedVisualAction": "mother quietly pauses at the dining table with a calm reflective expression, other family members implied off-frame.",
+    "reason": "abstract reflection beat carried by single adult without unsafe multi-person Schnell generation",
+    "voiceClause": "Nếu đưa nó về đời sống thật, ta thường gặp ở những cảnh như một người lớn ngồi xuống ngang tầm trẻ"
+  },
+  {
+    "beatId": "beat-05",
+    "storyRole": "context",
+    "sourceRoute": "SIMPLIFY_OR_CANONICAL",
+    "fulfillment": "SCHNELL_SINGLE",
+    "targetPeopleCount": 1,
+    "selectedMember": "boy",
+    "semanticAnchorsPreserved": [
+      "SPEAKING"
+    ],
+    "simplifiedVisualAction": "boy speaks with a small hand gesture, facing someone off-frame.",
+    "reason": "narration carried by single focal speaker without unsafe multi-person Schnell generation",
+    "voiceClause": "một lời xin lỗi sau khi bình tĩnh"
+  },
+  {
+    "beatId": "beat-06",
+    "storyRole": "reflection",
+    "sourceRoute": "SIMPLIFY_OR_CANONICAL",
+    "fulfillment": "SCHNELL_SINGLE",
+    "targetPeopleCount": 1,
+    "selectedMember": "mother",
+    "semanticAnchorsPreserved": [
+      "EVERYDAY_DETAIL"
+    ],
+    "simplifiedVisualAction": "mother quietly pauses at the dining table with a calm reflective expression, other family members implied off-frame.",
+    "reason": "abstract reflection beat carried by single adult without unsafe multi-person Schnell generation",
+    "voiceClause": "hoặc hai người cùng làm lại một việc nhỏ."
+  },
+  {
+    "beatId": "beat-07",
+    "storyRole": "reflection",
+    "sourceRoute": "SIMPLIFY_OR_CANONICAL",
+    "fulfillment": "SCHNELL_SINGLE",
+    "targetPeopleCount": 1,
+    "selectedMember": "mother",
+    "semanticAnchorsPreserved": [
+      "EVERYDAY_DETAIL"
+    ],
+    "simplifiedVisualAction": "mother quietly pauses at the dining table with a calm reflective expression, other family members implied off-frame.",
+    "reason": "abstract reflection beat carried by single adult without unsafe multi-person Schnell generation",
+    "voiceClause": "Điều đáng giữ không nhất thiết là một nguyên tắc thật lớn."
+  },
+  {
+    "beatId": "beat-08",
+    "storyRole": "context",
+    "sourceRoute": "SIMPLIFY_OR_CANONICAL",
+    "fulfillment": "SCHNELL_SINGLE",
+    "targetPeopleCount": 1,
+    "selectedMember": "mother",
+    "semanticAnchorsPreserved": [
+      "EVERYDAY_DETAIL"
+    ],
+    "simplifiedVisualAction": "mother quietly pauses at the dining table with a calm reflective expression, other family members implied off-frame.",
+    "reason": "abstract reflection beat carried by single adult without unsafe multi-person Schnell generation",
+    "voiceClause": "Nhiều khi chỉ là một cách làm đủ nhẹ để mình"
+  },
+  {
+    "beatId": "beat-09",
+    "storyRole": "context",
+    "sourceRoute": "SIMPLIFY_OR_CANONICAL",
+    "fulfillment": "SCHNELL_SINGLE",
+    "targetPeopleCount": 1,
+    "selectedMember": "mother",
+    "semanticAnchorsPreserved": [
+      "EVERYDAY_DETAIL"
+    ],
+    "simplifiedVisualAction": "mother quietly pauses at the dining table with a calm reflective expression, other family members implied off-frame.",
+    "reason": "abstract reflection beat carried by single adult without unsafe multi-person Schnell generation",
+    "voiceClause": "còn muốn lặp lại vào ngày mai."
+  },
+  {
+    "beatId": "beat-10",
+    "storyRole": "context",
+    "sourceRoute": "SIMPLIFY_OR_CANONICAL",
+    "fulfillment": "SCHNELL_SINGLE",
+    "targetPeopleCount": 1,
+    "selectedMember": "boy",
+    "semanticAnchorsPreserved": [
+      "SPEAKING"
+    ],
+    "simplifiedVisualAction": "boy speaks with a small hand gesture, facing someone off-frame.",
+    "reason": "narration carried by single focal speaker without unsafe multi-person Schnell generation",
+    "voiceClause": "Nếu lỡ nói quá lời, thử quay lại cuộc trò chuyện"
+  },
+  {
+    "beatId": "beat-11",
+    "storyRole": "reflection",
+    "sourceRoute": "SIMPLIFY_OR_CANONICAL",
+    "fulfillment": "SCHNELL_SINGLE",
+    "targetPeopleCount": 1,
+    "selectedMember": "mother",
+    "semanticAnchorsPreserved": [
+      "EVERYDAY_DETAIL"
+    ],
+    "simplifiedVisualAction": "mother quietly pauses at the dining table with a calm reflective expression, other family members implied off-frame.",
+    "reason": "abstract reflection beat carried by single adult without unsafe multi-person Schnell generation",
+    "voiceClause": "thay vì giả vờ như chưa có gì xảy ra."
+  },
+  {
+    "beatId": "beat-12",
+    "storyRole": "context",
+    "sourceRoute": "SIMPLIFY_OR_CANONICAL",
+    "fulfillment": "SCHNELL_SINGLE",
+    "targetPeopleCount": 1,
+    "selectedMember": "mother",
+    "semanticAnchorsPreserved": [
+      "EVERYDAY_DETAIL"
+    ],
+    "simplifiedVisualAction": "mother quietly pauses at the dining table with a calm reflective expression, other family members implied off-frame.",
+    "reason": "abstract reflection beat carried by single adult without unsafe multi-person Schnell generation",
+    "voiceClause": "Điều đẹp trong một gia đình không phải là không ai mắc lỗi."
+  },
+  {
+    "beatId": "beat-13",
+    "storyRole": "release",
+    "sourceRoute": "SCHNELL_SAFE",
+    "fulfillment": "UNCHANGED",
+    "targetPeopleCount": null,
+    "selectedMember": null,
+    "semanticAnchorsPreserved": [],
+    "simplifiedVisualAction": "(unchanged)",
+    "reason": "no people / object-environment composition",
+    "voiceClause": "Là mọi người vẫn biết quay lại với nhau sau một lỗi."
+  },
+  {
+    "beatId": "beat-14",
+    "storyRole": "question",
+    "sourceRoute": "REUSE_CANONICAL",
+    "fulfillment": "UNCHANGED",
+    "targetPeopleCount": null,
+    "selectedMember": null,
+    "semanticAnchorsPreserved": [],
+    "simplifiedVisualAction": "(unchanged)",
+    "reason": "existing canonical strategy",
+    "voiceClause": "Hồi nhỏ, bạn có nhớ lần nào người lớn xin lỗi mình không?"
+  }
+]

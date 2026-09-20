@@ -1,0 +1,260 @@
+{
+  "reviewVersion": "V3.6_HUMAN_VISUAL_REVIEW_2026-09-20",
+  "policy": {
+    "dimensions": [
+      "STYLE",
+      "PEOPLE_CONTRACT",
+      "SEMANTIC_FIDELITY",
+      "ANATOMY",
+      "TEXT_POLLUTION"
+    ],
+    "identityConsistencyRequired": false,
+    "model": "@cf/black-forest-labs/flux-1-schnell"
+  },
+  "videos": {
+    "video005": {
+      "shots": {
+        "1": {
+          "style": "PASS",
+          "people": "PASS",
+          "semantic": "PASS",
+          "anatomy": "PASS",
+          "text": "PASS",
+          "overall": "PASS",
+          "reason": "Clean 2D scene; one adult; semantics and anatomy acceptable; no material text pollution."
+        },
+        "2": {
+          "style": "PASS",
+          "people": "PASS",
+          "semantic": "PASS",
+          "anatomy": "PASS",
+          "text": "PASS",
+          "overall": "PASS",
+          "reason": "Clean reflective seated pose; one adult; no material visual defect."
+        },
+        "3": {
+          "style": "PASS",
+          "people": "PASS",
+          "semantic": "PASS",
+          "anatomy": "PASS",
+          "text": "PASS",
+          "overall": "PASS",
+          "reason": "Clean sofa-resting scene; one adult; semantics and anatomy acceptable."
+        },
+        "4": {
+          "style": "PASS",
+          "people": "PASS",
+          "semantic": "PASS",
+          "anatomy": "PASS",
+          "text": "PASS",
+          "overall": "PASS",
+          "reason": "One adult carrying a mug in kitchen; clean anatomy and background."
+        },
+        "5": {
+          "style": "PASS",
+          "people": "PASS",
+          "semantic": "PASS",
+          "anatomy": "PASS",
+          "text": "PASS",
+          "overall": "PASS",
+          "reason": "One adult folding blanket; clean semantic match and anatomy."
+        },
+        "6": {
+          "style": "PASS",
+          "people": "PASS",
+          "semantic": "PASS",
+          "anatomy": "PASS",
+          "text": "PASS",
+          "overall": "PASS",
+          "reason": "One adult tidying desk; clean scene with no material text pollution."
+        }
+      }
+    },
+    "video007": {
+      "shots": {
+        "1": {
+          "style": "PASS",
+          "people": "PASS",
+          "semantic": "PASS",
+          "anatomy": "PASS",
+          "text": "FAIL",
+          "overall": "FAIL",
+          "reason": "Visible pseudo-text / fake labels on shop-display objects; fails TEXT_POLLUTION."
+        },
+        "2": {
+          "style": "PASS",
+          "people": "PASS",
+          "semantic": "PASS",
+          "anatomy": "PASS",
+          "text": "PASS",
+          "overall": "PASS",
+          "reason": "One adult with basket in aisle; clean composition and semantics."
+        },
+        "3": {
+          "style": "PASS",
+          "people": "PASS",
+          "semantic": "PASS",
+          "anatomy": "PASS",
+          "text": "PASS",
+          "overall": "PASS",
+          "reason": "One adult resting with tea; clean scene and anatomy."
+        },
+        "4": {
+          "style": "PASS",
+          "people": "PASS",
+          "semantic": "PASS",
+          "anatomy": "PASS",
+          "text": "PASS",
+          "overall": "PASS",
+          "reason": "One adult examining bowl; semantic and anatomy acceptable."
+        },
+        "5": {
+          "style": "PASS",
+          "people": "FAIL",
+          "semantic": "PASS",
+          "anatomy": "PASS",
+          "text": "PASS",
+          "overall": "FAIL",
+          "reason": "Still-life contract requires zero visible people, but a partial human arm/hand is visible."
+        },
+        "6": {
+          "style": "PASS",
+          "people": "PASS",
+          "semantic": "PASS",
+          "anatomy": "PASS",
+          "text": "PASS",
+          "overall": "PASS",
+          "reason": "One adult walking down street; clean framing and semantics."
+        }
+      }
+    },
+    "video013": {
+      "shots": {
+        "1": {
+          "style": "PASS",
+          "people": "PASS",
+          "semantic": "PASS",
+          "anatomy": "PASS",
+          "text": "PASS",
+          "overall": "PASS",
+          "reason": "Two-person dialogue scene is clean and semantically correct."
+        },
+        "2": {
+          "style": "PASS",
+          "people": "PASS",
+          "semantic": "PASS",
+          "anatomy": "PASS",
+          "text": "FAIL",
+          "overall": "FAIL",
+          "reason": "Multiple writing-like marks / pseudo-text on wall notes and planning sheets; fails TEXT_POLLUTION."
+        },
+        "3": {
+          "style": "PASS",
+          "people": "PASS",
+          "semantic": "PASS",
+          "anatomy": "PASS",
+          "text": "PASS",
+          "overall": "PASS",
+          "reason": "Two people seated supportively; clean visual and people contract."
+        },
+        "4": {
+          "style": "PASS",
+          "people": "PASS",
+          "semantic": "PASS",
+          "anatomy": "PASS",
+          "text": "PASS",
+          "overall": "PASS",
+          "reason": "Two-person advice gesture scene is clean and readable."
+        },
+        "5": {
+          "style": "PASS",
+          "people": "PASS",
+          "semantic": "PASS",
+          "anatomy": "PASS",
+          "text": "PASS",
+          "overall": "PASS",
+          "reason": "Two-person personal-story scene is clean and semantically aligned."
+        },
+        "6": {
+          "style": "PASS",
+          "people": "PASS",
+          "semantic": "PASS",
+          "anatomy": "PASS",
+          "text": "PASS",
+          "overall": "PASS",
+          "reason": "Two people in rapport; clean style and anatomy."
+        }
+      }
+    },
+    "video028": {
+      "shots": {
+        "1": {
+          "style": "PASS",
+          "people": "PASS",
+          "semantic": "PASS",
+          "anatomy": "PASS",
+          "text": "PASS",
+          "overall": "PASS",
+          "reason": "One adult distracted at desk; clean composition and semantics."
+        },
+        "2": {
+          "style": "PASS",
+          "people": "PASS",
+          "semantic": "PASS",
+          "anatomy": "PASS",
+          "text": "PASS",
+          "overall": "PASS",
+          "reason": "One adult pausing by window; clean and readable."
+        },
+        "3": {
+          "style": "PASS",
+          "people": "PASS",
+          "semantic": "PASS",
+          "anatomy": "PASS",
+          "text": "PASS",
+          "overall": "PASS",
+          "reason": "One adult writing in notebook; clean scene and anatomy."
+        },
+        "4": {
+          "style": "PASS",
+          "people": "PASS",
+          "semantic": "PASS",
+          "anatomy": "PASS",
+          "text": "FAIL",
+          "overall": "FAIL",
+          "reason": "Visible signature/watermark-like mark in lower-right plus writing-like mark on laptop edge; fails TEXT_POLLUTION."
+        },
+        "5": {
+          "style": "PASS",
+          "people": "PASS",
+          "semantic": "PASS",
+          "anatomy": "PASS",
+          "text": "PASS",
+          "overall": "PASS",
+          "reason": "One adult pausing at keyboard; clean scene and semantics."
+        },
+        "6": {
+          "style": "FAIL",
+          "people": "PASS",
+          "semantic": "PASS",
+          "anatomy": "PASS",
+          "text": "PASS",
+          "overall": "FAIL",
+          "reason": "Embedded black letterbox/border bars at top and bottom make the asset visually unclean; fails STYLE/CLEANLINESS."
+        }
+      }
+    }
+  },
+  "summary": {
+    "pendingReviewed": 24,
+    "pass": 19,
+    "needsRegen": 5,
+    "regenTargets": [
+      "video007/shot01",
+      "video007/shot05",
+      "video013/shot02",
+      "video028/shot04",
+      "video028/shot06"
+    ]
+  }
+}

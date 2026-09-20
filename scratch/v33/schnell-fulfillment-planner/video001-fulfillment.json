@@ -1,0 +1,216 @@
+[
+  {
+    "beatId": "beat-01",
+    "storyRole": "establish",
+    "sourceRoute": "SIMPLIFY_OR_CANONICAL",
+    "fulfillment": "CANONICAL_REQUIRED",
+    "targetPeopleCount": null,
+    "selectedMember": null,
+    "semanticAnchorsPreserved": [
+      "GROUP_PRESENCE",
+      "SIMPLE_MEAL"
+    ],
+    "simplifiedVisualAction": "All four recurring family members eat a simple Vietnamese dinner at the same wooden dining table.",
+    "reason": "opening group identity must be established once using a curated/stronger-model canonical asset",
+    "voiceClause": "khi còn nhỏ, một bữa cơm đủ người thường chỉ là chuyện rất bình thường."
+  },
+  {
+    "beatId": "beat-02",
+    "storyRole": "reflection",
+    "sourceRoute": "SIMPLIFY_OR_CANONICAL",
+    "fulfillment": "SCHNELL_OBJECT",
+    "targetPeopleCount": 0,
+    "selectedMember": null,
+    "semanticAnchorsPreserved": [
+      "SIMPLE_MEAL"
+    ],
+    "simplifiedVisualAction": "Simple bowls of rice, chopsticks, soup bowl, used wooden chairs around warm dining table, soft evening light, no visible people.",
+    "reason": "simple-meal detail carried reliably by table still-life trace without visible people",
+    "voiceClause": "Giá trị của bữa cơm không nằm ở món ăn cầu kỳ"
+  },
+  {
+    "beatId": "beat-03",
+    "storyRole": "interaction",
+    "sourceRoute": "SIMPLIFY_OR_CANONICAL",
+    "fulfillment": "REUSE_CANONICAL",
+    "targetPeopleCount": null,
+    "selectedMember": null,
+    "semanticAnchorsPreserved": [
+      "GROUP_PRESENCE"
+    ],
+    "simplifiedVisualAction": "Reuse canonical establish asset: the whole family gathered together in their recurring home environment.",
+    "reason": "narration requires explicit whole-group togetherness; reuse canonical establish group asset",
+    "voiceClause": "mà ở việc mọi người cùng có mặt"
+  },
+  {
+    "beatId": "beat-04",
+    "storyRole": "interaction",
+    "sourceRoute": "SIMPLIFY_OR_CANONICAL",
+    "fulfillment": "SCHNELL_SINGLE",
+    "targetPeopleCount": 1,
+    "selectedMember": "boy",
+    "semanticAnchorsPreserved": [
+      "SPEAKING"
+    ],
+    "simplifiedVisualAction": "boy speaks with a small hand gesture, facing someone off-frame.",
+    "reason": "narration carried by single focal speaker without unsafe multi-person Schnell generation",
+    "voiceClause": "nghe vài câu chuyện vụn và nhìn thấy nhau sau một ngày dài."
+  },
+  {
+    "beatId": "beat-05",
+    "storyRole": "detail-action",
+    "sourceRoute": "SIMPLIFY_OR_CANONICAL",
+    "fulfillment": "REUSE_CANONICAL",
+    "targetPeopleCount": null,
+    "selectedMember": null,
+    "semanticAnchorsPreserved": [
+      "GROUP_PRESENCE",
+      "SIMPLE_MEAL"
+    ],
+    "simplifiedVisualAction": "Reuse canonical establish asset: the whole family gathered together in their recurring home environment.",
+    "reason": "narration requires explicit whole-group togetherness; reuse canonical establish group asset",
+    "voiceClause": "Có thể là một mâm cơm đơn giản có đủ người."
+  },
+  {
+    "beatId": "beat-06",
+    "storyRole": "detail-action",
+    "sourceRoute": "SCHNELL_SAFE",
+    "fulfillment": "UNCHANGED",
+    "targetPeopleCount": null,
+    "selectedMember": null,
+    "semanticAnchorsPreserved": [],
+    "simplifiedVisualAction": "(unchanged)",
+    "reason": "single-person composition",
+    "voiceClause": "Hoặc chiếc điện thoại được đặt sang một bên."
+  },
+  {
+    "beatId": "beat-07",
+    "storyRole": "action",
+    "sourceRoute": "SIMPLIFY_OR_CANONICAL",
+    "fulfillment": "SCHNELL_OBJECT",
+    "targetPeopleCount": 0,
+    "selectedMember": null,
+    "semanticAnchorsPreserved": [
+      "SCHOOL_WORK"
+    ],
+    "simplifiedVisualAction": "School bag and work bag resting near the doorway or dining chair, soft warm indoor lighting, no visible people.",
+    "reason": "school/work context carried reliably by object/environment trace without visible people",
+    "voiceClause": "Có khi chỉ là câu chuyện nhỏ sau một ngày đi học, đi làm."
+  },
+  {
+    "beatId": "beat-08",
+    "storyRole": "context",
+    "sourceRoute": "SIMPLIFY_OR_CANONICAL",
+    "fulfillment": "SCHNELL_SINGLE",
+    "targetPeopleCount": 1,
+    "selectedMember": "mother",
+    "semanticAnchorsPreserved": [
+      "EVERYDAY_DETAIL"
+    ],
+    "simplifiedVisualAction": "mother quietly pauses at the dining table with a calm reflective expression, other family members implied off-frame.",
+    "reason": "abstract reflection beat carried by single adult without unsafe multi-person Schnell generation",
+    "voiceClause": "Những chi tiết như vậy không tạo cảm giác mình vừa thay đổi cả cuộc sống."
+  },
+  {
+    "beatId": "beat-09",
+    "storyRole": "reflection",
+    "sourceRoute": "SIMPLIFY_OR_CANONICAL",
+    "fulfillment": "SCHNELL_SINGLE",
+    "targetPeopleCount": 1,
+    "selectedMember": "mother",
+    "semanticAnchorsPreserved": [
+      "EVERYDAY_DETAIL"
+    ],
+    "simplifiedVisualAction": "mother quietly pauses at the dining table with a calm reflective expression, other family members implied off-frame.",
+    "reason": "abstract reflection beat carried by single adult without unsafe multi-person Schnell generation",
+    "voiceClause": "Nhưng chính vì nhỏ, chúng có cơ hội xuất hiện trong những ngày thật."
+  },
+  {
+    "beatId": "beat-10",
+    "storyRole": "context",
+    "sourceRoute": "SIMPLIFY_OR_CANONICAL",
+    "fulfillment": "SCHNELL_SINGLE",
+    "targetPeopleCount": 1,
+    "selectedMember": "mother",
+    "semanticAnchorsPreserved": [
+      "SIMPLE_MEAL"
+    ],
+    "simplifiedVisualAction": "mother quietly pauses at the dining table with a calm reflective expression, other family members implied off-frame.",
+    "reason": "abstract reflection beat carried by single adult without unsafe multi-person Schnell generation",
+    "voiceClause": "Tuần này, thử giữ lại ít nhất một bữa ăn"
+  },
+  {
+    "beatId": "beat-11",
+    "storyRole": "interaction",
+    "sourceRoute": "SIMPLIFY_OR_CANONICAL",
+    "fulfillment": "REUSE_CANONICAL",
+    "targetPeopleCount": null,
+    "selectedMember": null,
+    "semanticAnchorsPreserved": [
+      "GROUP_PRESENCE"
+    ],
+    "simplifiedVisualAction": "Reuse canonical establish asset: the whole family gathered together in their recurring home environment.",
+    "reason": "narration requires explicit whole-group togetherness; reuse canonical establish group asset",
+    "voiceClause": "mà mọi người ngồi cùng nhau"
+  },
+  {
+    "beatId": "beat-12",
+    "storyRole": "detail-action",
+    "sourceRoute": "SCHNELL_SAFE",
+    "fulfillment": "UNCHANGED",
+    "targetPeopleCount": null,
+    "selectedMember": null,
+    "semanticAnchorsPreserved": [],
+    "simplifiedVisualAction": "(unchanged)",
+    "reason": "single-person composition",
+    "voiceClause": "và điện thoại không nằm giữa bàn."
+  },
+  {
+    "beatId": "beat-13",
+    "storyRole": "memory",
+    "sourceRoute": "REUSE_CANONICAL",
+    "fulfillment": "UNCHANGED",
+    "targetPeopleCount": null,
+    "selectedMember": null,
+    "semanticAnchorsPreserved": [],
+    "simplifiedVisualAction": "(unchanged)",
+    "reason": "existing canonical strategy",
+    "voiceClause": "Có những điều lúc đang có thì rất bình thường."
+  },
+  {
+    "beatId": "beat-14",
+    "storyRole": "memory",
+    "sourceRoute": "REUSE_CANONICAL",
+    "fulfillment": "UNCHANGED",
+    "targetPeopleCount": null,
+    "selectedMember": null,
+    "semanticAnchorsPreserved": [],
+    "simplifiedVisualAction": "(unchanged)",
+    "reason": "existing canonical strategy",
+    "voiceClause": "Đến khi lịch mỗi người khác đi, ta mới biết chúng từng đẹp đến mức nào."
+  },
+  {
+    "beatId": "beat-15",
+    "storyRole": "release",
+    "sourceRoute": "SCHNELL_SAFE",
+    "fulfillment": "UNCHANGED",
+    "targetPeopleCount": null,
+    "selectedMember": null,
+    "semanticAnchorsPreserved": [],
+    "simplifiedVisualAction": "(unchanged)",
+    "reason": "no people / object-environment composition",
+    "voiceClause": "Nhà bạn có bữa ăn nào dù món rất đơn giản"
+  },
+  {
+    "beatId": "beat-16",
+    "storyRole": "question",
+    "sourceRoute": "REUSE_CANONICAL",
+    "fulfillment": "UNCHANGED",
+    "targetPeopleCount": null,
+    "selectedMember": null,
+    "semanticAnchorsPreserved": [],
+    "simplifiedVisualAction": "(unchanged)",
+    "reason": "existing canonical strategy",
+    "voiceClause": "nhưng vẫn nhớ lâu không?"
+  }
+]

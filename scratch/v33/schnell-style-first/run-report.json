@@ -1,0 +1,37 @@
+﻿{
+  "testId": "V3.3B-S.1",
+  "goal": "SCHNELL STYLE-FIRST PROMPT GEOMETRY",
+  "model": "@cf/black-forest-labs/flux-1-schnell",
+  "timestamp": "2026-09-19T16:47:00+07:00",
+  "targetBeats": [
+    "beat-01",
+    "beat-02",
+    "beat-04",
+    "beat-09"
+  ],
+  "totalImagesGenerated": 8,
+  "callsPerBeat": 2,
+  "metrics": {
+    "targetEditorial2DCount": 8,
+    "severeStyleDriftCount": 0,
+    "adultBrandFitAcceptableCount": 8,
+    "realisticDigitalPaintingCount": 0,
+    "childrenBookCartoonCount": 0,
+    "animeLikeCount": 0,
+    "flatVectorCount": 0
+  },
+  "promptLengths": {
+    "beat-01": 1569,
+    "beat-02": 1525,
+    "beat-04": 1556,
+    "beat-09": 1540
+  },
+  "constraintsPassed": {
+    "allPromptsUnder1600": true,
+    "promptOrderExact": true,
+    "mediumLockFirst": true,
+    "noPhotographicVocabulary": true,
+    "hardExclusionsLast": true
+  },
+  "verdict": "PASS"
+}

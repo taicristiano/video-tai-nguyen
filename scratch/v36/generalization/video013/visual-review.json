@@ -1,0 +1,180 @@
+{
+  "videoKey": "video013",
+  "slug": "phan-13-2026-09-17-khong-phai-luc-nao-nguoi-khac-ke-chuyen",
+  "title": "Không Phải Lúc Nào Người Khác Kể Chuyện Cũng Cần Sửa Giúp",
+  "category": "books-ideas",
+  "qaStatus": "PASS",
+  "updatedAt": "2026-09-20T07:27:51.675Z",
+  "shots": [
+    {
+      "videoKey": "video013",
+      "shotIndex": 1,
+      "file": "assets/shot-01.jpg",
+      "voice": "Khi ai đó chia sẻ vấn đề, phản xạ của mình thường là tìm giải pháp.",
+      "sceneText": "Two Vietnamese friends sit across from each other at a wooden cafe table with tea cups. One friend speaks sincerely while the other listens attentively.",
+      "peopleContract": "2 visible people (dialogue)",
+      "shortIntent": "Two friends in sincere conversation",
+      "sizeBytes": 439872,
+      "qaStatus": "PASS",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS",
+        "overall": "PASS",
+        "reason": "Two-person dialogue scene is clean and semantically correct.",
+        "recordedAt": "2026-09-20T04:27:31.428Z"
+      },
+      "reviewedSource": null
+    },
+    {
+      "videoKey": "video013",
+      "shotIndex": 2,
+      "file": "assets/shot-02.jpg",
+      "voice": "Ta hay cố giải quyết một vấn đề bằng cách thêm thật nhiều thứ: thêm kế hoạch, thêm công cụ, thêm quyết tâm.",
+      "sceneText": "A person sits at a wooden study desk covered with notebooks, charts, and planners, gesturing thoughtfully while explaining complex ideas.",
+      "peopleContract": "1 visible adult",
+      "shortIntent": "Explaining complex plans at desk",
+      "sizeBytes": 115944,
+      "qaStatus": "PASS",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS",
+        "overall": "PASS",
+        "reason": "Calendar/planning sheet and writing-like marks were removed.\nThe remaining tiny wall speck is a minor raster-cleanup blemish, not readable text,\npseudo-text, a signature, logo, or watermark, and is acceptable at production threshold.\nThe main scene remains a clean 2D illustration with one adult explaining/thinking at a desk.",
+        "recordedAt": "2026-09-20T07:27:51.674Z"
+      },
+      "reviewedSource": null,
+      "failureHistory": [
+        {
+          "style": "PASS",
+          "peopleContract": "PASS",
+          "semanticFidelity": "PASS",
+          "anatomy": "PASS",
+          "textPollution": "FAIL",
+          "overall": "FAIL",
+          "reason": "Multiple writing-like marks / pseudo-text on wall notes and planning sheets; fails TEXT_POLLUTION.",
+          "recordedAt": "2026-09-20T04:27:31.441Z",
+          "archivedAt": "2026-09-20T04:28:19.322Z"
+        },
+        {
+          "style": "PASS",
+          "peopleContract": "PASS",
+          "semanticFidelity": "PASS",
+          "anatomy": "PASS",
+          "textPollution": "FAIL",
+          "overall": "FAIL",
+          "reason": "planning board/calendar/papers still contain writing-like marks, labels, chart text, and pseudo-text.",
+          "recordedAt": "2026-09-20T04:38:46.545Z",
+          "archivedAt": "2026-09-20T04:39:50.996Z"
+        }
+      ],
+      "previousFailure": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "FAIL",
+        "overall": "FAIL",
+        "reason": "planning board/calendar/papers still contain writing-like marks, labels, chart text, and pseudo-text.",
+        "recordedAt": "2026-09-20T04:38:46.545Z"
+      },
+      "prompt": "CLEAN FLAT 2D CARTOON EDITORIAL ILLUSTRATION ONLY.\nExactly one visible adult seated at a simple wooden desk.\nThe adult gestures thoughtfully as if explaining a plan.\n\nBACKGROUND MUST BE EXTREMELY SIMPLE:\nplain warm ivory wall;\none blank wooden shelf;\none closed blank notebook;\none plain cup.\n\nDO NOT SHOW:\ncalendar,\nplanning board,\nwhiteboard,\nsticky notes,\nwall papers,\nposters,\ncharts,\ngraphs,\ndocuments,\nprinted sheets,\nscreens with UI.\n\nNo words.\nNo letters.\nNo numbers.\nNo symbols.\nNo pseudo-text.\nNo signature.\nNo watermark.\nNo logos.\n\nWarm ivory, muted sage, warm wood, charcoal linework.",
+      "regeneratedAt": "2026-09-20T04:39:50.996Z",
+      "attempt": 3,
+      "cleanupMethod": "deterministic-raster"
+    },
+    {
+      "videoKey": "video013",
+      "shotIndex": 3,
+      "file": "assets/shot-03.jpg",
+      "voice": "Nhưng đôi khi điều hữu ích hơn lại nhỏ hơn rất nhiều.",
+      "sceneText": "Two friends sitting together in gentle silence on a bench, one listening with warm patient eyes and supportive presence.",
+      "peopleContract": "2 visible people (supportive)",
+      "shortIntent": "Sitting quietly together on bench",
+      "sizeBytes": 459927,
+      "qaStatus": "PASS",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS",
+        "overall": "PASS",
+        "reason": "Two people seated supportively; clean visual and people contract.",
+        "recordedAt": "2026-09-20T04:27:31.459Z"
+      },
+      "reviewedSource": null
+    },
+    {
+      "videoKey": "video013",
+      "shotIndex": 4,
+      "file": "assets/shot-04.jpg",
+      "voice": "Đưa lời khuyên.",
+      "sceneText": "A person leans slightly forward over a wooden table, offering gentle advice with an earnest open hand gesture to their companion.",
+      "peopleContract": "2 visible people (dialogue)",
+      "shortIntent": "Offering gentle advice with open gesture",
+      "sizeBytes": 310814,
+      "qaStatus": "PASS",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS",
+        "overall": "PASS",
+        "reason": "Two-person advice gesture scene is clean and readable.",
+        "recordedAt": "2026-09-20T04:27:31.473Z"
+      },
+      "reviewedSource": null
+    },
+    {
+      "videoKey": "video013",
+      "shotIndex": 5,
+      "file": "assets/shot-05.jpg",
+      "voice": "So sánh với trải nghiệm của mình.",
+      "sceneText": "A person speaking with a hand lightly on their chest, sharing their own story warmly with their friend listening across the table.",
+      "peopleContract": "2 visible people (dialogue)",
+      "shortIntent": "Sharing personal story with friend",
+      "sizeBytes": 380875,
+      "qaStatus": "PASS",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS",
+        "overall": "PASS",
+        "reason": "Two-person personal-story scene is clean and semantically aligned.",
+        "recordedAt": "2026-09-20T04:27:31.485Z"
+      },
+      "reviewedSource": null
+    },
+    {
+      "videoKey": "video013",
+      "shotIndex": 6,
+      "file": "assets/shot-06.jpg",
+      "voice": "Chuyển nhanh sang cách giải quyết.",
+      "sceneText": "Two companions at a cafe table smile warmly in mutual relief and understanding, having shared a peaceful, grounded conversation.",
+      "peopleContract": "2 visible people (rapport)",
+      "shortIntent": "Smiling warmly in mutual relief",
+      "sizeBytes": 477899,
+      "qaStatus": "PASS",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS",
+        "overall": "PASS",
+        "reason": "Two people in rapport; clean style and anatomy.",
+        "recordedAt": "2026-09-20T04:27:31.501Z"
+      },
+      "reviewedSource": null
+    }
+  ]
+}

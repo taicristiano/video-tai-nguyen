@@ -1,0 +1,8 @@
+time_sec,previous_shot_duration,change_type
+0.00,,
+1.23,1.23,subject-action-change
+5.20,3.97,detail-insert-change
+6.70,1.50,composition-change
+10.80,4.10,subject-action-change
+16.93,6.13,detail-insert-change
+21.20,4.27,composition-change

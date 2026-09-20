@@ -1,0 +1,64 @@
+{
+  "videoKey": "video005",
+  "slug": "phan-5-2026-09-17-muoi-phut-reset-cuoi-ngay-dang-gia-hon",
+  "title": "Mười Phút Reset Cuối Ngày Đáng Giá Hơn Một Giờ Dọn Cuối Tuần",
+  "category": "relationship-dialogue",
+  "model": "@cf/black-forest-labs/flux-1-schnell",
+  "style": "clean 2D illustrated editorial",
+  "shots": [
+    {
+      "index": 1,
+      "attempt": 1,
+      "file": "shot-01.jpg",
+      "publicPath": "scratch/v36/generalization/video005/shot-01.jpg",
+      "sizeBytes": 476902,
+      "prompt": "STYLE DEFAULT:\nClean 2D illustrated / cartoon style.\nHand-drawn editorial illustration.\nSimple expressive faces and readable body shapes.\nClearly illustrated, never photorealistic.\nDo not aim for realistic skin or lifelike photographic rendering.\nCharacter likeness consistency between images is not required.\nEach image should be visually clean, readable, and usable in a short-form video.\n\nPALETTE:\nWarm ivory and cream background.\nMuted sage clothing or accents.\nWarm medium wood.\nCharcoal / sepia linework.\nSmall restrained terracotta or amber accents.\nLow saturation.\nNo glossy surfaces.\n\nVISIBLE PEOPLE:\nExactly one visible person in the scene. One young adult. No other people.\n\nSCENE:\nA young Vietnamese adult stands quietly in an untidy living room at evening, looking thoughtfully at scattered everyday items with a quiet, reflective sigh. Muted sage clothing, warm ivory background.\n\nWORLD:\nWarm cozy living room with wooden furniture and soft evening indoor light.\n\nFRAMING:\nMedium portrait-focus composition with balanced negative space.\n\nHARD EXCLUSIONS:\nNo photorealism, no photographic textures, no photographic lighting, no 3D render, no CGI, no camera, lens, or photographic terms, no anime or chibi, no text, no captions, no watermarks, no artist signatures, no speech bubbles, no UI elements.",
+      "status": "SELECTED"
+    },
+    {
+      "index": 2,
+      "attempt": 1,
+      "file": "shot-02.jpg",
+      "publicPath": "scratch/v36/generalization/video005/shot-02.jpg",
+      "sizeBytes": 364678,
+      "prompt": "STYLE DEFAULT:\nClean 2D illustrated / cartoon style.\nHand-drawn editorial illustration.\nSimple expressive faces and readable body shapes.\nClearly illustrated, never photorealistic.\nDo not aim for realistic skin or lifelike photographic rendering.\nCharacter likeness consistency between images is not required.\nEach image should be visually clean, readable, and usable in a short-form video.\n\nPALETTE:\nWarm ivory and cream background.\nMuted sage clothing or accents.\nWarm medium wood.\nCharcoal / sepia linework.\nSmall restrained terracotta or amber accents.\nLow saturation.\nNo glossy surfaces.\n\nVISIBLE PEOPLE:\nExactly one visible person. Solo adult.\n\nSCENE:\nA Vietnamese person sits quietly in a wooden chair, resting hands on knees, looking downward in contemplative thought. Calm expressive face, relaxed posture.\n\nWORLD:\nCozy home corner with warm wood chair, ivory wall, soft shadow.\n\nFRAMING:\nMedium shot, portrait-focus composition.\n\nHARD EXCLUSIONS:\nNo photorealism, no photographic textures, no photographic lighting, no 3D render, no CGI, no camera, lens, or photographic terms, no anime or chibi, no text, no captions, no watermarks, no artist signatures, no speech bubbles, no UI elements.",
+      "status": "SELECTED"
+    },
+    {
+      "index": 3,
+      "attempt": 1,
+      "file": "shot-03.jpg",
+      "publicPath": "scratch/v36/generalization/video005/shot-03.jpg",
+      "sizeBytes": 376335,
+      "prompt": "STYLE DEFAULT:\nClean 2D illustrated / cartoon style.\nHand-drawn editorial illustration.\nSimple expressive faces and readable body shapes.\nClearly illustrated, never photorealistic.\nDo not aim for realistic skin or lifelike photographic rendering.\nCharacter likeness consistency between images is not required.\nEach image should be visually clean, readable, and usable in a short-form video.\n\nPALETTE:\nWarm ivory and cream background.\nMuted sage clothing or accents.\nWarm medium wood.\nCharcoal / sepia linework.\nSmall restrained terracotta or amber accents.\nLow saturation.\nNo glossy surfaces.\n\nVISIBLE PEOPLE:\nExactly one visible person resting on the sofa.\n\nSCENE:\nA tired adult rests peacefully back onto a warm cream sofa, closing eyes gently to unwind after work. Soft warm lighting.\n\nWORLD:\nLiving room with cream sofa, warm wood side table, gentle indoor atmosphere.\n\nFRAMING:\nMedium portrait-focus shot, centered.\n\nHARD EXCLUSIONS:\nNo photorealism, no photographic textures, no photographic lighting, no 3D render, no CGI, no camera, lens, or photographic terms, no anime or chibi, no text, no captions, no watermarks, no artist signatures, no speech bubbles, no UI elements.",
+      "status": "SELECTED"
+    },
+    {
+      "index": 4,
+      "attempt": 1,
+      "file": "shot-04.jpg",
+      "publicPath": "scratch/v36/generalization/video005/shot-04.jpg",
+      "sizeBytes": 352477,
+      "prompt": "STYLE DEFAULT:\nClean 2D illustrated / cartoon style.\nHand-drawn editorial illustration.\nSimple expressive faces and readable body shapes.\nClearly illustrated, never photorealistic.\nDo not aim for realistic skin or lifelike photographic rendering.\nCharacter likeness consistency between images is not required.\nEach image should be visually clean, readable, and usable in a short-form video.\n\nPALETTE:\nWarm ivory and cream background.\nMuted sage clothing or accents.\nWarm medium wood.\nCharcoal / sepia linework.\nSmall restrained terracotta or amber accents.\nLow saturation.\nNo glossy surfaces.\n\nVISIBLE PEOPLE:\nExactly one visible person holding the ceramic mug.\n\nSCENE:\nA person holding a simple ceramic coffee mug in two hands, gently carrying it across the room toward the kitchen sink. Simple domestic reset.\n\nWORLD:\nClean minimalist kitchen counter with warm wooden elements.\n\nFRAMING:\nMedium close shot of person carrying a cup.\n\nHARD EXCLUSIONS:\nNo photorealism, no photographic textures, no photographic lighting, no 3D render, no CGI, no camera, lens, or photographic terms, no anime or chibi, no text, no captions, no watermarks, no artist signatures, no speech bubbles, no UI elements.",
+      "status": "SELECTED"
+    },
+    {
+      "index": 5,
+      "attempt": 1,
+      "file": "shot-05.jpg",
+      "publicPath": "scratch/v36/generalization/video005/shot-05.jpg",
+      "sizeBytes": 321443,
+      "prompt": "STYLE DEFAULT:\nClean 2D illustrated / cartoon style.\nHand-drawn editorial illustration.\nSimple expressive faces and readable body shapes.\nClearly illustrated, never photorealistic.\nDo not aim for realistic skin or lifelike photographic rendering.\nCharacter likeness consistency between images is not required.\nEach image should be visually clean, readable, and usable in a short-form video.\n\nPALETTE:\nWarm ivory and cream background.\nMuted sage clothing or accents.\nWarm medium wood.\nCharcoal / sepia linework.\nSmall restrained terracotta or amber accents.\nLow saturation.\nNo glossy surfaces.\n\nVISIBLE PEOPLE:\nExactly one visible person folding the blanket.\n\nSCENE:\nA person gently smoothing and folding a warm linen throw blanket on a tidy bed in a peaceful sunlit bedroom.\n\nWORLD:\nCalm bedroom with ivory walls, wooden headboard, soft natural light.\n\nFRAMING:\nMedium portrait-focus shot.\n\nHARD EXCLUSIONS:\nNo photorealism, no photographic textures, no photographic lighting, no 3D render, no CGI, no camera, lens, or photographic terms, no anime or chibi, no text, no captions, no watermarks, no artist signatures, no speech bubbles, no UI elements.",
+      "status": "SELECTED"
+    },
+    {
+      "index": 6,
+      "attempt": 1,
+      "file": "shot-06.jpg",
+      "publicPath": "scratch/v36/generalization/video005/shot-06.jpg",
+      "sizeBytes": 399570,
+      "prompt": "STYLE DEFAULT:\nClean 2D illustrated / cartoon style.\nHand-drawn editorial illustration.\nSimple expressive faces and readable body shapes.\nClearly illustrated, never photorealistic.\nDo not aim for realistic skin or lifelike photographic rendering.\nCharacter likeness consistency between images is not required.\nEach image should be visually clean, readable, and usable in a short-form video.\n\nPALETTE:\nWarm ivory and cream background.\nMuted sage clothing or accents.\nWarm medium wood.\nCharcoal / sepia linework.\nSmall restrained terracotta or amber accents.\nLow saturation.\nNo glossy surfaces.\n\nVISIBLE PEOPLE:\nExactly one visible person at the desk.\n\nSCENE:\nA person gently wiping or tidying a warm wooden desk, placing a book and lamp neatly in place. Feeling of peace and order restored.\n\nWORLD:\nHome study corner with warm wood desk and soft desk lamp light.\n\nFRAMING:\nMedium portrait-focus composition.\n\nHARD EXCLUSIONS:\nNo photorealism, no photographic textures, no photographic lighting, no 3D render, no CGI, no camera, lens, or photographic terms, no anime or chibi, no text, no captions, no watermarks, no artist signatures, no speech bubbles, no UI elements.",
+      "status": "SELECTED"
+    }
+  ]
+}

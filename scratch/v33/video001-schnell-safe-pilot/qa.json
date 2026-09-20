@@ -1,0 +1,140 @@
+[
+  {
+    "beatId": "beat-02",
+    "sourceRoute": "SIMPLIFY_OR_CANONICAL",
+    "fulfillment": "SCHNELL_OBJECT",
+    "selectedMember": null,
+    "semanticAnchorsPreserved": [
+      "SIMPLE_MEAL"
+    ],
+    "style": "PASS",
+    "peopleContract": "PASS",
+    "semanticFidelity": "PASS",
+    "anatomy": "PASS",
+    "textPollution": "PASS",
+    "overall": "PASS",
+    "notes": "Flawless 2D editorial still-life. Wooden table, soup and rice bowls, chopsticks, no people, zero text."
+  },
+  {
+    "beatId": "beat-04",
+    "sourceRoute": "SIMPLIFY_OR_CANONICAL",
+    "fulfillment": "SCHNELL_SINGLE",
+    "selectedMember": "boy",
+    "semanticAnchorsPreserved": [
+      "SPEAKING"
+    ],
+    "style": "PASS",
+    "peopleContract": "PASS",
+    "semanticFidelity": "PASS",
+    "anatomy": "PASS",
+    "textPollution": "PASS",
+    "overall": "PASS",
+    "notes": "Mandatory single-child archetype. Exactly 1 boy, school-age, intact body, warm expressive face, zero text pollution."
+  },
+  {
+    "beatId": "beat-06",
+    "sourceRoute": "SCHNELL_SAFE",
+    "fulfillment": "UNCHANGED",
+    "selectedMember": "father",
+    "semanticAnchorsPreserved": [],
+    "style": "PASS",
+    "peopleContract": "PASS",
+    "semanticFidelity": "PASS",
+    "anatomy": "PASS",
+    "textPollution": "FAIL",
+    "overall": "FAIL",
+    "notes": "Clean 1-person adult male composition, but contains a clear cursive artist signature (\"Zathren\") in bottom-right corner."
+  },
+  {
+    "beatId": "beat-07",
+    "sourceRoute": "SIMPLIFY_OR_CANONICAL",
+    "fulfillment": "SCHNELL_OBJECT",
+    "selectedMember": null,
+    "semanticAnchorsPreserved": [
+      "SCHOOL_WORK"
+    ],
+    "style": "PASS",
+    "peopleContract": "FAIL",
+    "semanticFidelity": "PASS",
+    "anatomy": "PASS",
+    "textPollution": "FAIL",
+    "overall": "FAIL",
+    "notes": "Mandatory school/work object archetype. Hallucinated a background person in the doorway/booth (violating 0-people contract) and text \"EAASO\" in the wall frame."
+  },
+  {
+    "beatId": "beat-08",
+    "sourceRoute": "SIMPLIFY_OR_CANONICAL",
+    "fulfillment": "SCHNELL_SINGLE",
+    "selectedMember": "mother",
+    "semanticAnchorsPreserved": [
+      "EVERYDAY_DETAIL"
+    ],
+    "style": "PASS",
+    "peopleContract": "PASS",
+    "semanticFidelity": "PASS",
+    "anatomy": "PASS",
+    "textPollution": "PASS",
+    "overall": "PASS",
+    "notes": "Flawless single adult woman in peaceful armchair pause. Intact anatomy, low bun, zero text pollution."
+  },
+  {
+    "beatId": "beat-09",
+    "sourceRoute": "SIMPLIFY_OR_CANONICAL",
+    "fulfillment": "SCHNELL_SINGLE",
+    "selectedMember": "mother",
+    "semanticAnchorsPreserved": [
+      "EVERYDAY_DETAIL"
+    ],
+    "style": "PASS",
+    "peopleContract": "PASS",
+    "semanticFidelity": "PASS",
+    "anatomy": "PASS",
+    "textPollution": "FAIL",
+    "overall": "FAIL",
+    "notes": "Clean single adult female portrait on sofa, but contains an underlined signature (\"MH Tim\") in bottom-right corner."
+  },
+  {
+    "beatId": "beat-10",
+    "sourceRoute": "SIMPLIFY_OR_CANONICAL",
+    "fulfillment": "SCHNELL_SINGLE",
+    "selectedMember": "mother",
+    "semanticAnchorsPreserved": [
+      "SIMPLE_MEAL"
+    ],
+    "style": "PASS",
+    "peopleContract": "FAIL",
+    "semanticFidelity": "PASS",
+    "anatomy": "PASS",
+    "textPollution": "FAIL",
+    "overall": "FAIL",
+    "notes": "Hallucinated a second person (baby/toddler sitting on couch next to mother) and text artifact \"@21.4 Motnal\" in bottom-right corner."
+  },
+  {
+    "beatId": "beat-12",
+    "sourceRoute": "SCHNELL_SAFE",
+    "fulfillment": "UNCHANGED",
+    "selectedMember": "father",
+    "semanticAnchorsPreserved": [],
+    "style": "PASS",
+    "peopleContract": "FAIL",
+    "semanticFidelity": "PASS",
+    "anatomy": "FAIL",
+    "textPollution": "PASS",
+    "overall": "FAIL",
+    "notes": "Severe anatomy failure: a severed phantom arm and hand dangles behind the father's left hip, violating both people contract and anatomy gates."
+  },
+  {
+    "beatId": "beat-15",
+    "sourceRoute": "SCHNELL_SAFE",
+    "fulfillment": "UNCHANGED",
+    "selectedMember": null,
+    "semanticAnchorsPreserved": [],
+    "style": "PASS",
+    "peopleContract": "PASS",
+    "semanticFidelity": "PASS",
+    "anatomy": "PASS",
+    "textPollution": "FAIL",
+    "overall": "FAIL",
+    "notes": "Mandatory no-people release archetype. Empty room geometry and style are excellent, but bottom-right corner has cursive signature \"@leiin Lacking\"."
+  }
+]

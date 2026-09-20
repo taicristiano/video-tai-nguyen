@@ -1,0 +1,16 @@
+{
+  "videoIndex": 1,
+  "model": "@cf/black-forest-labs/flux-1-schnell",
+  "beatCount": 16,
+  "generatedBeatCount": 13,
+  "reuseCanonicalBeatCount": 3,
+  "totalApiCalls": 30,
+  "firstAttemptPassCount": 4,
+  "retryBeatCount": 9,
+  "failedAfterMaxRetriesCount": 8,
+  "anatomyRejectCount": 5,
+  "textPollutionRejectCount": 5,
+  "peopleContractRejectCount": 7,
+  "semanticRejectCount": 3,
+  "styleDriftRejectCount": 18
+}

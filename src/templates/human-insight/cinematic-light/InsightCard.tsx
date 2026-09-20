@@ -8,6 +8,7 @@ export interface InsightCardProps {
   authorOrContext?: string;
   durationFrames?: number;
   framing?: 'standard' | 'focus';
+  variant?: 'overlay' | 'card';
 }
 
 export const InsightCard: React.FC<InsightCardProps> = ({
@@ -15,6 +16,7 @@ export const InsightCard: React.FC<InsightCardProps> = ({
   authorOrContext,
   durationFrames = 66, // 0.3s enter (9f) + 1.47s clean still hold (44f) + 4f text fade + 9f card exit = 2.20s total
   framing = 'standard',
+  variant = 'overlay',
 }) => {
   const frame = useCurrentFrame();
 
@@ -22,23 +24,65 @@ export const InsightCard: React.FC<InsightCardProps> = ({
     return null;
   }
 
+  if (variant === 'overlay') {
+    const exitFrames = 8;
+    const exitStart = Math.max(0, durationFrames - exitFrames);
+
+    const opacity = interpolate(
+      frame,
+      [0, 8, exitStart, durationFrames],
+      [0, 1, 1, 0],
+      {
+        extrapolateLeft: 'clamp',
+        extrapolateRight: 'clamp',
+      },
+    );
+
+    return (
+      <div
+        style={{
+          position: 'absolute',
+          left: 70,
+          right: 70,
+          top: framing === 'focus' ? 690 : 720,
+          zIndex: 25,
+          display: 'flex',
+          justifyContent: 'center',
+          pointerEvents: 'none',
+          opacity,
+        }}
+      >
+        <div
+          style={{
+            maxWidth: 900,
+            padding: '28px 38px',
+            borderRadius: 24,
+            background:
+              'linear-gradient(180deg, rgba(255,252,247,0.72), rgba(255,252,247,0.90))',
+            backdropFilter: 'blur(5px)',
+            border: '1px solid rgba(48,45,40,0.08)',
+            boxShadow: '0 12px 36px rgba(48,45,40,0.08)',
+            fontFamily: FONT_MAIN,
+            fontSize: 46,
+            lineHeight: 1.34,
+            fontWeight: 700,
+            color: COLORS.text,
+            textAlign: 'center',
+            whiteSpace: 'pre-line',
+          }}
+        >
+          {statement}
+        </div>
+      </div>
+    );
+  }
+
   const { width, height, top } = FRAMING[framing];
 
-  // ── Entrance (frames 0 to 9, ~0.30s): gentle lift + fade-in ─────────────────
-  const enterFrames = 9;
-  const enterProgress = Math.min(1, Math.max(0, frame / enterFrames));
-  const enterY = interpolate(enterProgress, [0, 1], [10, 0], {
-    extrapolateLeft: 'clamp',
-    extrapolateRight: 'clamp',
-  });
-  const enterScale = interpolate(enterProgress, [0, 1], [0.98, 1.0], {
-    extrapolateLeft: 'clamp',
-    extrapolateRight: 'clamp',
-  });
-  const enterOpacity = interpolate(enterProgress, [0, 1], [0, 1], {
-    extrapolateLeft: 'clamp',
-    extrapolateRight: 'clamp',
-  });
+  // ── Entrance: immediate cut-in for hard cut fidelity (zero blank intermediate frame) ──
+  const enterY = 0;
+  const enterScale = 1.0;
+  const enterOpacity = 1.0;
 
   // ── Exit timing: Card and statement text dissolve TOGETHER (zero blank card window) ──
   const cardExitFrames = 10;

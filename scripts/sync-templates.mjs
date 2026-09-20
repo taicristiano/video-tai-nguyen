@@ -887,9 +887,15 @@ function installDependencies(plan, args, counters, transaction) {
       version && version !== 'latest' ? `${name}@${version}` : name
     )),
   ];
-  const result = spawnSync('npm', installArgs, {cwd: ROOT, encoding: 'utf8', stdio: 'pipe'});
+  const npmCmd = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+  const result = spawnSync(npmCmd, installArgs, {
+    cwd: ROOT,
+    encoding: 'utf8',
+    stdio: 'pipe',
+    shell: process.platform === 'win32',
+  });
   if (result.status !== 0) {
-    throw new Error(`npm install failed.\nCommand: npm ${installArgs.join(' ')}\n${result.stderr || result.stdout}`);
+    throw new Error(`npm install failed.\nCommand: npm ${installArgs.join(' ')}\n${result.stderr || result.stdout || result.error?.message}`);
   }
   counters.installedDependencies += plan.dependencies.length;
 }
@@ -912,17 +918,20 @@ function verifyInstalledPlan(plan) {
   ) {
     throw new Error(`Post-sync verification failed; asset manifest is missing: ${plan.registryEntry.assetManifestPath}`);
   }
-  const tscPath = path.join(ROOT, 'node_modules/.bin/tsc');
+  const tscPath = process.platform === 'win32'
+    ? path.join(ROOT, 'node_modules/.bin/tsc.cmd')
+    : path.join(ROOT, 'node_modules/.bin/tsc');
   const tsconfigPath = path.join(ROOT, 'tsconfig.json');
   if (plan.requiresTypecheck && fs.existsSync(tscPath) && fs.existsSync(tsconfigPath)) {
     const result = spawnSync(tscPath, ['--noEmit', '--pretty', 'false'], {
       cwd: ROOT,
       encoding: 'utf8',
       stdio: 'pipe',
+      shell: process.platform === 'win32',
       maxBuffer: 20 * 1024 * 1024,
     });
     if (result.status !== 0) {
-      throw new Error(`Post-sync TypeScript validation failed.\n${result.stdout || result.stderr}`);
+      throw new Error(`Post-sync TypeScript validation failed.\n${result.stdout || result.stderr || result.error?.message}`);
     }
   }
 }

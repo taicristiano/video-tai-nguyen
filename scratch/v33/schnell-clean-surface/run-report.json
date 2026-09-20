@@ -1,0 +1,151 @@
+{
+  "timestamp": "2026-09-19T12:05:00Z",
+  "task": "V3.3B-S.6.1",
+  "goal": "SCHNELL TEXT-POLLUTION PROMPT GEOMETRY ONLY",
+  "model": "@cf/black-forest-labs/flux-1-schnell",
+  "endpoint": "https://api.cloudflare.com/client/v4/accounts/{CLOUDFLARE_ACCOUNT_ID}/ai/run/@cf/black-forest-labs/flux-1-schnell",
+  "forbiddenTokenValidation": {
+    "tokensChecked": [
+      "text",
+      "word",
+      "written",
+      "writing",
+      "letter",
+      "lettering",
+      "logo",
+      "signature",
+      "watermark",
+      "caption",
+      "label",
+      "brand",
+      "typography",
+      "font",
+      "sign",
+      "signed"
+    ],
+    "allPromptsPassed": true,
+    "forbiddenTokensFound": 0
+  },
+  "runs": [
+    {
+      "beatId": "beat-06",
+      "callId": "a",
+      "filename": "beat-06-a.jpg",
+      "stylePreserved": true,
+      "unwantedPseudoWriting": "NONE",
+      "detectedSignature": null,
+      "textCleanliness": "PASS",
+      "peopleContractObservation": "1 adult male (father), hands in pockets; PASS",
+      "anatomyObservation": "Stable natural proportion, intact hands/torso; PASS",
+      "semanticObservation": "Father standing in domestic setting; PASS"
+    },
+    {
+      "beatId": "beat-06",
+      "callId": "b",
+      "filename": "beat-06-b.jpg",
+      "stylePreserved": true,
+      "unwantedPseudoWriting": "LOWER_RIGHT",
+      "detectedSignature": "Mfian Halcan (cursive ink signature on bottom-right margin)",
+      "textCleanliness": "FAIL",
+      "peopleContractObservation": "1 adult male (father), hands in pockets; PASS",
+      "anatomyObservation": "Stable anatomy; PASS",
+      "semanticObservation": "Father standing calmly; PASS"
+    },
+    {
+      "beatId": "beat-07",
+      "callId": "a",
+      "filename": "beat-07-a.jpg",
+      "stylePreserved": true,
+      "unwantedPseudoWriting": "LOWER_RIGHT",
+      "detectedSignature": "Chcil (cursive signature on bottom-right floor)",
+      "textCleanliness": "FAIL",
+      "peopleContractObservation": "0 people visible; PASS",
+      "anatomyObservation": "N/A (0 people); PASS",
+      "semanticObservation": "Quiet living room interior with blank wall frame; PASS"
+    },
+    {
+      "beatId": "beat-07",
+      "callId": "b",
+      "filename": "beat-07-b.jpg",
+      "stylePreserved": true,
+      "unwantedPseudoWriting": "NONE",
+      "detectedSignature": null,
+      "textCleanliness": "PASS",
+      "peopleContractObservation": "0 people visible; PASS",
+      "anatomyObservation": "N/A (0 people); PASS",
+      "semanticObservation": "Quiet living room interior with two pristine blank wall frames; PASS"
+    },
+    {
+      "beatId": "beat-09",
+      "callId": "a",
+      "filename": "beat-09-a.jpg",
+      "stylePreserved": true,
+      "unwantedPseudoWriting": "NONE",
+      "detectedSignature": null,
+      "textCleanliness": "PASS",
+      "peopleContractObservation": "2 people visible (mother + hallucinated infant); FAIL count contract",
+      "anatomyObservation": "Believable hands and facial structures; PASS",
+      "semanticObservation": "Mother holding child in domestic setting; PASS"
+    },
+    {
+      "beatId": "beat-09",
+      "callId": "b",
+      "filename": "beat-09-b.jpg",
+      "stylePreserved": true,
+      "unwantedPseudoWriting": "NONE",
+      "detectedSignature": null,
+      "textCleanliness": "PASS",
+      "peopleContractObservation": "1 adult female (mother) seated in armchair; PASS",
+      "anatomyObservation": "Natural hands and profile; PASS",
+      "semanticObservation": "Mother resting serenely; PASS"
+    },
+    {
+      "beatId": "beat-15",
+      "callId": "a",
+      "filename": "beat-15-a.jpg",
+      "stylePreserved": true,
+      "unwantedPseudoWriting": "LOWER_RIGHT",
+      "detectedSignature": "Obiom ldoyz (cursive golden signature on bottom-right floor; faint scribble bottom-left)",
+      "textCleanliness": "FAIL",
+      "peopleContractObservation": "0 people visible; PASS",
+      "anatomyObservation": "N/A (0 people); PASS",
+      "semanticObservation": "Warm evening living room interior; PASS"
+    },
+    {
+      "beatId": "beat-15",
+      "callId": "b",
+      "filename": "beat-15-b.jpg",
+      "stylePreserved": true,
+      "unwantedPseudoWriting": "LOWER_RIGHT",
+      "detectedSignature": "Aumlan / Aum fan (cursive brown signature on bottom-right floor)",
+      "textCleanliness": "FAIL",
+      "peopleContractObservation": "0 people visible in room; PASS",
+      "anatomyObservation": "N/A (0 people); PASS",
+      "semanticObservation": "Quiet empty living room interior; PASS"
+    }
+  ],
+  "aggregate": {
+    "totalImages": 8,
+    "stylePreservedCount": 8,
+    "stylePreservedRate": 1.0,
+    "textCleanlinessPassCount": 4,
+    "textCleanlinessFailCount": 4,
+    "textCleanlinessRate": 0.5,
+    "beatsWithAtLeastOneClean": 3,
+    "beatsTotal": 4,
+    "beatResults": {
+      "beat-06": { "pass": 1, "fail": 1, "cleanRate": 0.5 },
+      "beat-07": { "pass": 1, "fail": 1, "cleanRate": 0.5 },
+      "beat-09": { "pass": 2, "fail": 0, "cleanRate": 1.0 },
+      "beat-15": { "pass": 0, "fail": 2, "cleanRate": 0.0 }
+    }
+  },
+  "passRule": {
+    "requiredTextCleanliness": ">= 7/8 (87.5%)",
+    "requiredStylePreservation": "8/8 (100%)",
+    "requiredPerBeatClean": "4/4 beats >= 1 clean sample",
+    "passed": false
+  },
+  "verdict": "V3.3B-S.6.1 SCHNELL CLEAN-SURFACE GEOMETRY — FAIL",
+  "conclusion": "Prompt-only clean-surface geometry is insufficient to suppress Schnell pseudo-writing reliably. While it successfully cleared wall-decor text, reserving empty paper space in the bottom-right corner actively invites FLUX.1 illustration signature priors into the open margin."
+}

@@ -1,0 +1,142 @@
+{
+  "videoKey": "video001",
+  "slug": "phan-1-2026-09-19-co-nhung-bua-com-sau-nay-moi-hieu",
+  "title": "Có những bữa cơm sau này mới hiểu là rất quý",
+  "category": "family-emotional",
+  "qaStatus": "PASS",
+  "updatedAt": "2026-09-20T03:55:57.373Z",
+  "shots": [
+    {
+      "videoKey": "video001",
+      "shotIndex": 1,
+      "file": "assets/shot-01.jpg",
+      "voice": "Khi còn nhỏ, một bữa cơm đủ người thường chỉ là chuyện rất bình thường.",
+      "sceneText": "A Vietnamese family of three (parents and a young child) sharing a simple home-cooked dinner at a wooden dining table.",
+      "peopleContract": "3 visible people: Vietnamese father, mother, child",
+      "shortIntent": "Family dinner at wooden table",
+      "sizeBytes": 456585,
+      "qaStatus": "PASS",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS",
+        "overall": "PASS",
+        "source": "V3.4A_HUMAN_REVIEW",
+        "recordedAt": "2026-09-20T08:35:00.000Z"
+      },
+      "reviewedSource": "V3.4A_HUMAN_REVIEW"
+    },
+    {
+      "videoKey": "video001",
+      "shotIndex": 2,
+      "file": "assets/shot-02.jpg",
+      "voice": "Giá trị của bữa cơm không nằm ở món ăn cầu kỳ,",
+      "sceneText": "A Vietnamese adult quietly serves rice from a ceramic bowl using wooden chopsticks at the dining table. Simple home-cooked food in everyday ceramic bowls.",
+      "peopleContract": "1 visible adult",
+      "shortIntent": "Serving rice quietly at dining table",
+      "sizeBytes": 403763,
+      "qaStatus": "PASS",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS",
+        "overall": "PASS",
+        "source": "V3.4A_HUMAN_REVIEW",
+        "recordedAt": "2026-09-20T08:35:00.000Z"
+      },
+      "reviewedSource": "V3.4A_HUMAN_REVIEW"
+    },
+    {
+      "videoKey": "video001",
+      "shotIndex": 3,
+      "file": "assets/shot-03.jpg",
+      "voice": "mà ở việc mọi người cùng có mặt, nghe vài câu chuyện vụn và nhìn thấy nhau sau một ngày dài.",
+      "sceneText": "A Vietnamese parent and young school-age child reconnect at the wooden dining table after returning home.",
+      "peopleContract": "2 visible people: 1 adult, 1 child",
+      "shortIntent": "Parent and child talking at table",
+      "sizeBytes": 419877,
+      "qaStatus": "PASS",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS",
+        "overall": "PASS",
+        "source": "V3.4A_HUMAN_REVIEW",
+        "recordedAt": "2026-09-20T08:35:00.000Z"
+      },
+      "reviewedSource": "V3.4A_HUMAN_REVIEW"
+    },
+    {
+      "videoKey": "video001",
+      "shotIndex": 4,
+      "file": "assets/shot-04.jpg",
+      "voice": "Có thể là một mâm cơm đơn giản có đủ người, hoặc chiếc điện thoại được đặt sang một bên.",
+      "sceneText": "A Vietnamese adult deliberately places a smartphone face-down on a small wooden side shelf away from the dining table.",
+      "peopleContract": "1 visible adult",
+      "shortIntent": "Placing phone aside deliberately",
+      "sizeBytes": 340068,
+      "qaStatus": "PASS",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS",
+        "overall": "PASS",
+        "source": "V3.4A_HUMAN_REVIEW",
+        "recordedAt": "2026-09-20T08:35:00.000Z"
+      },
+      "reviewedSource": "V3.4A_HUMAN_REVIEW"
+    },
+    {
+      "videoKey": "video001",
+      "shotIndex": 5,
+      "file": "assets/shot-05.jpg",
+      "voice": "Có khi chỉ là câu chuyện nhỏ sau một ngày đi học, đi làm.",
+      "sceneText": "A Vietnamese parent has just returned from work, placing a work bag and keys by the wooden chair, while the young child sits at the table with a school notebook.",
+      "peopleContract": "2 visible people: 1 adult, 1 child",
+      "shortIntent": "Returning home after school and work",
+      "sizeBytes": 448853,
+      "qaStatus": "PASS",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS",
+        "overall": "PASS",
+        "source": "V3.4A_HUMAN_REVIEW",
+        "recordedAt": "2026-09-20T08:35:00.000Z"
+      },
+      "reviewedSource": "V3.4A_HUMAN_REVIEW"
+    },
+    {
+      "videoKey": "video001",
+      "shotIndex": 6,
+      "file": "assets/shot-06.jpg",
+      "voice": "Những chi tiết như vậy không tạo cảm giác mình vừa thay đổi cả cuộc sống.",
+      "sceneText": "A Vietnamese adult quietly pauses at the wooden dining table with a calm reflective expression, resting hands peacefully on the table.",
+      "peopleContract": "1 visible adult",
+      "shortIntent": "Quiet reflective domestic pause",
+      "sizeBytes": 514583,
+      "qaStatus": "PASS",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS",
+        "overall": "PASS",
+        "source": "V3.4A_HUMAN_REVIEW",
+        "recordedAt": "2026-09-20T08:35:00.000Z"
+      },
+      "reviewedSource": "V3.4A_HUMAN_REVIEW"
+    }
+  ]
+}

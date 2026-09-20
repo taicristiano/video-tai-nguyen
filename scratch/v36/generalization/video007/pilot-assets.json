@@ -1,0 +1,64 @@
+{
+  "videoKey": "video007",
+  "slug": "phan-7-2026-09-17-hai-muoi-bon-gio-truoc-mot-mon-mua",
+  "title": "Hai Mươi Bốn Giờ Trước Một Món Mua Không Cần Gấp",
+  "category": "home-living",
+  "model": "@cf/black-forest-labs/flux-1-schnell",
+  "style": "clean 2D illustrated editorial",
+  "shots": [
+    {
+      "index": 1,
+      "attempt": 1,
+      "file": "shot-01.jpg",
+      "publicPath": "scratch/v36/generalization/video007/shot-01.jpg",
+      "sizeBytes": 497192,
+      "prompt": "STYLE DEFAULT:\nClean 2D illustrated / cartoon style.\nHand-drawn editorial illustration.\nSimple expressive faces and readable body shapes.\nClearly illustrated, never photorealistic.\nDo not aim for realistic skin or lifelike photographic rendering.\nCharacter likeness consistency between images is not required.\nEach image should be visually clean, readable, and usable in a short-form video.\n\nPALETTE:\nWarm ivory and cream background.\nMuted sage clothing or accents.\nWarm medium wood.\nCharcoal / sepia linework.\nSmall restrained terracotta or amber accents.\nLow saturation.\nNo glossy surfaces.\n\nVISIBLE PEOPLE:\nExactly one visible person outside the shop window.\n\nSCENE:\nA young Vietnamese person stands outside a warm boutique store window, looking at aesthetic ceramics and stationery on display with curious, tempted eyes.\n\nWORLD:\nMinimalist street boutique with wooden window frames and warm cream exterior.\n\nFRAMING:\nMedium portrait-focus shot.\n\nHARD EXCLUSIONS:\nNo photorealism, no photographic textures, no photographic lighting, no 3D render, no CGI, no camera, lens, or photographic terms, no anime or chibi, no text, no captions, no watermarks, no artist signatures, no speech bubbles, no UI elements.",
+      "status": "SELECTED"
+    },
+    {
+      "index": 2,
+      "attempt": 1,
+      "file": "shot-02.jpg",
+      "publicPath": "scratch/v36/generalization/video007/shot-02.jpg",
+      "sizeBytes": 585770,
+      "prompt": "STYLE DEFAULT:\nClean 2D illustrated / cartoon style.\nHand-drawn editorial illustration.\nSimple expressive faces and readable body shapes.\nClearly illustrated, never photorealistic.\nDo not aim for realistic skin or lifelike photographic rendering.\nCharacter likeness consistency between images is not required.\nEach image should be visually clean, readable, and usable in a short-form video.\n\nPALETTE:\nWarm ivory and cream background.\nMuted sage clothing or accents.\nWarm medium wood.\nCharcoal / sepia linework.\nSmall restrained terracotta or amber accents.\nLow saturation.\nNo glossy surfaces.\n\nVISIBLE PEOPLE:\nExactly one visible person standing in the aisle.\n\nSCENE:\nA person holding a shopping basket pauses in a peaceful store aisle, holding an item and thinking with mild hesitation.\n\nWORLD:\nQuiet boutique interior with wooden shelves and soft ambient lighting.\n\nFRAMING:\nMedium shot, centered portrait-focus.\n\nHARD EXCLUSIONS:\nNo photorealism, no photographic textures, no photographic lighting, no 3D render, no CGI, no camera, lens, or photographic terms, no anime or chibi, no text, no captions, no watermarks, no artist signatures, no speech bubbles, no UI elements.",
+      "status": "SELECTED"
+    },
+    {
+      "index": 3,
+      "attempt": 1,
+      "file": "shot-03.jpg",
+      "publicPath": "scratch/v36/generalization/video007/shot-03.jpg",
+      "sizeBytes": 348448,
+      "prompt": "STYLE DEFAULT:\nClean 2D illustrated / cartoon style.\nHand-drawn editorial illustration.\nSimple expressive faces and readable body shapes.\nClearly illustrated, never photorealistic.\nDo not aim for realistic skin or lifelike photographic rendering.\nCharacter likeness consistency between images is not required.\nEach image should be visually clean, readable, and usable in a short-form video.\n\nPALETTE:\nWarm ivory and cream background.\nMuted sage clothing or accents.\nWarm medium wood.\nCharcoal / sepia linework.\nSmall restrained terracotta or amber accents.\nLow saturation.\nNo glossy surfaces.\n\nVISIBLE PEOPLE:\nExactly one visible person in the armchair.\n\nSCENE:\nA person sits peacefully at home in an armchair holding a warm cup of tea, resting in quiet contentment without unnecessary purchases.\n\nWORLD:\nCozy living room corner, ivory wall, warm wooden bookshelf.\n\nFRAMING:\nMedium portrait-focus shot.\n\nHARD EXCLUSIONS:\nNo photorealism, no photographic textures, no photographic lighting, no 3D render, no CGI, no camera, lens, or photographic terms, no anime or chibi, no text, no captions, no watermarks, no artist signatures, no speech bubbles, no UI elements.",
+      "status": "SELECTED"
+    },
+    {
+      "index": 4,
+      "attempt": 1,
+      "file": "shot-04.jpg",
+      "publicPath": "scratch/v36/generalization/video007/shot-04.jpg",
+      "sizeBytes": 401625,
+      "prompt": "STYLE DEFAULT:\nClean 2D illustrated / cartoon style.\nHand-drawn editorial illustration.\nSimple expressive faces and readable body shapes.\nClearly illustrated, never photorealistic.\nDo not aim for realistic skin or lifelike photographic rendering.\nCharacter likeness consistency between images is not required.\nEach image should be visually clean, readable, and usable in a short-form video.\n\nPALETTE:\nWarm ivory and cream background.\nMuted sage clothing or accents.\nWarm medium wood.\nCharcoal / sepia linework.\nSmall restrained terracotta or amber accents.\nLow saturation.\nNo glossy surfaces.\n\nVISIBLE PEOPLE:\nExactly one visible person examining the bowl.\n\nSCENE:\nA person gently examines a handcrafted ceramic bowl on a wooden display shelf in a calm lifestyle shop.\n\nWORLD:\nWarm lifestyle boutique with wooden display shelves and warm lighting.\n\nFRAMING:\nMedium close portrait-focus shot.\n\nHARD EXCLUSIONS:\nNo photorealism, no photographic textures, no photographic lighting, no 3D render, no CGI, no camera, lens, or photographic terms, no anime or chibi, no text, no captions, no watermarks, no artist signatures, no speech bubbles, no UI elements.",
+      "status": "SELECTED"
+    },
+    {
+      "index": 5,
+      "attempt": 1,
+      "file": "shot-05.jpg",
+      "publicPath": "scratch/v36/generalization/video007/shot-05.jpg",
+      "sizeBytes": 394910,
+      "prompt": "STYLE DEFAULT:\nClean 2D illustrated / cartoon style.\nHand-drawn editorial illustration.\nSimple expressive faces and readable body shapes.\nClearly illustrated, never photorealistic.\nDo not aim for realistic skin or lifelike photographic rendering.\nCharacter likeness consistency between images is not required.\nEach image should be visually clean, readable, and usable in a short-form video.\n\nPALETTE:\nWarm ivory and cream background.\nMuted sage clothing or accents.\nWarm medium wood.\nCharcoal / sepia linework.\nSmall restrained terracotta or amber accents.\nLow saturation.\nNo glossy surfaces.\n\nVISIBLE PEOPLE:\nNo visible people in this detail shot. Only the objects on the wooden table.\n\nSCENE:\nA small handcrafted ceramic dish and an elegant brass bookmark resting quietly on a polished wooden desk in warm morning light. Clean still-life composition.\n\nWORLD:\nWarm wooden table surface, soft ivory ambient light.\n\nFRAMING:\nDetail shot, balanced centered composition.\n\nHARD EXCLUSIONS:\nNo photorealism, no photographic textures, no photographic lighting, no 3D render, no CGI, no camera, lens, or photographic terms, no anime or chibi, no text, no captions, no watermarks, no artist signatures, no speech bubbles, no UI elements.",
+      "status": "SELECTED"
+    },
+    {
+      "index": 6,
+      "attempt": 1,
+      "file": "shot-06.jpg",
+      "publicPath": "scratch/v36/generalization/video007/shot-06.jpg",
+      "sizeBytes": 676516,
+      "prompt": "STYLE DEFAULT:\nClean 2D illustrated / cartoon style.\nHand-drawn editorial illustration.\nSimple expressive faces and readable body shapes.\nClearly illustrated, never photorealistic.\nDo not aim for realistic skin or lifelike photographic rendering.\nCharacter likeness consistency between images is not required.\nEach image should be visually clean, readable, and usable in a short-form video.\n\nPALETTE:\nWarm ivory and cream background.\nMuted sage clothing or accents.\nWarm medium wood.\nCharcoal / sepia linework.\nSmall restrained terracotta or amber accents.\nLow saturation.\nNo glossy surfaces.\n\nVISIBLE PEOPLE:\nExactly one visible person walking peacefully.\n\nSCENE:\nA person walks peacefully down a quiet leafy residential street with empty hands, wearing a light jacket, feeling unburdened and calm.\n\nWORLD:\nTranquil suburban street with green trees and soft afternoon light.\n\nFRAMING:\nMedium portrait-focus shot.\n\nHARD EXCLUSIONS:\nNo photorealism, no photographic textures, no photographic lighting, no 3D render, no CGI, no camera, lens, or photographic terms, no anime or chibi, no text, no captions, no watermarks, no artist signatures, no speech bubbles, no UI elements.",
+      "status": "SELECTED"
+    }
+  ]
+}

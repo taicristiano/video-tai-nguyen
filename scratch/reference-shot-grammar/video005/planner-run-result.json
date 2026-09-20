@@ -1,0 +1,1499 @@
+{
+  "plan": {
+    "grammarVersion": "reference-shot-grammar-v1",
+    "plannerVersion": "cinematic-light-story-planner-v2.1",
+    "generatedByTemplate": true,
+    "sourceSlug": "phan-5-2026-09-17-muoi-phut-reset-cuoi-ngay-dang-gia-hon",
+    "title": "Mười Phút Reset Cuối Ngày Đáng Giá Hơn Một Giờ Dọn Cuối Tuần",
+    "shots": [
+      {
+        "id": "shot-01",
+        "startFrame": 0,
+        "endFrame": 94,
+        "durationFrames": 94,
+        "scale": "WIDE",
+        "silhouette": "room-wide",
+        "storyRole": "hook",
+        "visualVerb": "dọn",
+        "semanticIntent": "Minh họa hook cho câu: \"Nếu việc dọn nhà chỉ diễn ra khi mọi thứ đã quá rối,\". Hành động: dọn.",
+        "peopleContract": {
+          "min": 1,
+          "max": 1
+        },
+        "assetStrategy": "NEW_IMAGE",
+        "composition": "portrait-focus",
+        "motionProfile": "SLOW_PUSH",
+        "referenceReason": "Derived via reference shot grammar for role: hook",
+        "audioText": "Nếu việc dọn nhà chỉ diễn ra khi mọi thứ đã quá rối,",
+        "assetPrompt": "STYLE DEFAULT:\nClean 2D illustrated / cartoon style.\nHand-drawn editorial illustration.\nSimple expressive faces and readable body shapes.\nClearly illustrated, never photorealistic.\n\nPALETTE:\nWarm ivory and cream background.\nMuted sage clothing or accents.\nWarm medium wood.\nCharcoal / sepia linework.\nSmall restrained terracotta or amber accents.\nLow saturation.\nNo glossy surfaces.\n\nVISIBLE PEOPLE:\nExactly one visible person. One adult. No other people.\n\nSCENE:\nMinh họa hook cho câu: \"Nếu việc dọn nhà chỉ diễn ra khi mọi thứ đã quá rối,\". Hành động: dọn.\n\nFRAMING:\nportrait-focus composition with balanced negative space.\n\nHARD EXCLUSIONS:\nNo photorealism, no photographic textures, no photographic lighting, no 3D render, no CGI, no camera, lens, or photographic terms, no anime or chibi, no text, no captions, no watermarks, no artist signatures, no speech bubbles, no UI elements."
+      },
+      {
+        "id": "shot-02",
+        "startFrame": 94,
+        "endFrame": 138,
+        "durationFrames": 44,
+        "scale": "MEDIUM",
+        "silhouette": "single-left",
+        "storyRole": "establish",
+        "visualVerb": "đứng nhìn",
+        "semanticIntent": "Minh họa establish cho câu: \"nó luôn có cảm giác nặng.\". Hành động: đứng nhìn.",
+        "peopleContract": {
+          "min": 1,
+          "max": 1
+        },
+        "assetStrategy": "NEW_IMAGE",
+        "composition": "editorial-left",
+        "motionProfile": "AMBIENT_STILL",
+        "referenceReason": "Derived via reference shot grammar for role: establish",
+        "audioText": "nó luôn có cảm giác nặng.",
+        "assetPrompt": "STYLE DEFAULT:\nClean 2D illustrated / cartoon style.\nHand-drawn editorial illustration.\nSimple expressive faces and readable body shapes.\nClearly illustrated, never photorealistic.\n\nPALETTE:\nWarm ivory and cream background.\nMuted sage clothing or accents.\nWarm medium wood.\nCharcoal / sepia linework.\nSmall restrained terracotta or amber accents.\nLow saturation.\nNo glossy surfaces.\n\nVISIBLE PEOPLE:\nExactly one visible person. One adult. No other people.\n\nSCENE:\nMinh họa establish cho câu: \"nó luôn có cảm giác nặng.\". Hành động: đứng nhìn.\n\nFRAMING:\neditorial-left composition with balanced negative space.\n\nHARD EXCLUSIONS:\nNo photorealism, no photographic textures, no photographic lighting, no 3D render, no CGI, no camera, lens, or photographic terms, no anime or chibi, no text, no captions, no watermarks, no artist signatures, no speech bubbles, no UI elements."
+      },
+      {
+        "id": "shot-03",
+        "startFrame": 138,
+        "endFrame": 249,
+        "durationFrames": 111,
+        "scale": "CLOSE",
+        "silhouette": "face-close",
+        "storyRole": "reflection",
+        "visualVerb": "suy ngẫm",
+        "semanticIntent": "Minh họa reflection cho câu: \"Vấn đề thường không nằm ở chỗ mình không biết phải làm gì.\". Hành động: suy ngẫm.",
+        "peopleContract": {
+          "min": 1,
+          "max": 1
+        },
+        "assetStrategy": "NEW_IMAGE",
+        "composition": "portrait-focus",
+        "motionProfile": "AMBIENT_STILL",
+        "referenceReason": "Derived via reference shot grammar for role: reflection",
+        "audioText": "Vấn đề thường không nằm ở chỗ mình không biết phải làm gì.",
+        "assetPrompt": "STYLE DEFAULT:\nClean 2D illustrated / cartoon style.\nHand-drawn editorial illustration.\nSimple expressive faces and readable body shapes.\nClearly illustrated, never photorealistic.\n\nPALETTE:\nWarm ivory and cream background.\nMuted sage clothing or accents.\nWarm medium wood.\nCharcoal / sepia linework.\nSmall restrained terracotta or amber accents.\nLow saturation.\nNo glossy surfaces.\n\nVISIBLE PEOPLE:\nExactly one visible person. One adult. No other people.\n\nSCENE:\nMinh họa reflection cho câu: \"Vấn đề thường không nằm ở chỗ mình không biết phải làm gì.\". Hành động: suy ngẫm.\n\nFRAMING:\nportrait-focus composition with balanced negative space.\n\nHARD EXCLUSIONS:\nNo photorealism, no photographic textures, no photographic lighting, no 3D render, no CGI, no camera, lens, or photographic terms, no anime or chibi, no text, no captions, no watermarks, no artist signatures, no speech bubbles, no UI elements."
+      },
+      {
+        "id": "shot-04",
+        "startFrame": 249,
+        "endFrame": 313,
+        "durationFrames": 64,
+        "scale": "MEDIUM",
+        "silhouette": "single-left",
+        "storyRole": "reflection",
+        "visualVerb": "suy ngẫm",
+        "semanticIntent": "Minh họa reflection cho câu: \"Vấn đề là giải pháp trong đầu thường lớn\". Hành động: suy ngẫm.",
+        "peopleContract": {
+          "min": 1,
+          "max": 1
+        },
+        "assetStrategy": "NEW_IMAGE",
+        "composition": "editorial-left",
+        "motionProfile": "SLOW_PUSH",
+        "referenceReason": "Derived via reference shot grammar for role: reflection",
+        "audioText": "Vấn đề là giải pháp trong đầu thường lớn",
+        "assetPrompt": "STYLE DEFAULT:\nClean 2D illustrated / cartoon style.\nHand-drawn editorial illustration.\nSimple expressive faces and readable body shapes.\nClearly illustrated, never photorealistic.\n\nPALETTE:\nWarm ivory and cream background.\nMuted sage clothing or accents.\nWarm medium wood.\nCharcoal / sepia linework.\nSmall restrained terracotta or amber accents.\nLow saturation.\nNo glossy surfaces.\n\nVISIBLE PEOPLE:\nExactly one visible person. One adult. No other people.\n\nSCENE:\nMinh họa reflection cho câu: \"Vấn đề là giải pháp trong đầu thường lớn\". Hành động: suy ngẫm.\n\nFRAMING:\neditorial-left composition with balanced negative space.\n\nHARD EXCLUSIONS:\nNo photorealism, no photographic textures, no photographic lighting, no 3D render, no CGI, no camera, lens, or photographic terms, no anime or chibi, no text, no captions, no watermarks, no artist signatures, no speech bubbles, no UI elements."
+      },
+      {
+        "id": "shot-05",
+        "startFrame": 313,
+        "endFrame": 384,
+        "durationFrames": 71,
+        "scale": "MEDIUM",
+        "silhouette": "single-right",
+        "storyRole": "action",
+        "visualVerb": "symbolic-detail",
+        "semanticIntent": "Minh họa action cho câu: \"hơn năng lượng mình có trong một ngày bình thường.\". Hành động: symbolic-detail.",
+        "peopleContract": {
+          "min": 1,
+          "max": 1
+        },
+        "assetStrategy": "NEW_IMAGE",
+        "composition": "editorial-right",
+        "motionProfile": "SLOW_PUSH",
+        "referenceReason": "Derived via reference shot grammar for role: action",
+        "audioText": "hơn năng lượng mình có trong một ngày bình thường.",
+        "assetPrompt": "STYLE DEFAULT:\nClean 2D illustrated / cartoon style.\nHand-drawn editorial illustration.\nSimple expressive faces and readable body shapes.\nClearly illustrated, never photorealistic.\n\nPALETTE:\nWarm ivory and cream background.\nMuted sage clothing or accents.\nWarm medium wood.\nCharcoal / sepia linework.\nSmall restrained terracotta or amber accents.\nLow saturation.\nNo glossy surfaces.\n\nVISIBLE PEOPLE:\nExactly one visible person. One adult. No other people.\n\nSCENE:\nMinh họa action cho câu: \"hơn năng lượng mình có trong một ngày bình thường.\". Hành động: symbolic-detail.\n\nFRAMING:\neditorial-right composition with balanced negative space.\n\nHARD EXCLUSIONS:\nNo photorealism, no photographic textures, no photographic lighting, no 3D render, no CGI, no camera, lens, or photographic terms, no anime or chibi, no text, no captions, no watermarks, no artist signatures, no speech bubbles, no UI elements."
+      },
+      {
+        "id": "shot-06",
+        "startFrame": 384,
+        "endFrame": 484,
+        "durationFrames": 100,
+        "scale": "DETAIL",
+        "silhouette": "hands-detail",
+        "storyRole": "action",
+        "visualVerb": "gập",
+        "semanticIntent": "Minh họa action cho câu: \"Có thể chỉ là đưa cốc về bếp, hoặc gập chăn,\". Hành động: gập.",
+        "peopleContract": {
+          "min": 1,
+          "max": 1
+        },
+        "assetStrategy": "NEW_IMAGE",
+        "composition": "detail-insert",
+        "motionProfile": "SLOW_PUSH",
+        "referenceReason": "Derived via reference shot grammar for role: action",
+        "audioText": "Có thể chỉ là đưa cốc về bếp, hoặc gập chăn,",
+        "assetPrompt": "STYLE DEFAULT:\nClean 2D illustrated / cartoon style.\nHand-drawn editorial illustration.\nSimple expressive faces and readable body shapes.\nClearly illustrated, never photorealistic.\n\nPALETTE:\nWarm ivory and cream background.\nMuted sage clothing or accents.\nWarm medium wood.\nCharcoal / sepia linework.\nSmall restrained terracotta or amber accents.\nLow saturation.\nNo glossy surfaces.\n\nVISIBLE PEOPLE:\nExactly one visible person. One adult. No other people.\n\nSCENE:\nMinh họa action cho câu: \"Có thể chỉ là đưa cốc về bếp, hoặc gập chăn,\". Hành động: gập.\n\nSCALE DETAIL:\nExtreme detail shot. Emphasize clean object geometry, tactile textures, clear focal object with balanced negative space.\n\nFRAMING:\ndetail-insert composition with balanced negative space.\n\nHARD EXCLUSIONS:\nNo photorealism, no photographic textures, no photographic lighting, no 3D render, no CGI, no camera, lens, or photographic terms, no anime or chibi, no text, no captions, no watermarks, no artist signatures, no speech bubbles, no UI elements."
+      },
+      {
+        "id": "shot-07",
+        "startFrame": 484,
+        "endFrame": 550,
+        "durationFrames": 66,
+        "scale": "DETAIL",
+        "silhouette": "tabletop-topdown",
+        "storyRole": "action",
+        "visualVerb": "dọn",
+        "semanticIntent": "Minh họa action cho câu: \"hoặc đơn giản là dọn mặt bàn.\". Hành động: dọn.",
+        "peopleContract": {
+          "min": 1,
+          "max": 1
+        },
+        "assetStrategy": "NEW_IMAGE",
+        "composition": "detail-insert",
+        "motionProfile": "SLOW_PUSH",
+        "referenceReason": "Derived via reference shot grammar for role: action",
+        "audioText": "hoặc đơn giản là dọn mặt bàn.",
+        "assetPrompt": "STYLE DEFAULT:\nClean 2D illustrated / cartoon style.\nHand-drawn editorial illustration.\nSimple expressive faces and readable body shapes.\nClearly illustrated, never photorealistic.\n\nPALETTE:\nWarm ivory and cream background.\nMuted sage clothing or accents.\nWarm medium wood.\nCharcoal / sepia linework.\nSmall restrained terracotta or amber accents.\nLow saturation.\nNo glossy surfaces.\n\nVISIBLE PEOPLE:\nExactly one visible person. One adult. No other people.\n\nSCENE:\nMinh họa action cho câu: \"hoặc đơn giản là dọn mặt bàn.\". Hành động: dọn.\n\nSCALE DETAIL:\nExtreme detail shot. Emphasize clean object geometry, tactile textures, clear focal object with balanced negative space.\n\nFRAMING:\ndetail-insert composition with balanced negative space.\n\nHARD EXCLUSIONS:\nNo photorealism, no photographic textures, no photographic lighting, no 3D render, no CGI, no camera, lens, or photographic terms, no anime or chibi, no text, no captions, no watermarks, no artist signatures, no speech bubbles, no UI elements."
+      },
+      {
+        "id": "shot-08",
+        "startFrame": 550,
+        "endFrame": 639,
+        "durationFrames": 89,
+        "scale": "MEDIUM",
+        "silhouette": "single-left",
+        "storyRole": "reflection",
+        "visualVerb": "suy ngẫm",
+        "semanticIntent": "Minh họa reflection cho câu: \"Những việc này nhỏ tới mức không tạo cảm giác lột xác,\". Hành động: suy ngẫm.",
+        "peopleContract": {
+          "min": 1,
+          "max": 1
+        },
+        "assetStrategy": "NEW_IMAGE",
+        "composition": "editorial-left",
+        "motionProfile": "SLOW_PUSH",
+        "referenceReason": "Derived via reference shot grammar for role: reflection",
+        "audioText": "Những việc này nhỏ tới mức không tạo cảm giác lột xác,",
+        "assetPrompt": "STYLE DEFAULT:\nClean 2D illustrated / cartoon style.\nHand-drawn editorial illustration.\nSimple expressive faces and readable body shapes.\nClearly illustrated, never photorealistic.\n\nPALETTE:\nWarm ivory and cream background.\nMuted sage clothing or accents.\nWarm medium wood.\nCharcoal / sepia linework.\nSmall restrained terracotta or amber accents.\nLow saturation.\nNo glossy surfaces.\n\nVISIBLE PEOPLE:\nExactly one visible person. One adult. No other people.\n\nSCENE:\nMinh họa reflection cho câu: \"Những việc này nhỏ tới mức không tạo cảm giác lột xác,\". Hành động: suy ngẫm.\n\nFRAMING:\neditorial-left composition with balanced negative space.\n\nHARD EXCLUSIONS:\nNo photorealism, no photographic textures, no photographic lighting, no 3D render, no CGI, no camera, lens, or photographic terms, no anime or chibi, no text, no captions, no watermarks, no artist signatures, no speech bubbles, no UI elements."
+      },
+      {
+        "id": "shot-09",
+        "startFrame": 639,
+        "endFrame": 686,
+        "durationFrames": 47,
+        "scale": "SYMBOLIC",
+        "silhouette": "object-detail",
+        "storyRole": "context",
+        "visualVerb": "symbolic-detail",
+        "semanticIntent": "Minh họa context cho câu: \"nhưng chúng có một lợi thế,\". Hành động: symbolic-detail.",
+        "peopleContract": {
+          "min": 0,
+          "max": 0
+        },
+        "assetStrategy": "NEW_IMAGE",
+        "composition": "paper",
+        "motionProfile": "SLOW_PUSH",
+        "referenceReason": "Derived via reference shot grammar for role: context",
+        "audioText": "nhưng chúng có một lợi thế,",
+        "assetPrompt": "STYLE DEFAULT:\nClean 2D illustrated / cartoon style.\nHand-drawn editorial illustration.\nSimple expressive faces and readable body shapes.\nClearly illustrated, never photorealistic.\n\nPALETTE:\nWarm ivory and cream background.\nMuted sage clothing or accents.\nWarm medium wood.\nCharcoal / sepia linework.\nSmall restrained terracotta or amber accents.\nLow saturation.\nNo glossy surfaces.\n\nVISIBLE PEOPLE:\nZero people in frame. NO human figures, NO hands, NO silhouettes. Clean unpopulated scene.\n\nSCENE:\nMinh họa context cho câu: \"nhưng chúng có một lợi thế,\". Hành động: symbolic-detail.\n\nFRAMING:\npaper composition with balanced negative space.\n\nHARD EXCLUSIONS:\nNo photorealism, no photographic textures, no photographic lighting, no 3D render, no CGI, no camera, lens, or photographic terms, no anime or chibi, no text, no captions, no watermarks, no artist signatures, no speech bubbles, no UI elements."
+      },
+      {
+        "id": "shot-10",
+        "startFrame": 686,
+        "endFrame": 765,
+        "durationFrames": 79,
+        "scale": "MEDIUM",
+        "silhouette": "single-centered",
+        "storyRole": "action",
+        "visualVerb": "quay lại",
+        "semanticIntent": "Minh họa action cho câu: \"mình có thể quay lại với chúng vào ngày mai.\". Hành động: quay lại.",
+        "peopleContract": {
+          "min": 1,
+          "max": 1
+        },
+        "assetStrategy": "NEW_IMAGE",
+        "composition": "portrait-focus",
+        "motionProfile": "SLOW_PUSH",
+        "referenceReason": "Derived via reference shot grammar for role: action",
+        "audioText": "mình có thể quay lại với chúng vào ngày mai.",
+        "assetPrompt": "STYLE DEFAULT:\nClean 2D illustrated / cartoon style.\nHand-drawn editorial illustration.\nSimple expressive faces and readable body shapes.\nClearly illustrated, never photorealistic.\n\nPALETTE:\nWarm ivory and cream background.\nMuted sage clothing or accents.\nWarm medium wood.\nCharcoal / sepia linework.\nSmall restrained terracotta or amber accents.\nLow saturation.\nNo glossy surfaces.\n\nVISIBLE PEOPLE:\nExactly one visible person. One adult. No other people.\n\nSCENE:\nMinh họa action cho câu: \"mình có thể quay lại với chúng vào ngày mai.\". Hành động: quay lại.\n\nFRAMING:\nportrait-focus composition with balanced negative space.\n\nHARD EXCLUSIONS:\nNo photorealism, no photographic textures, no photographic lighting, no 3D render, no CGI, no camera, lens, or photographic terms, no anime or chibi, no text, no captions, no watermarks, no artist signatures, no speech bubbles, no UI elements."
+      },
+      {
+        "id": "shot-11",
+        "startFrame": 765,
+        "endFrame": 830,
+        "durationFrames": 65,
+        "scale": "SYMBOLIC",
+        "silhouette": "object-detail",
+        "storyRole": "context",
+        "visualVerb": "symbolic-detail",
+        "semanticIntent": "Minh họa context cho câu: \"Một reset ngắn giữ cho sự lộn xộn\". Hành động: symbolic-detail.",
+        "peopleContract": {
+          "min": 0,
+          "max": 0
+        },
+        "assetStrategy": "NEW_IMAGE",
+        "composition": "paper",
+        "motionProfile": "SLOW_PUSH",
+        "referenceReason": "Derived via reference shot grammar for role: context",
+        "audioText": "Một reset ngắn giữ cho sự lộn xộn",
+        "assetPrompt": "STYLE DEFAULT:\nClean 2D illustrated / cartoon style.\nHand-drawn editorial illustration.\nSimple expressive faces and readable body shapes.\nClearly illustrated, never photorealistic.\n\nPALETTE:\nWarm ivory and cream background.\nMuted sage clothing or accents.\nWarm medium wood.\nCharcoal / sepia linework.\nSmall restrained terracotta or amber accents.\nLow saturation.\nNo glossy surfaces.\n\nVISIBLE PEOPLE:\nZero people in frame. NO human figures, NO hands, NO silhouettes. Clean unpopulated scene.\n\nSCENE:\nMinh họa context cho câu: \"Một reset ngắn giữ cho sự lộn xộn\". Hành động: symbolic-detail.\n\nFRAMING:\npaper composition with balanced negative space.\n\nHARD EXCLUSIONS:\nNo photorealism, no photographic textures, no photographic lighting, no 3D render, no CGI, no camera, lens, or photographic terms, no anime or chibi, no text, no captions, no watermarks, no artist signatures, no speech bubbles, no UI elements."
+      },
+      {
+        "id": "shot-12",
+        "startFrame": 830,
+        "endFrame": 895,
+        "durationFrames": 65,
+        "scale": "SYMBOLIC",
+        "silhouette": "object-detail",
+        "storyRole": "context",
+        "visualVerb": "symbolic-detail",
+        "semanticIntent": "Minh họa context cho câu: \"không kịp tích thành một dự án lớn\". Hành động: symbolic-detail.",
+        "peopleContract": {
+          "min": 0,
+          "max": 0
+        },
+        "assetStrategy": "NEW_IMAGE",
+        "composition": "paper",
+        "motionProfile": "SLOW_PUSH",
+        "referenceReason": "Derived via reference shot grammar for role: context",
+        "audioText": "không kịp tích thành một dự án lớn",
+        "assetPrompt": "STYLE DEFAULT:\nClean 2D illustrated / cartoon style.\nHand-drawn editorial illustration.\nSimple expressive faces and readable body shapes.\nClearly illustrated, never photorealistic.\n\nPALETTE:\nWarm ivory and cream background.\nMuted sage clothing or accents.\nWarm medium wood.\nCharcoal / sepia linework.\nSmall restrained terracotta or amber accents.\nLow saturation.\nNo glossy surfaces.\n\nVISIBLE PEOPLE:\nZero people in frame. NO human figures, NO hands, NO silhouettes. Clean unpopulated scene.\n\nSCENE:\nMinh họa context cho câu: \"không kịp tích thành một dự án lớn\". Hành động: symbolic-detail.\n\nFRAMING:\npaper composition with balanced negative space.\n\nHARD EXCLUSIONS:\nNo photorealism, no photographic textures, no photographic lighting, no 3D render, no CGI, no camera, lens, or photographic terms, no anime or chibi, no text, no captions, no watermarks, no artist signatures, no speech bubbles, no UI elements."
+      },
+      {
+        "id": "shot-13",
+        "startFrame": 895,
+        "endFrame": 992,
+        "durationFrames": 97,
+        "scale": "MEDIUM",
+        "silhouette": "single-right",
+        "storyRole": "action",
+        "visualVerb": "symbolic-detail / đặt",
+        "semanticIntent": "Minh họa action cho câu: \"Nếu muốn thử,\". Hành động: symbolic-detail. Kết hợp: Minh họa action cho câu: \"đặt một timer 10 phút\". Hành động: đặt.",
+        "peopleContract": {
+          "min": 1,
+          "max": 1
+        },
+        "assetStrategy": "NEW_IMAGE",
+        "composition": "editorial-right",
+        "motionProfile": "SLOW_PUSH",
+        "referenceReason": "Derived via reference shot grammar for role: action",
+        "audioText": "Nếu muốn thử, đặt một timer 10 phút",
+        "assetPrompt": "STYLE DEFAULT:\nClean 2D illustrated / cartoon style.\nHand-drawn editorial illustration.\nSimple expressive faces and readable body shapes.\nClearly illustrated, never photorealistic.\n\nPALETTE:\nWarm ivory and cream background.\nMuted sage clothing or accents.\nWarm medium wood.\nCharcoal / sepia linework.\nSmall restrained terracotta or amber accents.\nLow saturation.\nNo glossy surfaces.\n\nVISIBLE PEOPLE:\nExactly one visible person. One adult. No other people.\n\nSCENE:\nMinh họa action cho câu: \"Nếu muốn thử,\". Hành động: symbolic-detail. Kết hợp: Minh họa action cho câu: \"đặt một timer 10 phút\". Hành động: đặt.\n\nTIMER SAFETY:\nMinimal mechanical timer with simple wedge indicator. Strictly NO readable numerals, NO numbers, NO digital digits, NO brand logos or letters.\n\nFRAMING:\neditorial-right composition with balanced negative space.\n\nHARD EXCLUSIONS:\nNo photorealism, no photographic textures, no photographic lighting, no 3D render, no CGI, no camera, lens, or photographic terms, no anime or chibi, no text, no captions, no watermarks, no artist signatures, no speech bubbles, no UI elements."
+      },
+      {
+        "id": "shot-14",
+        "startFrame": 992,
+        "endFrame": 1085,
+        "durationFrames": 93,
+        "scale": "MEDIUM",
+        "silhouette": "single-right",
+        "storyRole": "action",
+        "visualVerb": "đưa",
+        "semanticIntent": "Minh họa action cho câu: \"trước khi nghỉ tối và chỉ đưa đồ về trạng thái ngày mai dùng được\". Hành động: đưa.",
+        "peopleContract": {
+          "min": 1,
+          "max": 1
+        },
+        "assetStrategy": "NEW_IMAGE",
+        "composition": "editorial-right",
+        "motionProfile": "SLOW_PUSH",
+        "referenceReason": "Derived via reference shot grammar for role: action",
+        "audioText": "trước khi nghỉ tối và chỉ đưa đồ về trạng thái ngày mai dùng được",
+        "assetPrompt": "STYLE DEFAULT:\nClean 2D illustrated / cartoon style.\nHand-drawn editorial illustration.\nSimple expressive faces and readable body shapes.\nClearly illustrated, never photorealistic.\n\nPALETTE:\nWarm ivory and cream background.\nMuted sage clothing or accents.\nWarm medium wood.\nCharcoal / sepia linework.\nSmall restrained terracotta or amber accents.\nLow saturation.\nNo glossy surfaces.\n\nVISIBLE PEOPLE:\nExactly one visible person. One adult. No other people.\n\nSCENE:\nMinh họa action cho câu: \"trước khi nghỉ tối và chỉ đưa đồ về trạng thái ngày mai dùng được\". Hành động: đưa.\n\nFRAMING:\neditorial-right composition with balanced negative space.\n\nHARD EXCLUSIONS:\nNo photorealism, no photographic textures, no photographic lighting, no 3D render, no CGI, no camera, lens, or photographic terms, no anime or chibi, no text, no captions, no watermarks, no artist signatures, no speech bubbles, no UI elements."
+      },
+      {
+        "id": "shot-15",
+        "startFrame": 1085,
+        "endFrame": 1195,
+        "durationFrames": 110,
+        "scale": "DETAIL",
+        "silhouette": "single-centered",
+        "storyRole": "action",
+        "visualVerb": "symbolic-detail / nhìn",
+        "semanticIntent": "Minh họa action cho câu: \"Đừng đánh giá nó sau một lần,\". Hành động: symbolic-detail. Kết hợp: Minh họa release cho câu: \"hãy nhìn xem nó thay đổi một thao\". Hành động: nhìn.",
+        "peopleContract": {
+          "min": 1,
+          "max": 1
+        },
+        "assetStrategy": "NEW_IMAGE",
+        "composition": "detail-insert",
+        "motionProfile": "SLOW_PUSH",
+        "referenceReason": "Derived via reference shot grammar for role: action",
+        "audioText": "Đừng đánh giá nó sau một lần, hãy nhìn xem nó thay đổi một thao",
+        "assetPrompt": "STYLE DEFAULT:\nClean 2D illustrated / cartoon style.\nHand-drawn editorial illustration.\nSimple expressive faces and readable body shapes.\nClearly illustrated, never photorealistic.\n\nPALETTE:\nWarm ivory and cream background.\nMuted sage clothing or accents.\nWarm medium wood.\nCharcoal / sepia linework.\nSmall restrained terracotta or amber accents.\nLow saturation.\nNo glossy surfaces.\n\nVISIBLE PEOPLE:\nExactly one visible person. One adult. No other people.\n\nSCENE:\nMinh họa action cho câu: \"Đừng đánh giá nó sau một lần,\". Hành động: symbolic-detail. Kết hợp: Minh họa release cho câu: \"hãy nhìn xem nó thay đổi một thao\". Hành động: nhìn.\n\nSCALE DETAIL:\nExtreme detail shot. Emphasize clean object geometry, tactile textures, clear focal object with balanced negative space.\n\nFRAMING:\ndetail-insert composition with balanced negative space.\n\nHARD EXCLUSIONS:\nNo photorealism, no photographic textures, no photographic lighting, no 3D render, no CGI, no camera, lens, or photographic terms, no anime or chibi, no text, no captions, no watermarks, no artist signatures, no speech bubbles, no UI elements."
+      },
+      {
+        "id": "shot-16",
+        "startFrame": 1195,
+        "endFrame": 1313,
+        "durationFrames": 118,
+        "scale": "MEDIUM",
+        "silhouette": "single-centered",
+        "storyRole": "action",
+        "visualVerb": "symbolic-detail",
+        "semanticIntent": "Minh họa action cho câu: \"tác lặp lại như thế nào sau vài ngày\". Hành động: symbolic-detail. Kết hợp: Minh họa action cho câu: \"Mục tiêu không phải sạch hoàn hảo,\". Hành động: symbolic-detail.",
+        "peopleContract": {
+          "min": 1,
+          "max": 1
+        },
+        "assetStrategy": "NEW_IMAGE",
+        "composition": "portrait-focus",
+        "motionProfile": "SLOW_PUSH",
+        "referenceReason": "Derived via reference shot grammar for role: action",
+        "audioText": "tác lặp lại như thế nào sau vài ngày Mục tiêu không phải sạch hoàn hảo,",
+        "assetPrompt": "STYLE DEFAULT:\nClean 2D illustrated / cartoon style.\nHand-drawn editorial illustration.\nSimple expressive faces and readable body shapes.\nClearly illustrated, never photorealistic.\n\nPALETTE:\nWarm ivory and cream background.\nMuted sage clothing or accents.\nWarm medium wood.\nCharcoal / sepia linework.\nSmall restrained terracotta or amber accents.\nLow saturation.\nNo glossy surfaces.\n\nVISIBLE PEOPLE:\nExactly one visible person. One adult. No other people.\n\nSCENE:\nMinh họa action cho câu: \"tác lặp lại như thế nào sau vài ngày\". Hành động: symbolic-detail. Kết hợp: Minh họa action cho câu: \"Mục tiêu không phải sạch hoàn hảo,\". Hành động: symbolic-detail.\n\nFRAMING:\nportrait-focus composition with balanced negative space.\n\nHARD EXCLUSIONS:\nNo photorealism, no photographic textures, no photographic lighting, no 3D render, no CGI, no camera, lens, or photographic terms, no anime or chibi, no text, no captions, no watermarks, no artist signatures, no speech bubbles, no UI elements."
+      },
+      {
+        "id": "shot-17",
+        "startFrame": 1313,
+        "endFrame": 1410,
+        "durationFrames": 97,
+        "scale": "RELEASE",
+        "silhouette": "empty-space",
+        "storyRole": "release",
+        "visualVerb": "bắt đầu",
+        "semanticIntent": "Minh họa release cho câu: \"mục tiêu là ngày mai bắt đầu dễ hơn hôm nay một chút\". Hành động: bắt đầu.",
+        "peopleContract": {
+          "min": 0,
+          "max": 0
+        },
+        "assetStrategy": "NEW_IMAGE",
+        "composition": "portrait-focus",
+        "motionProfile": "AMBIENT_STILL",
+        "referenceReason": "Derived via reference shot grammar for role: release",
+        "audioText": "mục tiêu là ngày mai bắt đầu dễ hơn hôm nay một chút",
+        "assetPrompt": "STYLE DEFAULT:\nClean 2D illustrated / cartoon style.\nHand-drawn editorial illustration.\nSimple expressive faces and readable body shapes.\nClearly illustrated, never photorealistic.\n\nPALETTE:\nWarm ivory and cream background.\nMuted sage clothing or accents.\nWarm medium wood.\nCharcoal / sepia linework.\nSmall restrained terracotta or amber accents.\nLow saturation.\nNo glossy surfaces.\n\nVISIBLE PEOPLE:\nZero people in frame. NO human figures, NO hands, NO silhouettes. Clean unpopulated scene.\n\nSCENE:\nMinh họa release cho câu: \"mục tiêu là ngày mai bắt đầu dễ hơn hôm nay một chút\". Hành động: bắt đầu.\n\nFRAMING:\nportrait-focus composition with balanced negative space.\n\nHARD EXCLUSIONS:\nNo photorealism, no photographic textures, no photographic lighting, no 3D render, no CGI, no camera, lens, or photographic terms, no anime or chibi, no text, no captions, no watermarks, no artist signatures, no speech bubbles, no UI elements."
+      },
+      {
+        "id": "shot-18",
+        "startFrame": 1410,
+        "endFrame": 1506,
+        "durationFrames": 96,
+        "scale": "WIDE",
+        "silhouette": "room-wide",
+        "storyRole": "release",
+        "visualVerb": "thư thái",
+        "semanticIntent": "Minh họa release cho câu: \"Nếp, những điều nhỏ tạo nên một đời sống\". Hành động: thư thái.",
+        "peopleContract": {
+          "min": 0,
+          "max": 0
+        },
+        "assetStrategy": "NEW_IMAGE",
+        "composition": "portrait-focus",
+        "motionProfile": "AMBIENT_STILL",
+        "referenceReason": "Derived via reference shot grammar for role: release",
+        "audioText": "Nếp, những điều nhỏ tạo nên một đời sống",
+        "assetPrompt": "STYLE DEFAULT:\nClean 2D illustrated / cartoon style.\nHand-drawn editorial illustration.\nSimple expressive faces and readable body shapes.\nClearly illustrated, never photorealistic.\n\nPALETTE:\nWarm ivory and cream background.\nMuted sage clothing or accents.\nWarm medium wood.\nCharcoal / sepia linework.\nSmall restrained terracotta or amber accents.\nLow saturation.\nNo glossy surfaces.\n\nVISIBLE PEOPLE:\nZero people in frame. NO human figures, NO hands, NO silhouettes. Clean unpopulated scene.\n\nSCENE:\nMinh họa release cho câu: \"Nếp, những điều nhỏ tạo nên một đời sống\". Hành động: thư thái.\n\nFRAMING:\nportrait-focus composition with balanced negative space.\n\nHARD EXCLUSIONS:\nNo photorealism, no photographic textures, no photographic lighting, no 3D render, no CGI, no camera, lens, or photographic terms, no anime or chibi, no text, no captions, no watermarks, no artist signatures, no speech bubbles, no UI elements."
+      },
+      {
+        "id": "shot-19",
+        "startFrame": 1506,
+        "endFrame": 1572,
+        "durationFrames": 66,
+        "scale": "RELEASE",
+        "silhouette": "empty-space",
+        "storyRole": "outro",
+        "visualVerb": "chào kết",
+        "semanticIntent": "Thẻ OutroCard kết thúc thương hiệu HAY & ĐẸP.",
+        "peopleContract": {
+          "min": 0,
+          "max": 0
+        },
+        "assetStrategy": "COMPONENT",
+        "composition": "portrait-focus",
+        "motionProfile": "AMBIENT_STILL",
+        "referenceReason": "Standard branded outro release hold",
+        "holdException": {
+          "kind": "OUTRO_COMPONENT",
+          "reason": "Standard branded outro release hold"
+        },
+        "audioText": ""
+      }
+    ],
+    "metrics": {
+      "shotCount": 19,
+      "durationFrames": 1572,
+      "durationSeconds": 52.4,
+      "durationMinutes": 0.873,
+      "changesPerMinute": 21.76,
+      "uniqueScales": 6,
+      "uniqueSilhouettes": 9,
+      "maxHoldSeconds": 3.93,
+      "medianHoldSeconds": 2.97,
+      "scaleDistribution": {
+        "WIDE": 2,
+        "MEDIUM": 8,
+        "CLOSE": 1,
+        "DETAIL": 3,
+        "SYMBOLIC": 3,
+        "RELEASE": 2
+      },
+      "silhouetteDistribution": {
+        "room-wide": 2,
+        "single-left": 3,
+        "face-close": 1,
+        "single-right": 3,
+        "hands-detail": 1,
+        "tabletop-topdown": 1,
+        "object-detail": 3,
+        "single-centered": 3,
+        "empty-space": 2
+      },
+      "reuseCount": 0,
+      "newImageCount": 18,
+      "componentCount": 1
+    },
+    "validation": {
+      "ok": true,
+      "errors": [],
+      "warnings": [
+        "shot-02: 1.47s outside recommended MEDIUM range [2.2-3.5s]",
+        "shot-03: 3.70s outside recommended CLOSE range [2-3.2s]",
+        "shot-04: 2.13s outside recommended MEDIUM range [2.2-3.5s]",
+        "shot-06: 3.33s outside recommended DETAIL range [1.5-2.8s]",
+        "shot-15: 3.67s outside recommended DETAIL range [1.5-2.8s]",
+        "shot-16: 3.93s outside recommended MEDIUM range [2.2-3.5s]"
+      ],
+      "metrics": {
+        "shotCount": 19,
+        "durationFrames": 1572,
+        "durationSeconds": 52.4,
+        "durationMinutes": 0.873,
+        "changesPerMinute": 21.76,
+        "uniqueScales": 6,
+        "uniqueSilhouettes": 9,
+        "maxHoldSeconds": 3.93,
+        "medianHoldSeconds": 2.97,
+        "scaleDistribution": {
+          "WIDE": 2,
+          "MEDIUM": 8,
+          "CLOSE": 1,
+          "DETAIL": 3,
+          "SYMBOLIC": 3,
+          "RELEASE": 2
+        },
+        "silhouetteDistribution": {
+          "room-wide": 2,
+          "single-left": 3,
+          "face-close": 1,
+          "single-right": 3,
+          "hands-detail": 1,
+          "tabletop-topdown": 1,
+          "object-detail": 3,
+          "single-centered": 3,
+          "empty-space": 2
+        },
+        "reuseCount": 0,
+        "newImageCount": 18,
+        "componentCount": 1
+      }
+    },
+    "structuralValidation": {
+      "ok": true,
+      "errors": [],
+      "warnings": [
+        "shot-02: 1.47s outside recommended MEDIUM range [2.2-3.5s]",
+        "shot-03: 3.70s outside recommended CLOSE range [2-3.2s]",
+        "shot-04: 2.13s outside recommended MEDIUM range [2.2-3.5s]",
+        "shot-06: 3.33s outside recommended DETAIL range [1.5-2.8s]",
+        "shot-15: 3.67s outside recommended DETAIL range [1.5-2.8s]",
+        "shot-16: 3.93s outside recommended MEDIUM range [2.2-3.5s]"
+      ],
+      "metrics": {
+        "shotCount": 19,
+        "durationFrames": 1572,
+        "durationSeconds": 52.4,
+        "durationMinutes": 0.873,
+        "changesPerMinute": 21.76,
+        "uniqueScales": 6,
+        "uniqueSilhouettes": 9,
+        "maxHoldSeconds": 3.93,
+        "medianHoldSeconds": 2.97,
+        "scaleDistribution": {
+          "WIDE": 2,
+          "MEDIUM": 8,
+          "CLOSE": 1,
+          "DETAIL": 3,
+          "SYMBOLIC": 3,
+          "RELEASE": 2
+        },
+        "silhouetteDistribution": {
+          "room-wide": 2,
+          "single-left": 3,
+          "face-close": 1,
+          "single-right": 3,
+          "hands-detail": 1,
+          "tabletop-topdown": 1,
+          "object-detail": 3,
+          "single-centered": 3,
+          "empty-space": 2
+        },
+        "reuseCount": 0,
+        "newImageCount": 18,
+        "componentCount": 1
+      }
+    },
+    "productionValidation": {
+      "ok": true,
+      "productionReady": false,
+      "errors": [],
+      "warnings": [
+        "shot-02: 1.47s outside recommended MEDIUM range [2.2-3.5s]",
+        "shot-03: 3.70s outside recommended CLOSE range [2-3.2s]",
+        "shot-04: 2.13s outside recommended MEDIUM range [2.2-3.5s]",
+        "shot-06: 3.33s outside recommended DETAIL range [1.5-2.8s]",
+        "shot-15: 3.67s outside recommended DETAIL range [1.5-2.8s]",
+        "shot-16: 3.93s outside recommended MEDIUM range [2.2-3.5s]",
+        "BRAND_AUDIO_MISMATCH: spoken audio mentions legacy brand 'Nếp', template brand is 'HAY & ĐẸP.'"
+      ]
+    },
+    "brandAudit": {
+      "templateBrand": "HAY & ĐẸP.",
+      "audioMentionsBrand": true,
+      "audioBrandName": "Nếp",
+      "hasMismatch": true,
+      "mismatchType": "BRAND_AUDIO_MISMATCH",
+      "notes": "Canonical audio mentions legacy brand 'Nếp' while visual template brand is 'HAY & ĐẸP.'. Spoken audio is preserved."
+    },
+    "reuseAudit": {
+      "summary": {
+        "totalShots": 19,
+        "reuseCount": 0,
+        "newImageCount": 18,
+        "componentCount": 1
+      },
+      "evaluations": [
+        {
+          "shotId": "shot-01",
+          "scale": "WIDE",
+          "strategy": "NEW_IMAGE",
+          "semanticIntent": "Minh họa hook cho câu: \"Nếu việc dọn nhà chỉ diễn ra khi mọi thứ đã quá rối,\". Hành động: dọn.",
+          "visualVerb": "dọn",
+          "reason": "No approved assets available for candidate evaluation",
+          "candidateEvaluations": []
+        },
+        {
+          "shotId": "shot-02",
+          "scale": "MEDIUM",
+          "strategy": "NEW_IMAGE",
+          "semanticIntent": "Minh họa establish cho câu: \"nó luôn có cảm giác nặng.\". Hành động: đứng nhìn.",
+          "visualVerb": "đứng nhìn",
+          "reason": "No approved assets available for candidate evaluation",
+          "candidateEvaluations": []
+        },
+        {
+          "shotId": "shot-03",
+          "scale": "CLOSE",
+          "strategy": "NEW_IMAGE",
+          "semanticIntent": "Minh họa reflection cho câu: \"Vấn đề thường không nằm ở chỗ mình không biết phải làm gì.\". Hành động: suy ngẫm.",
+          "visualVerb": "suy ngẫm",
+          "reason": "No approved assets available for candidate evaluation",
+          "candidateEvaluations": []
+        },
+        {
+          "shotId": "shot-04",
+          "scale": "MEDIUM",
+          "strategy": "NEW_IMAGE",
+          "semanticIntent": "Minh họa reflection cho câu: \"Vấn đề là giải pháp trong đầu thường lớn\". Hành động: suy ngẫm.",
+          "visualVerb": "suy ngẫm",
+          "reason": "No approved assets available for candidate evaluation",
+          "candidateEvaluations": []
+        },
+        {
+          "shotId": "shot-05",
+          "scale": "MEDIUM",
+          "strategy": "NEW_IMAGE",
+          "semanticIntent": "Minh họa action cho câu: \"hơn năng lượng mình có trong một ngày bình thường.\". Hành động: symbolic-detail.",
+          "visualVerb": "symbolic-detail",
+          "reason": "No approved assets available for candidate evaluation",
+          "candidateEvaluations": []
+        },
+        {
+          "shotId": "shot-06",
+          "scale": "DETAIL",
+          "strategy": "NEW_IMAGE",
+          "semanticIntent": "Minh họa action cho câu: \"Có thể chỉ là đưa cốc về bếp, hoặc gập chăn,\". Hành động: gập.",
+          "visualVerb": "gập",
+          "reason": "No approved assets available for candidate evaluation",
+          "candidateEvaluations": []
+        },
+        {
+          "shotId": "shot-07",
+          "scale": "DETAIL",
+          "strategy": "NEW_IMAGE",
+          "semanticIntent": "Minh họa action cho câu: \"hoặc đơn giản là dọn mặt bàn.\". Hành động: dọn.",
+          "visualVerb": "dọn",
+          "reason": "No approved assets available for candidate evaluation",
+          "candidateEvaluations": []
+        },
+        {
+          "shotId": "shot-08",
+          "scale": "MEDIUM",
+          "strategy": "NEW_IMAGE",
+          "semanticIntent": "Minh họa reflection cho câu: \"Những việc này nhỏ tới mức không tạo cảm giác lột xác,\". Hành động: suy ngẫm.",
+          "visualVerb": "suy ngẫm",
+          "reason": "No approved assets available for candidate evaluation",
+          "candidateEvaluations": []
+        },
+        {
+          "shotId": "shot-09",
+          "scale": "SYMBOLIC",
+          "strategy": "NEW_IMAGE",
+          "semanticIntent": "Minh họa context cho câu: \"nhưng chúng có một lợi thế,\". Hành động: symbolic-detail.",
+          "visualVerb": "symbolic-detail",
+          "reason": "No approved assets available for candidate evaluation",
+          "candidateEvaluations": []
+        },
+        {
+          "shotId": "shot-10",
+          "scale": "MEDIUM",
+          "strategy": "NEW_IMAGE",
+          "semanticIntent": "Minh họa action cho câu: \"mình có thể quay lại với chúng vào ngày mai.\". Hành động: quay lại.",
+          "visualVerb": "quay lại",
+          "reason": "No approved assets available for candidate evaluation",
+          "candidateEvaluations": []
+        },
+        {
+          "shotId": "shot-11",
+          "scale": "SYMBOLIC",
+          "strategy": "NEW_IMAGE",
+          "semanticIntent": "Minh họa context cho câu: \"Một reset ngắn giữ cho sự lộn xộn\". Hành động: symbolic-detail.",
+          "visualVerb": "symbolic-detail",
+          "reason": "No approved assets available for candidate evaluation",
+          "candidateEvaluations": []
+        },
+        {
+          "shotId": "shot-12",
+          "scale": "SYMBOLIC",
+          "strategy": "NEW_IMAGE",
+          "semanticIntent": "Minh họa context cho câu: \"không kịp tích thành một dự án lớn\". Hành động: symbolic-detail.",
+          "visualVerb": "symbolic-detail",
+          "reason": "No approved assets available for candidate evaluation",
+          "candidateEvaluations": []
+        },
+        {
+          "shotId": "shot-13",
+          "scale": "MEDIUM",
+          "strategy": "NEW_IMAGE",
+          "semanticIntent": "Minh họa action cho câu: \"Nếu muốn thử,\". Hành động: symbolic-detail. Kết hợp: Minh họa action cho câu: \"đặt một timer 10 phút\". Hành động: đặt.",
+          "visualVerb": "symbolic-detail / đặt",
+          "reason": "No approved assets available for candidate evaluation",
+          "candidateEvaluations": []
+        },
+        {
+          "shotId": "shot-14",
+          "scale": "MEDIUM",
+          "strategy": "NEW_IMAGE",
+          "semanticIntent": "Minh họa action cho câu: \"trước khi nghỉ tối và chỉ đưa đồ về trạng thái ngày mai dùng được\". Hành động: đưa.",
+          "visualVerb": "đưa",
+          "reason": "No approved assets available for candidate evaluation",
+          "candidateEvaluations": []
+        },
+        {
+          "shotId": "shot-15",
+          "scale": "DETAIL",
+          "strategy": "NEW_IMAGE",
+          "semanticIntent": "Minh họa action cho câu: \"Đừng đánh giá nó sau một lần,\". Hành động: symbolic-detail. Kết hợp: Minh họa release cho câu: \"hãy nhìn xem nó thay đổi một thao\". Hành động: nhìn.",
+          "visualVerb": "symbolic-detail / nhìn",
+          "reason": "No approved assets available for candidate evaluation",
+          "candidateEvaluations": []
+        },
+        {
+          "shotId": "shot-16",
+          "scale": "MEDIUM",
+          "strategy": "NEW_IMAGE",
+          "semanticIntent": "Minh họa action cho câu: \"tác lặp lại như thế nào sau vài ngày\". Hành động: symbolic-detail. Kết hợp: Minh họa action cho câu: \"Mục tiêu không phải sạch hoàn hảo,\". Hành động: symbolic-detail.",
+          "visualVerb": "symbolic-detail",
+          "reason": "No approved assets available for candidate evaluation",
+          "candidateEvaluations": []
+        },
+        {
+          "shotId": "shot-17",
+          "scale": "RELEASE",
+          "strategy": "NEW_IMAGE",
+          "semanticIntent": "Minh họa release cho câu: \"mục tiêu là ngày mai bắt đầu dễ hơn hôm nay một chút\". Hành động: bắt đầu.",
+          "visualVerb": "bắt đầu",
+          "reason": "No approved assets available for candidate evaluation",
+          "candidateEvaluations": []
+        },
+        {
+          "shotId": "shot-18",
+          "scale": "WIDE",
+          "strategy": "NEW_IMAGE",
+          "semanticIntent": "Minh họa release cho câu: \"Nếp, những điều nhỏ tạo nên một đời sống\". Hành động: thư thái.",
+          "visualVerb": "thư thái",
+          "reason": "No approved assets available for candidate evaluation",
+          "candidateEvaluations": []
+        },
+        {
+          "shotId": "shot-19",
+          "scale": "RELEASE",
+          "strategy": "COMPONENT",
+          "semanticIntent": "Thẻ OutroCard kết thúc thương hiệu HAY & ĐẸP.",
+          "visualVerb": "chào kết",
+          "reason": "Standard outro component",
+          "candidateEvaluations": []
+        }
+      ]
+    },
+    "scenes": [
+      {
+        "type": "hook",
+        "layout": "standard",
+        "composition": "portrait-focus",
+        "shotScale": "WIDE",
+        "motionProfile": "SLOW_PUSH",
+        "startFrame": 0,
+        "durationFrames": 94,
+        "plannerStoryRole": "hook",
+        "storyRole": "establish",
+        "visualIntent": "Minh họa hook cho câu: \"Nếu việc dọn nhà chỉ diễn ra khi mọi thứ đã quá rối,\". Hành động: dọn.",
+        "isOutro": false,
+        "audioSegment": {
+          "start": 0,
+          "end": 3.1333333333333333,
+          "text": "Nếu việc dọn nhà chỉ diễn ra khi mọi thứ đã quá rối,"
+        },
+        "image": {
+          "assetId": "shot-01",
+          "path": "assets/shot-01.jpg"
+        }
+      },
+      {
+        "type": "body",
+        "layout": "standard",
+        "composition": "editorial-left",
+        "shotScale": "MEDIUM",
+        "motionProfile": "AMBIENT_STILL",
+        "startFrame": 94,
+        "durationFrames": 44,
+        "plannerStoryRole": "establish",
+        "storyRole": "establish",
+        "visualIntent": "Minh họa establish cho câu: \"nó luôn có cảm giác nặng.\". Hành động: đứng nhìn.",
+        "isOutro": false,
+        "audioSegment": {
+          "start": 3.1333333333333333,
+          "end": 4.6,
+          "text": "nó luôn có cảm giác nặng."
+        },
+        "image": {
+          "assetId": "shot-02",
+          "path": "assets/shot-02.jpg"
+        }
+      },
+      {
+        "type": "body",
+        "layout": "standard",
+        "composition": "portrait-focus",
+        "shotScale": "CLOSE",
+        "motionProfile": "AMBIENT_STILL",
+        "startFrame": 138,
+        "durationFrames": 111,
+        "plannerStoryRole": "reflection",
+        "storyRole": "reflection",
+        "visualIntent": "Minh họa reflection cho câu: \"Vấn đề thường không nằm ở chỗ mình không biết phải làm gì.\". Hành động: suy ngẫm.",
+        "isOutro": false,
+        "audioSegment": {
+          "start": 4.6,
+          "end": 8.3,
+          "text": "Vấn đề thường không nằm ở chỗ mình không biết phải làm gì."
+        },
+        "image": {
+          "assetId": "shot-03",
+          "path": "assets/shot-03.jpg"
+        }
+      },
+      {
+        "type": "body",
+        "layout": "standard",
+        "composition": "editorial-left",
+        "shotScale": "MEDIUM",
+        "motionProfile": "SLOW_PUSH",
+        "startFrame": 249,
+        "durationFrames": 64,
+        "plannerStoryRole": "reflection",
+        "storyRole": "reflection",
+        "visualIntent": "Minh họa reflection cho câu: \"Vấn đề là giải pháp trong đầu thường lớn\". Hành động: suy ngẫm.",
+        "isOutro": false,
+        "audioSegment": {
+          "start": 8.3,
+          "end": 10.433333333333334,
+          "text": "Vấn đề là giải pháp trong đầu thường lớn"
+        },
+        "image": {
+          "assetId": "shot-04",
+          "path": "assets/shot-04.jpg"
+        }
+      },
+      {
+        "type": "body",
+        "layout": "standard",
+        "composition": "editorial-right",
+        "shotScale": "MEDIUM",
+        "motionProfile": "SLOW_PUSH",
+        "startFrame": 313,
+        "durationFrames": 71,
+        "plannerStoryRole": "action",
+        "storyRole": "action",
+        "visualIntent": "Minh họa action cho câu: \"hơn năng lượng mình có trong một ngày bình thường.\". Hành động: symbolic-detail.",
+        "isOutro": false,
+        "audioSegment": {
+          "start": 10.433333333333334,
+          "end": 12.8,
+          "text": "hơn năng lượng mình có trong một ngày bình thường."
+        },
+        "image": {
+          "assetId": "shot-05",
+          "path": "assets/shot-05.jpg"
+        }
+      },
+      {
+        "type": "body",
+        "layout": "standard",
+        "composition": "detail-insert",
+        "shotScale": "DETAIL",
+        "motionProfile": "SLOW_PUSH",
+        "startFrame": 384,
+        "durationFrames": 100,
+        "plannerStoryRole": "action",
+        "storyRole": "action",
+        "visualIntent": "Minh họa action cho câu: \"Có thể chỉ là đưa cốc về bếp, hoặc gập chăn,\". Hành động: gập.",
+        "isOutro": false,
+        "audioSegment": {
+          "start": 12.8,
+          "end": 16.133333333333333,
+          "text": "Có thể chỉ là đưa cốc về bếp, hoặc gập chăn,"
+        },
+        "image": {
+          "assetId": "shot-06",
+          "path": "assets/shot-06.jpg"
+        }
+      },
+      {
+        "type": "body",
+        "layout": "standard",
+        "composition": "detail-insert",
+        "shotScale": "DETAIL",
+        "motionProfile": "SLOW_PUSH",
+        "startFrame": 484,
+        "durationFrames": 66,
+        "plannerStoryRole": "action",
+        "storyRole": "action",
+        "visualIntent": "Minh họa action cho câu: \"hoặc đơn giản là dọn mặt bàn.\". Hành động: dọn.",
+        "isOutro": false,
+        "audioSegment": {
+          "start": 16.133333333333333,
+          "end": 18.333333333333332,
+          "text": "hoặc đơn giản là dọn mặt bàn."
+        },
+        "image": {
+          "assetId": "shot-07",
+          "path": "assets/shot-07.jpg"
+        }
+      },
+      {
+        "type": "body",
+        "layout": "standard",
+        "composition": "editorial-left",
+        "shotScale": "MEDIUM",
+        "motionProfile": "SLOW_PUSH",
+        "startFrame": 550,
+        "durationFrames": 89,
+        "plannerStoryRole": "reflection",
+        "storyRole": "reflection",
+        "visualIntent": "Minh họa reflection cho câu: \"Những việc này nhỏ tới mức không tạo cảm giác lột xác,\". Hành động: suy ngẫm.",
+        "isOutro": false,
+        "audioSegment": {
+          "start": 18.333333333333332,
+          "end": 21.3,
+          "text": "Những việc này nhỏ tới mức không tạo cảm giác lột xác,"
+        },
+        "image": {
+          "assetId": "shot-08",
+          "path": "assets/shot-08.jpg"
+        }
+      },
+      {
+        "type": "body",
+        "layout": "standard",
+        "composition": "paper",
+        "shotScale": "SYMBOLIC",
+        "motionProfile": "SLOW_PUSH",
+        "startFrame": 639,
+        "durationFrames": 47,
+        "plannerStoryRole": "context",
+        "storyRole": "context",
+        "visualIntent": "Minh họa context cho câu: \"nhưng chúng có một lợi thế,\". Hành động: symbolic-detail.",
+        "isOutro": false,
+        "audioSegment": {
+          "start": 21.3,
+          "end": 22.866666666666667,
+          "text": "nhưng chúng có một lợi thế,"
+        },
+        "image": {
+          "assetId": "shot-09",
+          "path": "assets/shot-09.jpg"
+        }
+      },
+      {
+        "type": "body",
+        "layout": "standard",
+        "composition": "portrait-focus",
+        "shotScale": "MEDIUM",
+        "motionProfile": "SLOW_PUSH",
+        "startFrame": 686,
+        "durationFrames": 79,
+        "plannerStoryRole": "action",
+        "storyRole": "action",
+        "visualIntent": "Minh họa action cho câu: \"mình có thể quay lại với chúng vào ngày mai.\". Hành động: quay lại.",
+        "isOutro": false,
+        "audioSegment": {
+          "start": 22.866666666666667,
+          "end": 25.5,
+          "text": "mình có thể quay lại với chúng vào ngày mai."
+        },
+        "image": {
+          "assetId": "shot-10",
+          "path": "assets/shot-10.jpg"
+        }
+      },
+      {
+        "type": "body",
+        "layout": "standard",
+        "composition": "paper",
+        "shotScale": "SYMBOLIC",
+        "motionProfile": "SLOW_PUSH",
+        "startFrame": 765,
+        "durationFrames": 65,
+        "plannerStoryRole": "context",
+        "storyRole": "context",
+        "visualIntent": "Minh họa context cho câu: \"Một reset ngắn giữ cho sự lộn xộn\". Hành động: symbolic-detail.",
+        "isOutro": false,
+        "audioSegment": {
+          "start": 25.5,
+          "end": 27.666666666666668,
+          "text": "Một reset ngắn giữ cho sự lộn xộn"
+        },
+        "image": {
+          "assetId": "shot-11",
+          "path": "assets/shot-11.jpg"
+        }
+      },
+      {
+        "type": "body",
+        "layout": "standard",
+        "composition": "paper",
+        "shotScale": "SYMBOLIC",
+        "motionProfile": "SLOW_PUSH",
+        "startFrame": 830,
+        "durationFrames": 65,
+        "plannerStoryRole": "context",
+        "storyRole": "context",
+        "visualIntent": "Minh họa context cho câu: \"không kịp tích thành một dự án lớn\". Hành động: symbolic-detail.",
+        "isOutro": false,
+        "audioSegment": {
+          "start": 27.666666666666668,
+          "end": 29.833333333333332,
+          "text": "không kịp tích thành một dự án lớn"
+        },
+        "image": {
+          "assetId": "shot-12",
+          "path": "assets/shot-12.jpg"
+        }
+      },
+      {
+        "type": "body",
+        "layout": "standard",
+        "composition": "editorial-right",
+        "shotScale": "MEDIUM",
+        "motionProfile": "SLOW_PUSH",
+        "startFrame": 895,
+        "durationFrames": 97,
+        "plannerStoryRole": "action",
+        "storyRole": "action",
+        "visualIntent": "Minh họa action cho câu: \"Nếu muốn thử,\". Hành động: symbolic-detail. Kết hợp: Minh họa action cho câu: \"đặt một timer 10 phút\". Hành động: đặt.",
+        "isOutro": false,
+        "audioSegment": {
+          "start": 29.833333333333332,
+          "end": 33.06666666666667,
+          "text": "Nếu muốn thử, đặt một timer 10 phút"
+        },
+        "image": {
+          "assetId": "shot-13",
+          "path": "assets/shot-13.jpg"
+        }
+      },
+      {
+        "type": "body",
+        "layout": "standard",
+        "composition": "editorial-right",
+        "shotScale": "MEDIUM",
+        "motionProfile": "SLOW_PUSH",
+        "startFrame": 992,
+        "durationFrames": 93,
+        "plannerStoryRole": "action",
+        "storyRole": "action",
+        "visualIntent": "Minh họa action cho câu: \"trước khi nghỉ tối và chỉ đưa đồ về trạng thái ngày mai dùng được\". Hành động: đưa.",
+        "isOutro": false,
+        "audioSegment": {
+          "start": 33.06666666666667,
+          "end": 36.166666666666664,
+          "text": "trước khi nghỉ tối và chỉ đưa đồ về trạng thái ngày mai dùng được"
+        },
+        "image": {
+          "assetId": "shot-14",
+          "path": "assets/shot-14.jpg"
+        }
+      },
+      {
+        "type": "body",
+        "layout": "standard",
+        "composition": "detail-insert",
+        "shotScale": "DETAIL",
+        "motionProfile": "SLOW_PUSH",
+        "startFrame": 1085,
+        "durationFrames": 110,
+        "plannerStoryRole": "action",
+        "storyRole": "action",
+        "visualIntent": "Minh họa action cho câu: \"Đừng đánh giá nó sau một lần,\". Hành động: symbolic-detail. Kết hợp: Minh họa release cho câu: \"hãy nhìn xem nó thay đổi một thao\". Hành động: nhìn.",
+        "isOutro": false,
+        "audioSegment": {
+          "start": 36.166666666666664,
+          "end": 39.833333333333336,
+          "text": "Đừng đánh giá nó sau một lần, hãy nhìn xem nó thay đổi một thao"
+        },
+        "image": {
+          "assetId": "shot-15",
+          "path": "assets/shot-15.jpg"
+        }
+      },
+      {
+        "type": "body",
+        "layout": "standard",
+        "composition": "portrait-focus",
+        "shotScale": "MEDIUM",
+        "motionProfile": "SLOW_PUSH",
+        "startFrame": 1195,
+        "durationFrames": 118,
+        "plannerStoryRole": "action",
+        "storyRole": "action",
+        "visualIntent": "Minh họa action cho câu: \"tác lặp lại như thế nào sau vài ngày\". Hành động: symbolic-detail. Kết hợp: Minh họa action cho câu: \"Mục tiêu không phải sạch hoàn hảo,\". Hành động: symbolic-detail.",
+        "isOutro": false,
+        "audioSegment": {
+          "start": 39.833333333333336,
+          "end": 43.766666666666666,
+          "text": "tác lặp lại như thế nào sau vài ngày Mục tiêu không phải sạch hoàn hảo,"
+        },
+        "image": {
+          "assetId": "shot-16",
+          "path": "assets/shot-16.jpg"
+        }
+      },
+      {
+        "type": "body",
+        "layout": "standard",
+        "composition": "portrait-focus",
+        "shotScale": "RELEASE",
+        "motionProfile": "AMBIENT_STILL",
+        "startFrame": 1313,
+        "durationFrames": 97,
+        "plannerStoryRole": "release",
+        "storyRole": "release",
+        "visualIntent": "Minh họa release cho câu: \"mục tiêu là ngày mai bắt đầu dễ hơn hôm nay một chút\". Hành động: bắt đầu.",
+        "isOutro": false,
+        "audioSegment": {
+          "start": 43.766666666666666,
+          "end": 47,
+          "text": "mục tiêu là ngày mai bắt đầu dễ hơn hôm nay một chút"
+        },
+        "image": {
+          "assetId": "shot-17",
+          "path": "assets/shot-17.jpg"
+        }
+      },
+      {
+        "type": "ending",
+        "layout": "standard",
+        "composition": "portrait-focus",
+        "shotScale": "WIDE",
+        "motionProfile": "AMBIENT_STILL",
+        "startFrame": 1410,
+        "durationFrames": 96,
+        "plannerStoryRole": "release",
+        "storyRole": "release",
+        "visualIntent": "Minh họa release cho câu: \"Nếp, những điều nhỏ tạo nên một đời sống\". Hành động: thư thái.",
+        "isOutro": false,
+        "audioSegment": {
+          "start": 47,
+          "end": 50.2,
+          "text": "Nếp, những điều nhỏ tạo nên một đời sống"
+        },
+        "image": {
+          "assetId": "shot-18",
+          "path": "assets/shot-18.jpg"
+        }
+      },
+      {
+        "type": "ending",
+        "layout": "standard",
+        "composition": "portrait-focus",
+        "shotScale": "RELEASE",
+        "motionProfile": "AMBIENT_STILL",
+        "startFrame": 1506,
+        "durationFrames": 66,
+        "plannerStoryRole": "outro",
+        "storyRole": "release",
+        "visualIntent": "Thẻ OutroCard kết thúc thương hiệu HAY & ĐẸP.",
+        "isOutro": true,
+        "audioSegment": {
+          "start": 50.2,
+          "end": 52.4,
+          "text": ""
+        },
+        "image": {
+          "assetId": "shot-19",
+          "path": "assets/shot-19.jpg"
+        }
+      }
+    ]
+  },
+  "metrics": {
+    "shotCount": 19,
+    "durationFrames": 1572,
+    "durationSeconds": 52.4,
+    "durationMinutes": 0.873,
+    "changesPerMinute": 21.76,
+    "uniqueScales": 6,
+    "uniqueSilhouettes": 9,
+    "maxHoldSeconds": 3.93,
+    "medianHoldSeconds": 2.97,
+    "scaleDistribution": {
+      "WIDE": 2,
+      "MEDIUM": 8,
+      "CLOSE": 1,
+      "DETAIL": 3,
+      "SYMBOLIC": 3,
+      "RELEASE": 2
+    },
+    "silhouetteDistribution": {
+      "room-wide": 2,
+      "single-left": 3,
+      "face-close": 1,
+      "single-right": 3,
+      "hands-detail": 1,
+      "tabletop-topdown": 1,
+      "object-detail": 3,
+      "single-centered": 3,
+      "empty-space": 2
+    },
+    "reuseCount": 0,
+    "newImageCount": 18,
+    "componentCount": 1
+  },
+  "validation": {
+    "ok": true,
+    "errors": [],
+    "warnings": [
+      "shot-02: 1.47s outside recommended MEDIUM range [2.2-3.5s]",
+      "shot-03: 3.70s outside recommended CLOSE range [2-3.2s]",
+      "shot-04: 2.13s outside recommended MEDIUM range [2.2-3.5s]",
+      "shot-06: 3.33s outside recommended DETAIL range [1.5-2.8s]",
+      "shot-15: 3.67s outside recommended DETAIL range [1.5-2.8s]",
+      "shot-16: 3.93s outside recommended MEDIUM range [2.2-3.5s]"
+    ],
+    "metrics": {
+      "shotCount": 19,
+      "durationFrames": 1572,
+      "durationSeconds": 52.4,
+      "durationMinutes": 0.873,
+      "changesPerMinute": 21.76,
+      "uniqueScales": 6,
+      "uniqueSilhouettes": 9,
+      "maxHoldSeconds": 3.93,
+      "medianHoldSeconds": 2.97,
+      "scaleDistribution": {
+        "WIDE": 2,
+        "MEDIUM": 8,
+        "CLOSE": 1,
+        "DETAIL": 3,
+        "SYMBOLIC": 3,
+        "RELEASE": 2
+      },
+      "silhouetteDistribution": {
+        "room-wide": 2,
+        "single-left": 3,
+        "face-close": 1,
+        "single-right": 3,
+        "hands-detail": 1,
+        "tabletop-topdown": 1,
+        "object-detail": 3,
+        "single-centered": 3,
+        "empty-space": 2
+      },
+      "reuseCount": 0,
+      "newImageCount": 18,
+      "componentCount": 1
+    }
+  },
+  "structuralValidation": {
+    "ok": true,
+    "errors": [],
+    "warnings": [
+      "shot-02: 1.47s outside recommended MEDIUM range [2.2-3.5s]",
+      "shot-03: 3.70s outside recommended CLOSE range [2-3.2s]",
+      "shot-04: 2.13s outside recommended MEDIUM range [2.2-3.5s]",
+      "shot-06: 3.33s outside recommended DETAIL range [1.5-2.8s]",
+      "shot-15: 3.67s outside recommended DETAIL range [1.5-2.8s]",
+      "shot-16: 3.93s outside recommended MEDIUM range [2.2-3.5s]"
+    ],
+    "metrics": {
+      "shotCount": 19,
+      "durationFrames": 1572,
+      "durationSeconds": 52.4,
+      "durationMinutes": 0.873,
+      "changesPerMinute": 21.76,
+      "uniqueScales": 6,
+      "uniqueSilhouettes": 9,
+      "maxHoldSeconds": 3.93,
+      "medianHoldSeconds": 2.97,
+      "scaleDistribution": {
+        "WIDE": 2,
+        "MEDIUM": 8,
+        "CLOSE": 1,
+        "DETAIL": 3,
+        "SYMBOLIC": 3,
+        "RELEASE": 2
+      },
+      "silhouetteDistribution": {
+        "room-wide": 2,
+        "single-left": 3,
+        "face-close": 1,
+        "single-right": 3,
+        "hands-detail": 1,
+        "tabletop-topdown": 1,
+        "object-detail": 3,
+        "single-centered": 3,
+        "empty-space": 2
+      },
+      "reuseCount": 0,
+      "newImageCount": 18,
+      "componentCount": 1
+    }
+  },
+  "productionValidation": {
+    "ok": true,
+    "productionReady": false,
+    "errors": [],
+    "warnings": [
+      "shot-02: 1.47s outside recommended MEDIUM range [2.2-3.5s]",
+      "shot-03: 3.70s outside recommended CLOSE range [2-3.2s]",
+      "shot-04: 2.13s outside recommended MEDIUM range [2.2-3.5s]",
+      "shot-06: 3.33s outside recommended DETAIL range [1.5-2.8s]",
+      "shot-15: 3.67s outside recommended DETAIL range [1.5-2.8s]",
+      "shot-16: 3.93s outside recommended MEDIUM range [2.2-3.5s]",
+      "BRAND_AUDIO_MISMATCH: spoken audio mentions legacy brand 'Nếp', template brand is 'HAY & ĐẸP.'"
+    ]
+  },
+  "brandAudit": {
+    "templateBrand": "HAY & ĐẸP.",
+    "audioMentionsBrand": true,
+    "audioBrandName": "Nếp",
+    "hasMismatch": true,
+    "mismatchType": "BRAND_AUDIO_MISMATCH",
+    "notes": "Canonical audio mentions legacy brand 'Nếp' while visual template brand is 'HAY & ĐẸP.'. Spoken audio is preserved."
+  },
+  "reuseAudit": {
+    "summary": {
+      "totalShots": 19,
+      "reuseCount": 0,
+      "newImageCount": 18,
+      "componentCount": 1
+    },
+    "evaluations": [
+      {
+        "shotId": "shot-01",
+        "scale": "WIDE",
+        "strategy": "NEW_IMAGE",
+        "semanticIntent": "Minh họa hook cho câu: \"Nếu việc dọn nhà chỉ diễn ra khi mọi thứ đã quá rối,\". Hành động: dọn.",
+        "visualVerb": "dọn",
+        "reason": "No approved assets available for candidate evaluation",
+        "candidateEvaluations": []
+      },
+      {
+        "shotId": "shot-02",
+        "scale": "MEDIUM",
+        "strategy": "NEW_IMAGE",
+        "semanticIntent": "Minh họa establish cho câu: \"nó luôn có cảm giác nặng.\". Hành động: đứng nhìn.",
+        "visualVerb": "đứng nhìn",
+        "reason": "No approved assets available for candidate evaluation",
+        "candidateEvaluations": []
+      },
+      {
+        "shotId": "shot-03",
+        "scale": "CLOSE",
+        "strategy": "NEW_IMAGE",
+        "semanticIntent": "Minh họa reflection cho câu: \"Vấn đề thường không nằm ở chỗ mình không biết phải làm gì.\". Hành động: suy ngẫm.",
+        "visualVerb": "suy ngẫm",
+        "reason": "No approved assets available for candidate evaluation",
+        "candidateEvaluations": []
+      },
+      {
+        "shotId": "shot-04",
+        "scale": "MEDIUM",
+        "strategy": "NEW_IMAGE",
+        "semanticIntent": "Minh họa reflection cho câu: \"Vấn đề là giải pháp trong đầu thường lớn\". Hành động: suy ngẫm.",
+        "visualVerb": "suy ngẫm",
+        "reason": "No approved assets available for candidate evaluation",
+        "candidateEvaluations": []
+      },
+      {
+        "shotId": "shot-05",
+        "scale": "MEDIUM",
+        "strategy": "NEW_IMAGE",
+        "semanticIntent": "Minh họa action cho câu: \"hơn năng lượng mình có trong một ngày bình thường.\". Hành động: symbolic-detail.",
+        "visualVerb": "symbolic-detail",
+        "reason": "No approved assets available for candidate evaluation",
+        "candidateEvaluations": []
+      },
+      {
+        "shotId": "shot-06",
+        "scale": "DETAIL",
+        "strategy": "NEW_IMAGE",
+        "semanticIntent": "Minh họa action cho câu: \"Có thể chỉ là đưa cốc về bếp, hoặc gập chăn,\". Hành động: gập.",
+        "visualVerb": "gập",
+        "reason": "No approved assets available for candidate evaluation",
+        "candidateEvaluations": []
+      },
+      {
+        "shotId": "shot-07",
+        "scale": "DETAIL",
+        "strategy": "NEW_IMAGE",
+        "semanticIntent": "Minh họa action cho câu: \"hoặc đơn giản là dọn mặt bàn.\". Hành động: dọn.",
+        "visualVerb": "dọn",
+        "reason": "No approved assets available for candidate evaluation",
+        "candidateEvaluations": []
+      },
+      {
+        "shotId": "shot-08",
+        "scale": "MEDIUM",
+        "strategy": "NEW_IMAGE",
+        "semanticIntent": "Minh họa reflection cho câu: \"Những việc này nhỏ tới mức không tạo cảm giác lột xác,\". Hành động: suy ngẫm.",
+        "visualVerb": "suy ngẫm",
+        "reason": "No approved assets available for candidate evaluation",
+        "candidateEvaluations": []
+      },
+      {
+        "shotId": "shot-09",
+        "scale": "SYMBOLIC",
+        "strategy": "NEW_IMAGE",
+        "semanticIntent": "Minh họa context cho câu: \"nhưng chúng có một lợi thế,\". Hành động: symbolic-detail.",
+        "visualVerb": "symbolic-detail",
+        "reason": "No approved assets available for candidate evaluation",
+        "candidateEvaluations": []
+      },
+      {
+        "shotId": "shot-10",
+        "scale": "MEDIUM",
+        "strategy": "NEW_IMAGE",
+        "semanticIntent": "Minh họa action cho câu: \"mình có thể quay lại với chúng vào ngày mai.\". Hành động: quay lại.",
+        "visualVerb": "quay lại",
+        "reason": "No approved assets available for candidate evaluation",
+        "candidateEvaluations": []
+      },
+      {
+        "shotId": "shot-11",
+        "scale": "SYMBOLIC",
+        "strategy": "NEW_IMAGE",
+        "semanticIntent": "Minh họa context cho câu: \"Một reset ngắn giữ cho sự lộn xộn\". Hành động: symbolic-detail.",
+        "visualVerb": "symbolic-detail",
+        "reason": "No approved assets available for candidate evaluation",
+        "candidateEvaluations": []
+      },
+      {
+        "shotId": "shot-12",
+        "scale": "SYMBOLIC",
+        "strategy": "NEW_IMAGE",
+        "semanticIntent": "Minh họa context cho câu: \"không kịp tích thành một dự án lớn\". Hành động: symbolic-detail.",
+        "visualVerb": "symbolic-detail",
+        "reason": "No approved assets available for candidate evaluation",
+        "candidateEvaluations": []
+      },
+      {
+        "shotId": "shot-13",
+        "scale": "MEDIUM",
+        "strategy": "NEW_IMAGE",
+        "semanticIntent": "Minh họa action cho câu: \"Nếu muốn thử,\". Hành động: symbolic-detail. Kết hợp: Minh họa action cho câu: \"đặt một timer 10 phút\". Hành động: đặt.",
+        "visualVerb": "symbolic-detail / đặt",
+        "reason": "No approved assets available for candidate evaluation",
+        "candidateEvaluations": []
+      },
+      {
+        "shotId": "shot-14",
+        "scale": "MEDIUM",
+        "strategy": "NEW_IMAGE",
+        "semanticIntent": "Minh họa action cho câu: \"trước khi nghỉ tối và chỉ đưa đồ về trạng thái ngày mai dùng được\". Hành động: đưa.",
+        "visualVerb": "đưa",
+        "reason": "No approved assets available for candidate evaluation",
+        "candidateEvaluations": []
+      },
+      {
+        "shotId": "shot-15",
+        "scale": "DETAIL",
+        "strategy": "NEW_IMAGE",
+        "semanticIntent": "Minh họa action cho câu: \"Đừng đánh giá nó sau một lần,\". Hành động: symbolic-detail. Kết hợp: Minh họa release cho câu: \"hãy nhìn xem nó thay đổi một thao\". Hành động: nhìn.",
+        "visualVerb": "symbolic-detail / nhìn",
+        "reason": "No approved assets available for candidate evaluation",
+        "candidateEvaluations": []
+      },
+      {
+        "shotId": "shot-16",
+        "scale": "MEDIUM",
+        "strategy": "NEW_IMAGE",
+        "semanticIntent": "Minh họa action cho câu: \"tác lặp lại như thế nào sau vài ngày\". Hành động: symbolic-detail. Kết hợp: Minh họa action cho câu: \"Mục tiêu không phải sạch hoàn hảo,\". Hành động: symbolic-detail.",
+        "visualVerb": "symbolic-detail",
+        "reason": "No approved assets available for candidate evaluation",
+        "candidateEvaluations": []
+      },
+      {
+        "shotId": "shot-17",
+        "scale": "RELEASE",
+        "strategy": "NEW_IMAGE",
+        "semanticIntent": "Minh họa release cho câu: \"mục tiêu là ngày mai bắt đầu dễ hơn hôm nay một chút\". Hành động: bắt đầu.",
+        "visualVerb": "bắt đầu",
+        "reason": "No approved assets available for candidate evaluation",
+        "candidateEvaluations": []
+      },
+      {
+        "shotId": "shot-18",
+        "scale": "WIDE",
+        "strategy": "NEW_IMAGE",
+        "semanticIntent": "Minh họa release cho câu: \"Nếp, những điều nhỏ tạo nên một đời sống\". Hành động: thư thái.",
+        "visualVerb": "thư thái",
+        "reason": "No approved assets available for candidate evaluation",
+        "candidateEvaluations": []
+      },
+      {
+        "shotId": "shot-19",
+        "scale": "RELEASE",
+        "strategy": "COMPONENT",
+        "semanticIntent": "Thẻ OutroCard kết thúc thương hiệu HAY & ĐẸP.",
+        "visualVerb": "chào kết",
+        "reason": "Standard outro component",
+        "candidateEvaluations": []
+      }
+    ]
+  },
+  "storyboardHeaderModel": {
+    "shotCount": 19,
+    "changesPerMinute": 21.76,
+    "uniqueScales": 6,
+    "uniqueSilhouettes": 9,
+    "text": "19 shots | 21.76 changes/min | 6 scales | 9 silhouettes"
+  },
+  "transitionStripHeaderModel": {
+    "shotCount": 19,
+    "changesPerMinute": 21.76,
+    "uniqueScales": 6,
+    "uniqueSilhouettes": 9,
+    "text": "19 shots | 21.76 changes/min | 6 scales | 9 silhouettes"
+  }
+}

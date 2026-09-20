@@ -1,0 +1,58 @@
+{
+  "videoKey": "video001",
+  "slug": "phan-1-2026-09-19-co-nhung-bua-com-sau-nay-moi-hieu",
+  "title": "Có những bữa cơm sau này mới hiểu là rất quý",
+  "category": "family-emotional",
+  "model": "@cf/black-forest-labs/flux-1-schnell",
+  "style": "clean 2D illustrated editorial",
+  "shots": [
+    {
+      "index": 1,
+      "attempt": 1,
+      "file": "shot-01.jpg",
+      "publicPath": "scratch/v36/generalization/video001/shot-01.jpg",
+      "sizeBytes": 456585,
+      "status": "SELECTED"
+    },
+    {
+      "index": 2,
+      "attempt": 1,
+      "file": "shot-02.jpg",
+      "publicPath": "scratch/v36/generalization/video001/shot-02.jpg",
+      "sizeBytes": 403763,
+      "status": "SELECTED"
+    },
+    {
+      "index": 3,
+      "attempt": 1,
+      "file": "shot-03.jpg",
+      "publicPath": "scratch/v36/generalization/video001/shot-03.jpg",
+      "sizeBytes": 419877,
+      "status": "SELECTED"
+    },
+    {
+      "index": 4,
+      "attempt": 1,
+      "file": "shot-04.jpg",
+      "publicPath": "scratch/v36/generalization/video001/shot-04.jpg",
+      "sizeBytes": 340068,
+      "status": "SELECTED"
+    },
+    {
+      "index": 5,
+      "attempt": 1,
+      "file": "shot-05.jpg",
+      "publicPath": "scratch/v36/generalization/video001/shot-05.jpg",
+      "sizeBytes": 448853,
+      "status": "SELECTED"
+    },
+    {
+      "index": 6,
+      "attempt": 1,
+      "file": "shot-06.jpg",
+      "publicPath": "scratch/v36/generalization/video001/shot-06.jpg",
+      "sizeBytes": 514583,
+      "status": "SELECTED"
+    }
+  ]
+}

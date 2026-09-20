@@ -1,0 +1,364 @@
+[
+  {
+    "beatId": "beat-01",
+    "storyRole": "establish",
+    "voiceClause": "khi còn nhỏ, một bữa cơm đủ người thường chỉ là chuyện rất bình thường.",
+    "attempts": [
+      {
+        "file": "beat-01-attempt-01.jpg",
+        "verdict": "FAIL",
+        "reasons": [
+          "severe style drift: photorealism"
+        ]
+      },
+      {
+        "file": "beat-01-attempt-02.jpg",
+        "verdict": "FAIL",
+        "reasons": [
+          "severe style drift: photorealism",
+          "people contract: 5 people (extra adult male in blue shirt)"
+        ]
+      },
+      {
+        "file": "beat-01-attempt-03.jpg",
+        "verdict": "FAIL",
+        "reasons": [
+          "severe style drift: photorealism",
+          "people contract: 5 people (extra girl in foreground)",
+          "text pollution: 'MAKKIN' plaque on wall shelf"
+        ]
+      }
+    ],
+    "selectedFile": "beat-01-attempt-01.jpg",
+    "qaVerdict": "FAIL",
+    "note": "Failed after max 3 retries due to photorealism drift. Used attempt-01 as visual fallback for sequence review."
+  },
+  {
+    "beatId": "beat-02",
+    "storyRole": "reflection",
+    "voiceClause": "Giá trị của bữa cơm không nằm ở món ăn cầu kỳ",
+    "attempts": [
+      {
+        "file": "beat-02-attempt-01.jpg",
+        "verdict": "FAIL",
+        "reasons": [
+          "severe style drift: photorealism"
+        ]
+      },
+      {
+        "file": "beat-02-attempt-02.jpg",
+        "verdict": "FAIL",
+        "reasons": [
+          "severe style drift: photorealism"
+        ]
+      },
+      {
+        "file": "beat-02-attempt-03.jpg",
+        "verdict": "FAIL",
+        "reasons": [
+          "severe style drift: photorealism",
+          "anatomy: detached floating third hand near bowl"
+        ]
+      }
+    ],
+    "selectedFile": "beat-02-attempt-01.jpg",
+    "qaVerdict": "FAIL",
+    "note": "Failed after max 3 retries due to photorealism drift and anatomy failure in attempt 3."
+  },
+  {
+    "beatId": "beat-03",
+    "storyRole": "interaction",
+    "voiceClause": "mà ở việc mọi người cùng có mặt",
+    "attempts": [
+      {
+        "file": "beat-03-attempt-01.jpg",
+        "verdict": "PASS",
+        "reasons": []
+      }
+    ],
+    "selectedFile": "beat-03-attempt-01.jpg",
+    "qaVerdict": "PASS"
+  },
+  {
+    "beatId": "beat-04",
+    "storyRole": "interaction",
+    "voiceClause": "nghe vài câu chuyện vụn và nhìn thấy nhau sau một ngày dài.",
+    "attempts": [
+      {
+        "file": "beat-04-attempt-01.jpg",
+        "verdict": "FAIL",
+        "reasons": [
+          "severe style drift: photorealism"
+        ]
+      },
+      {
+        "file": "beat-04-attempt-02.jpg",
+        "verdict": "FAIL",
+        "reasons": [
+          "severe style drift: photorealism"
+        ]
+      },
+      {
+        "file": "beat-04-attempt-03.jpg",
+        "verdict": "FAIL",
+        "reasons": [
+          "severe style drift: photorealism",
+          "people contract: 5 people (extra children in foreground)"
+        ]
+      }
+    ],
+    "selectedFile": "beat-04-attempt-01.jpg",
+    "qaVerdict": "FAIL",
+    "note": "Failed after max 3 retries due to photorealism drift."
+  },
+  {
+    "beatId": "beat-05",
+    "storyRole": "detail-action",
+    "voiceClause": "Có thể là một mâm cơm đơn giản có đủ người.",
+    "attempts": [
+      {
+        "file": "beat-05-attempt-01.jpg",
+        "verdict": "FAIL",
+        "reasons": [
+          "text pollution: artist signature glyph in bottom-right corner"
+        ]
+      },
+      {
+        "file": "beat-05-attempt-02.jpg",
+        "verdict": "PASS",
+        "reasons": []
+      }
+    ],
+    "selectedFile": "beat-05-attempt-02.jpg",
+    "qaVerdict": "PASS"
+  },
+  {
+    "beatId": "beat-06",
+    "storyRole": "detail-action",
+    "voiceClause": "Hoặc chiếc điện thoại được đặt sang một bên.",
+    "attempts": [
+      {
+        "file": "beat-06-attempt-01.jpg",
+        "verdict": "FAIL",
+        "reasons": [
+          "anatomy: severe deformed hand with 6+ distorted fingers",
+          "core semantic failure: holding phone mid-air over dining table instead of setting face-down on shelf"
+        ]
+      },
+      {
+        "file": "beat-06-attempt-02.jpg",
+        "verdict": "FAIL",
+        "reasons": [
+          "anatomy: detached arm entering from right side",
+          "core semantic failure: holding phone up toward camera instead of setting face-down on shelf"
+        ]
+      },
+      {
+        "file": "beat-06-attempt-03.jpg",
+        "verdict": "FAIL",
+        "reasons": [
+          "text pollution: Chinese calligraphy character framed on wall",
+          "core semantic failure: phone placed directly over dinner bowl on table instead of on side shelf"
+        ]
+      }
+    ],
+    "selectedFile": "beat-06-attempt-03.jpg",
+    "qaVerdict": "FAIL",
+    "note": "Failed after max 3 retries due to severe anatomy defects, persistent semantic action failure, and text pollution."
+  },
+  {
+    "beatId": "beat-07",
+    "storyRole": "action",
+    "voiceClause": "Có khi chỉ là câu chuyện nhỏ sau một ngày đi học, đi làm.",
+    "attempts": [
+      {
+        "file": "beat-07-attempt-01.jpg",
+        "verdict": "FAIL",
+        "reasons": [
+          "severe style drift: photorealism"
+        ]
+      },
+      {
+        "file": "beat-07-attempt-02.jpg",
+        "verdict": "FAIL",
+        "reasons": [
+          "severe style drift: photorealism",
+          "text pollution: commercial Apple logo on tablet"
+        ]
+      },
+      {
+        "file": "beat-07-attempt-03.jpg",
+        "verdict": "FAIL",
+        "reasons": [
+          "severe style drift: photorealism",
+          "people contract: father missing (only boy present)"
+        ]
+      }
+    ],
+    "selectedFile": "beat-07-attempt-01.jpg",
+    "qaVerdict": "FAIL",
+    "note": "Failed after max 3 retries due to photorealism drift."
+  },
+  {
+    "beatId": "beat-08",
+    "storyRole": "context",
+    "voiceClause": "Những chi tiết như vậy không tạo cảm giác mình vừa thay đổi cả cuộc sống.",
+    "attempts": [
+      {
+        "file": "beat-08-attempt-01.jpg",
+        "verdict": "PASS",
+        "reasons": []
+      }
+    ],
+    "selectedFile": "beat-08-attempt-01.jpg",
+    "qaVerdict": "PASS"
+  },
+  {
+    "beatId": "beat-09",
+    "storyRole": "reflection",
+    "voiceClause": "Nhưng chính vì nhỏ, chúng có cơ hội xuất hiện trong những ngày thật.",
+    "attempts": [
+      {
+        "file": "beat-09-attempt-01.jpg",
+        "verdict": "FAIL",
+        "reasons": [
+          "severe style drift: photorealism"
+        ]
+      },
+      {
+        "file": "beat-09-attempt-02.jpg",
+        "verdict": "FAIL",
+        "reasons": [
+          "severe style drift: photorealism"
+        ]
+      },
+      {
+        "file": "beat-09-attempt-03.jpg",
+        "verdict": "FAIL",
+        "reasons": [
+          "severe style drift: photorealism"
+        ]
+      }
+    ],
+    "selectedFile": "beat-09-attempt-01.jpg",
+    "qaVerdict": "FAIL",
+    "note": "Failed after max 3 retries due to photorealism drift."
+  },
+  {
+    "beatId": "beat-10",
+    "storyRole": "context",
+    "voiceClause": "Tuần này, thử giữ lại ít nhất một bữa ăn",
+    "attempts": [
+      {
+        "file": "beat-10-attempt-01.jpg",
+        "verdict": "FAIL",
+        "reasons": [
+          "severe style drift: photorealism"
+        ]
+      },
+      {
+        "file": "beat-10-attempt-02.jpg",
+        "verdict": "FAIL",
+        "reasons": [
+          "severe style drift: photorealism"
+        ]
+      },
+      {
+        "file": "beat-10-attempt-03.jpg",
+        "verdict": "FAIL",
+        "reasons": [
+          "severe style drift: photorealism",
+          "anatomy: severed arm floating out of thin air on table"
+        ]
+      }
+    ],
+    "selectedFile": "beat-10-attempt-01.jpg",
+    "qaVerdict": "FAIL",
+    "note": "Failed after max 3 retries due to photorealism drift and severed arm defect."
+  },
+  {
+    "beatId": "beat-11",
+    "storyRole": "interaction",
+    "voiceClause": "mà mọi người ngồi cùng nhau",
+    "attempts": [
+      {
+        "file": "beat-11-attempt-01.jpg",
+        "verdict": "PASS",
+        "reasons": []
+      }
+    ],
+    "selectedFile": "beat-11-attempt-01.jpg",
+    "qaVerdict": "PASS"
+  },
+  {
+    "beatId": "beat-12",
+    "storyRole": "detail-action",
+    "voiceClause": "và điện thoại không nằm giữa bàn.",
+    "attempts": [
+      {
+        "file": "beat-12-attempt-01.jpg",
+        "verdict": "PASS",
+        "reasons": []
+      }
+    ],
+    "selectedFile": "beat-12-attempt-01.jpg",
+    "qaVerdict": "PASS"
+  },
+  {
+    "beatId": "beat-13",
+    "storyRole": "reflection",
+    "voiceClause": "Có những điều lúc đang có thì rất bình thường.",
+    "assetStrategy": "reuse-canonical",
+    "selectedFrom": "beat-01",
+    "apiCalls": 0
+  },
+  {
+    "beatId": "beat-14",
+    "storyRole": "reflection",
+    "voiceClause": "Đến khi lịch mỗi người khác đi, ta mới biết chúng từng đẹp đến mức nào.",
+    "assetStrategy": "reuse-canonical",
+    "selectedFrom": "beat-01",
+    "apiCalls": 0
+  },
+  {
+    "beatId": "beat-15",
+    "storyRole": "release",
+    "voiceClause": "Nhà bạn có bữa ăn nào dù món rất đơn giản",
+    "attempts": [
+      {
+        "file": "beat-15-attempt-01.jpg",
+        "verdict": "FAIL",
+        "reasons": [
+          "people contract: 3 people present despite noPeople requested",
+          "text pollution: Chinese calligraphy on wall"
+        ]
+      },
+      {
+        "file": "beat-15-attempt-02.jpg",
+        "verdict": "FAIL",
+        "reasons": [
+          "people contract: 4 people present despite noPeople requested"
+        ]
+      },
+      {
+        "file": "beat-15-attempt-03.jpg",
+        "verdict": "FAIL",
+        "reasons": [
+          "people contract: 3 people present despite noPeople requested",
+          "anatomy: floating severed arm holding bowl in center"
+        ]
+      }
+    ],
+    "selectedFile": "beat-15-attempt-01.jpg",
+    "qaVerdict": "FAIL",
+    "note": "Failed after max 3 retries: model persistently generated people despite noPeople prompt, with severe floating arm defect in attempt 3."
+  },
+  {
+    "beatId": "beat-16",
+    "storyRole": "question",
+    "voiceClause": "nhưng vẫn nhớ lâu không?",
+    "assetStrategy": "reuse-canonical",
+    "selectedFrom": "beat-01",
+    "apiCalls": 0
+  }
+]

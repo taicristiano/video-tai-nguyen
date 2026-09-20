@@ -1,0 +1,8 @@
+{
+  "style": "PASS",
+  "peopleContract": "FAIL",
+  "semanticFidelity": "PASS",
+  "anatomy": "PASS",
+  "textPollution": "PASS",
+  "reasons": ["wall frame contains drawn human figure (head, face, arm) violating zero-people contract"]
+}

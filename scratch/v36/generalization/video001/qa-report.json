@@ -1,0 +1,106 @@
+{
+  "videoKey": "video001",
+  "slug": "phan-1-2026-09-19-co-nhung-bua-com-sau-nay-moi-hieu",
+  "title": "Có những bữa cơm sau này mới hiểu là rất quý",
+  "category": "family-emotional",
+  "evaluatedAt": "2026-09-20T03:55:57.373Z",
+  "overallStatus": "PASS",
+  "shots": [
+    {
+      "index": 1,
+      "file": "assets/shot-01.jpg",
+      "qaStatus": "PASS",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS",
+        "overall": "PASS",
+        "source": "V3.4A_HUMAN_REVIEW",
+        "recordedAt": "2026-09-20T08:35:00.000Z"
+      },
+      "notes": "Validated asset"
+    },
+    {
+      "index": 2,
+      "file": "assets/shot-02.jpg",
+      "qaStatus": "PASS",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS",
+        "overall": "PASS",
+        "source": "V3.4A_HUMAN_REVIEW",
+        "recordedAt": "2026-09-20T08:35:00.000Z"
+      },
+      "notes": "Validated asset"
+    },
+    {
+      "index": 3,
+      "file": "assets/shot-03.jpg",
+      "qaStatus": "PASS",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS",
+        "overall": "PASS",
+        "source": "V3.4A_HUMAN_REVIEW",
+        "recordedAt": "2026-09-20T08:35:00.000Z"
+      },
+      "notes": "Validated asset"
+    },
+    {
+      "index": 4,
+      "file": "assets/shot-04.jpg",
+      "qaStatus": "PASS",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS",
+        "overall": "PASS",
+        "source": "V3.4A_HUMAN_REVIEW",
+        "recordedAt": "2026-09-20T08:35:00.000Z"
+      },
+      "notes": "Validated asset"
+    },
+    {
+      "index": 5,
+      "file": "assets/shot-05.jpg",
+      "qaStatus": "PASS",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS",
+        "overall": "PASS",
+        "source": "V3.4A_HUMAN_REVIEW",
+        "recordedAt": "2026-09-20T08:35:00.000Z"
+      },
+      "notes": "Validated asset"
+    },
+    {
+      "index": 6,
+      "file": "assets/shot-06.jpg",
+      "qaStatus": "PASS",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS",
+        "overall": "PASS",
+        "source": "V3.4A_HUMAN_REVIEW",
+        "recordedAt": "2026-09-20T08:35:00.000Z"
+      },
+      "notes": "Validated asset"
+    }
+  ]
+}

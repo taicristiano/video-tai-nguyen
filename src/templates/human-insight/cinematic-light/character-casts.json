@@ -1,0 +1,99 @@
+{
+  "family-young-01": {
+    "id": "family-young-01",
+    "name": "Gia đình trẻ",
+    "descriptionVi": "Bố mẹ trẻ khoảng 30–34 tuổi và hai con nhỏ",
+    "members": {
+      "father": "Vietnamese man, 34, oval face, straight brows, warm almond eyes, clean-shaven, NO GLASSES, short straight black hair with a neat side part, sage overshirt, cream T-shirt, charcoal trousers.",
+      "mother": "Vietnamese woman, 32, soft oval face, warm almond eyes, black hair in one fixed low bun with two subtle loose strands, NO GLASSES, warm beige cardigan, cream dress.",
+      "boy": "Vietnamese boy, 7, round face, short slightly spiky black fringe, sage cotton T-shirt.",
+      "girl": "Vietnamese girl, 5–6, round-soft face, neat bob haircut with straight bangs, warm cream dress."
+    },
+    "continuity": "STRICT CONTINUITY: same people in every recurring scene; same age, facial proportions, hairstyle, glasses/no-glasses state, clothes, body proportions and illustration design. Never duplicate children. Never add random family members.",
+    "castLockPrompt": "CAST LOCK — family-young-01:\nFather: Vietnamese man, 34, oval face, straight brows, warm almond eyes, clean-shaven, NO GLASSES, short straight black hair with a neat side part, sage overshirt, cream T-shirt, charcoal trousers.\nMother: Vietnamese woman, 32, soft oval face, warm almond eyes, black hair in one fixed low bun with two subtle loose strands, NO GLASSES, warm beige cardigan, cream dress.\nBoy: Vietnamese boy, 7, round face, short slightly spiky black fringe, sage cotton T-shirt.\nGirl: Vietnamese girl, 5–6, round-soft face, neat bob haircut with straight bangs, warm cream dress.\nSTRICT CONTINUITY: same people in every recurring scene; same age, facial proportions, hairstyle, glasses/no-glasses state, clothes, body proportions and illustration design. Never duplicate children. Never add random family members."
+  },
+  "couple-young-01": {
+    "id": "couple-young-01",
+    "name": "Cặp đôi trẻ",
+    "descriptionVi": "Cặp đôi Việt Nam khoảng 25–28 tuổi",
+    "members": {
+      "man": "Vietnamese man, 27, oval face, tidy short black hair, clean-shaven, NO GLASSES, charcoal knit sweater, cream trousers.",
+      "woman": "Vietnamese woman, 26, soft oval face, low ponytail, NO GLASSES, muted sage linen shirt, light ivory skirt."
+    },
+    "continuity": "STRICT CONTINUITY: same two people across recurring scenes; same face, hairstyle, clothes and proportions. No random extra partner.",
+    "castLockPrompt": "CAST LOCK — couple-young-01:\nMan: Vietnamese man, 27, oval face, tidy short black hair, clean-shaven, NO GLASSES, charcoal knit sweater, cream trousers.\nWoman: Vietnamese woman, 26, soft oval face, low ponytail, NO GLASSES, muted sage linen shirt, light ivory skirt.\nSTRICT CONTINUITY: same two people across recurring scenes; same face, hairstyle, clothes and proportions. No random extra partner."
+  },
+  "parents-middleage-01": {
+    "id": "parents-middleage-01",
+    "name": "Bố mẹ trung niên",
+    "descriptionVi": "Cặp bố mẹ Việt Nam khoảng 48–52 tuổi",
+    "members": {
+      "father": "Vietnamese father, 50, gentle oval face, slight grey at temples, clean-shaven, NO GLASSES unless explicitly requested, charcoal polo.",
+      "mother": "Vietnamese mother, 48, warm eyes, black hair tied in one fixed low bun, muted sage blouse."
+    },
+    "continuity": "STRICT CONTINUITY: same faces, age, hairstyle, clothes and proportions across recurring scenes.",
+    "castLockPrompt": "CAST LOCK — parents-middleage-01:\nFather: Vietnamese father, 50, gentle oval face, slight grey at temples, clean-shaven, NO GLASSES unless explicitly requested, charcoal polo.\nMother: Vietnamese mother, 48, warm eyes, black hair tied in one fixed low bun, muted sage blouse.\nSTRICT CONTINUITY: same faces, age, hairstyle, clothes and proportions across recurring scenes."
+  },
+  "elderly-couple-01": {
+    "id": "elderly-couple-01",
+    "name": "Ông bà",
+    "descriptionVi": "Cặp vợ chồng Việt Nam 65–70 tuổi",
+    "members": {
+      "grandfather": "Vietnamese grandfather, 68, silver hair, thin reading glasses, light cream cotton shirt.",
+      "grandmother": "Vietnamese grandmother, 65, silver-black hair in a low bun, warm sage cardigan."
+    },
+    "continuity": "STRICT CONTINUITY: same elderly couple, same face, hair, glasses state and attire.",
+    "castLockPrompt": "CAST LOCK — elderly-couple-01:\nGrandfather: Vietnamese grandfather, 68, silver hair, thin reading glasses, light cream cotton shirt.\nGrandmother: Vietnamese grandmother, 65, silver-black hair in a low bun, warm sage cardigan.\nSTRICT CONTINUITY: same elderly couple, same face, hair, glasses state and attire."
+  },
+  "solo-male-01": {
+    "id": "solo-male-01",
+    "name": "Nam trẻ",
+    "descriptionVi": "Nam Việt Nam 26–29 tuổi",
+    "members": {
+      "person": "Vietnamese man, 28, clean modern short black hair, clean-shaven, NO GLASSES unless explicitly requested, charcoal crewneck sweater, ivory inner shirt, dark trousers."
+    },
+    "continuity": "STRICT CONTINUITY: same face, hairstyle, wardrobe and proportions.",
+    "castLockPrompt": "CAST LOCK — solo-male-01:\nPerson: Vietnamese man, 28, clean modern short black hair, clean-shaven, NO GLASSES unless explicitly requested, charcoal crewneck sweater, ivory inner shirt, dark trousers.\nSTRICT CONTINUITY: same face, hairstyle, wardrobe and proportions."
+  },
+  "solo-female-01": {
+    "id": "solo-female-01",
+    "name": "Nữ trẻ",
+    "descriptionVi": "Nữ Việt Nam 24–28 tuổi",
+    "members": {
+      "person": "Vietnamese woman, 26, natural shoulder-length black hair with one fixed soft wave pattern, NO GLASSES unless explicitly requested, muted sage linen top or ivory cardigan."
+    },
+    "continuity": "STRICT CONTINUITY: same face, hairstyle, wardrobe and proportions.",
+    "castLockPrompt": "CAST LOCK — solo-female-01:\nPerson: Vietnamese woman, 26, natural shoulder-length black hair with one fixed soft wave pattern, NO GLASSES unless explicitly requested, muted sage linen top or ivory cardigan.\nSTRICT CONTINUITY: same face, hairstyle, wardrobe and proportions."
+  },
+  "child-boy-01": {
+    "id": "child-boy-01",
+    "name": "Bé trai",
+    "descriptionVi": "Bé trai Việt Nam 6–9 tuổi",
+    "members": {
+      "person": "Vietnamese boy, 8, short black hair with one fixed fringe shape, sage or cream cotton T-shirt, lively expression."
+    },
+    "continuity": "STRICT CONTINUITY: same child face, hair, clothes and proportions.",
+    "castLockPrompt": "CAST LOCK — child-boy-01:\nPerson: Vietnamese boy, 8, short black hair with one fixed fringe shape, sage or cream cotton T-shirt, lively expression.\nSTRICT CONTINUITY: same child face, hair, clothes and proportions."
+  },
+  "child-girl-01": {
+    "id": "child-girl-01",
+    "name": "Bé gái",
+    "descriptionVi": "Bé gái Việt Nam 5–8 tuổi",
+    "members": {
+      "person": "Vietnamese girl, 6, neat bob haircut with straight bangs, cream or pastel sage dress, gentle expression."
+    },
+    "continuity": "STRICT CONTINUITY: same child face, hair, clothes and proportions.",
+    "castLockPrompt": "CAST LOCK — child-girl-01:\nPerson: Vietnamese girl, 6, neat bob haircut with straight bangs, cream or pastel sage dress, gentle expression.\nSTRICT CONTINUITY: same child face, hair, clothes and proportions."
+  },
+  "dialogue-pair-01": {
+    "id": "dialogue-pair-01",
+    "name": "Cặp đối thoại",
+    "descriptionVi": "Hai người Việt Nam trưởng thành trong quan hệ thân thiết nhưng không mặc định lãng mạn",
+    "members": {
+      "speaker": "Vietnamese adult, 27–32, fixed oval facial design, short neat black hair, charcoal/sage casual clothing.",
+      "listener": "Vietnamese adult, 27–32, distinct fixed soft facial design, shoulder-length or tied black hair, warm neutral clothing."
+    },
+    "continuity": "STRICT CONTINUITY: same two distinct people across all dialogue scenes. Do not switch speaker/listener identities. Do not imply romance unless the narration says so.",
+    "castLockPrompt": "CAST LOCK — dialogue-pair-01:\nSpeaker: Vietnamese adult, 27–32, fixed oval facial design, short neat black hair, charcoal/sage casual clothing.\nListener: Vietnamese adult, 27–32, distinct fixed soft facial design, shoulder-length or tied black hair, warm neutral clothing.\nSTRICT CONTINUITY: same two distinct people across all dialogue scenes. Do not switch speaker/listener identities. Do not imply romance unless the narration says so."
+  }
+}

@@ -35,22 +35,71 @@ const ROOT = path.resolve(__dirname, '..');
 const MANIFEST_PATH = path.join(ROOT, 'public/assets/human-insight/manifest.json');
 const IMAGE_DIR = path.join(ROOT, 'public/assets/human-insight/images');
 
-const OUTPUT_WIDTH = 688;
-const OUTPUT_HEIGHT = 384;
-const JPEG_QUALITY = 70;
 // Be deliberately conservative when reusing an existing illustration.
 // A single mood/emotion overlap must never be enough to suppress generation.
 const DEFAULT_THRESHOLD = 14;
 const CLOUDFLARE_MODEL = '@cf/black-forest-labs/flux-1-schnell';
 
-const STYLE_PROMPT = [
-  'A 16:9 vintage beige paper cartoon illustration in the exact style of simple Vietnamese human-insight storyboards:',
-  'thin graphite pencil outlines, low contrast sepia-gray ink, pale cream background, subtle cross-hatching only,',
-  'rectangular hand-drawn border, simple round-head stick-figure characters with minimal facial features,',
-  'clear metaphorical composition, calm emotional storytelling.',
-  'Keep all lines light and delicate, no heavy black fills, no saturated colors, no anime, no photorealism, no 3D,',
-  'no text, no labels, no logo, no watermark.',
-].join(' ');
+// TODO: Audit remaining historical 394 assets into HAYDEP_CORE, HAYDEP_COMPATIBLE, LEGACY_NEP, REJECT_OFFSTYLE
+export const ASSET_TIERS = {
+  CORE: 'HAYDEP_CORE',
+  CANDIDATE: 'HAYDEP_CANDIDATE',
+  COMPATIBLE: 'HAYDEP_COMPATIBLE',
+  LEGACY: 'LEGACY_NEP',
+  REJECT: 'REJECT_OFFSTYLE',
+};
+
+export const STYLE_PROMPT = [
+  'STYLE LOCK:',
+  'Premium warm editorial 2D illustration for HAY & ĐẸP.',
+  'Soft ivory and warm cream palette, muted sage accents, warm wood, charcoal/sepia linework.',
+  'Natural gentle light, tactile editorial texture, proportional expressive Vietnamese characters.',
+  'Calm uncluttered composition, subtle depth, believable anatomy.',
+].join('\n');
+
+const CASTS_PATH = path.join(
+  ROOT,
+  'src/templates/human-insight/cinematic-light/character-casts.json',
+);
+
+export const CHARACTER_CASTS = JSON.parse(
+  fs.readFileSync(CASTS_PATH, 'utf-8'),
+);
+
+
+export function inferCastId(text, category) {
+  const lower = (String(text || '') + ' ' + (category ?? '')).toLowerCase();
+  if (
+    lower.includes('bữa cơm') ||
+    lower.includes('gia đình') ||
+    lower.includes('con cái') ||
+    lower.includes('bố mẹ') ||
+    lower.includes('nhà mình')
+  ) {
+    return 'family-young-01';
+  }
+  if (lower.includes('ông bà') || lower.includes('tuổi già') || lower.includes('dưỡng già')) {
+    return 'elderly-couple-01';
+  }
+  if (
+    lower.includes('vợ chồng') ||
+    lower.includes('người yêu') ||
+    lower.includes('kết hôn') ||
+    lower.includes('hôn nhân')
+  ) {
+    return 'couple-young-01';
+  }
+  if (lower.includes('trung niên') || lower.includes('nuôi dạy')) {
+    return 'parents-middleage-01';
+  }
+  if (lower.includes('cô gái') || lower.includes('phụ nữ')) {
+    return 'solo-female-01';
+  }
+  if (lower.includes('chàng trai') || lower.includes('người trẻ')) {
+    return 'solo-male-01';
+  }
+  return undefined;
+}
 
 const VIETNAMESE_TAG_HINTS = [
   [['ai', 'trí tuệ nhân tạo', 'cong nghe', 'công nghệ', 'robot', 'tu dong hoa', 'tự động hóa'], ['ai-learning', 'technology', 'automation', 'ai-replacement']],
@@ -136,16 +185,39 @@ function parseArgs(argv) {
     type: 'body',
     mood: '',
     character: 'neutral',
+    cast: '',
+    slug: '',
+    video: '',
+    sceneIndex: 0,
+    seed: null,
     generate: false,
     threshold: DEFAULT_THRESHOLD,
     visual: '',
     exclude: '',
+    shotScale: '',
+    composition: '',
+    storyRole: '',
+    action: '',
+    worldId: '',
+    worldLock: '',
+    strictHayDep: false,
+    noPeople: false,
+    presentMembers: [],
   };
 
   for (let i = 2; i < argv.length; i++) {
     const arg = argv[i];
     if (arg === '--generate') {
       args.generate = true;
+    } else if (arg === '--strict-hay-dep') {
+      args.strictHayDep = true;
+    } else if (arg === '--no-people') {
+      args.noPeople = true;
+    } else if (arg === '--present-members') {
+      args.presentMembers = argv[++i]
+        .split(',')
+        .map((v) => v.trim())
+        .filter(Boolean);
     } else if (arg === '--text') {
       args.text = argv[++i];
     } else if (arg === '--type') {
@@ -154,8 +226,30 @@ function parseArgs(argv) {
       args.mood = argv[++i];
     } else if (arg === '--character') {
       args.character = argv[++i];
+    } else if (arg === '--cast') {
+      args.cast = argv[++i];
+    } else if (arg === '--slug') {
+      args.slug = argv[++i];
+    } else if (arg === '--video') {
+      args.video = argv[++i];
+    } else if (arg === '--scene-index') {
+      args.sceneIndex = Number(argv[++i]);
+    } else if (arg === '--seed') {
+      args.seed = Number(argv[++i]);
     } else if (arg === '--visual') {
       args.visual = argv[++i];
+    } else if (arg === '--shot-scale') {
+      args.shotScale = argv[++i];
+    } else if (arg === '--composition') {
+      args.composition = argv[++i];
+    } else if (arg === '--story-role') {
+      args.storyRole = argv[++i];
+    } else if (arg === '--action') {
+      args.action = argv[++i];
+    } else if (arg === '--world-id') {
+      args.worldId = argv[++i];
+    } else if (arg === '--world-lock') {
+      args.worldLock = argv[++i];
     } else if (arg === '--threshold') {
       args.threshold = Number(argv[++i]);
     } else if (arg === '--exclude') {
@@ -192,6 +286,10 @@ Options:
   --type hook|body|stat|ending     Scene type. Default: body
   --mood <mood>                    Overall mood, e.g. introspective
   --character male|female|neutral  Character continuity hint. Default: neutral
+  --cast <castId>                  Cast ID (family-young-01, couple-young-01, etc.)
+  --slug <slug>                    Video slug for deterministic seed calculation
+  --scene-index <number>           Scene index in timeline (0, 1, ...)
+  --seed <number>                  Explicit uint32 seed override
   --visual "<description>"         Optional visual description for generation prompt
   --threshold <number>             Existing asset score threshold. Default: ${DEFAULT_THRESHOLD}
   --generate                       Allow Cloudflare generation when no asset matches
@@ -293,11 +391,25 @@ export function writeManifest(manifest) {
 }
 
 export function scoreAsset(asset, scene) {
+  if (asset.tier === ASSET_TIERS.REJECT) {
+    return { asset, score: -9999, reasons: ['tier:REJECT_OFFSTYLE'] };
+  }
+
   const sceneTags = deriveTags(scene.text, scene.mood, scene.character);
   const assetTags = new Set((asset.tags || []).map(normalize));
   const assetDesc = normalize(asset.desc || '');
   let score = 0;
   const reasons = [];
+
+  if (asset.tier === ASSET_TIERS.CORE) {
+    score += 25;
+    reasons.push('tier:HAYDEP_CORE');
+  } else if (asset.tier === ASSET_TIERS.COMPATIBLE) {
+    score += 10;
+    reasons.push('tier:HAYDEP_COMPATIBLE');
+  } else if (asset.tier === ASSET_TIERS.LEGACY) {
+    reasons.push('tier:LEGACY_NEP');
+  }
 
   for (const tag of sceneTags) {
     const normalizedTag = normalize(tag);
@@ -345,13 +457,83 @@ export function scoreAsset(asset, scene) {
     reasons.push(`character-mismatch:${assetCharacter}`);
   }
 
+  if (scene.castId) {
+    if (!asset.castId) {
+      score -= 30;
+      reasons.push('cast:unknown');
+    } else if (scene.castId === asset.castId) {
+      score += 20;
+      reasons.push(`cast:${scene.castId}`);
+    } else {
+      score -= 40;
+      reasons.push(`cast-mismatch:${asset.castId}`);
+    }
+  }
+
+  if (scene.worldId && asset.worldId) {
+    if (scene.worldId === asset.worldId) {
+      score += 8;
+      reasons.push(`world:${scene.worldId}`);
+    } else {
+      score -= 8;
+      reasons.push(`world-mismatch:${asset.worldId}`);
+    }
+  }
+
+  if (scene.storyRole && asset.storyRole === scene.storyRole) {
+    score += 6;
+    reasons.push(`story-role:${scene.storyRole}`);
+  }
+
   return {asset, score, reasons};
+}
+
+export function effectiveTier(asset) {
+  return asset?.tier || ASSET_TIERS.LEGACY;
+}
+
+export function canReuseForHayDep(result, scene, threshold = DEFAULT_THRESHOLD) {
+  if (!result) return false;
+
+  const asset = result.asset;
+  const tier = effectiveTier(asset);
+
+  if (
+    tier !== ASSET_TIERS.CORE &&
+    tier !== ASSET_TIERS.COMPATIBLE
+  ) {
+    return false;
+  }
+
+  if (!isConfidentExistingMatch(result, threshold)) {
+    return false;
+  }
+
+  if (scene.castId) {
+    if (!asset.castId) return false;
+    if (asset.castId !== scene.castId) return false;
+  }
+
+  if (scene.worldId && asset.worldId) {
+    if (asset.worldId !== scene.worldId) return false;
+  }
+
+  if (
+    scene.storyRole &&
+    asset.storyRole &&
+    asset.storyRole !== scene.storyRole
+  ) {
+    return false;
+  }
+
+  return true;
 }
 
 function isReusableAsset(asset) {
   // Cloudflare images are generated for one very specific narration scene.
   // Reusing them for another scene was a major source of visually-wrong matches.
   if (asset.reuse === false) return false;
+  if (asset.tier === ASSET_TIERS.REJECT) return false;
   if (String(asset.id || '').startsWith('cf-')) return false;
   return true;
 }
@@ -403,15 +585,176 @@ function shortHash(text) {
   return crypto.createHash('sha1').update(text).digest('hex').slice(0, 8);
 }
 
-function buildPrompt(scene) {
-  const characterPhrase = {
-    male: 'Keep the recurring main character male-presenting across scenes.',
-    female: 'Keep the recurring main character female-presenting across scenes.',
-    neutral: 'Use simple gender-neutral stick-figure characters unless the scene clearly requires otherwise.',
-  }[scene.character];
-  const visual = scene.visual || `Visual metaphor for this Vietnamese narration: "${scene.text}"`;
+function buildShotPrompt(scene) {
+  const shotScale = scene.shotScale || (scene.type === 'hook' ? 'wide' : scene.type === 'ending' ? 'close' : 'medium');
+  const composition = scene.composition || 'portrait-focus';
 
-  return `${STYLE_PROMPT}\n\nScene: ${visual}\n${characterPhrase}`;
+  const scaleDescriptions = {
+    wide: 'Wide environmental establishing shot.',
+    medium: 'Medium editorial shot focusing on natural movement.',
+    close: 'Close intimate framing focusing on faces, hands, emotions.',
+    detail: 'Macro detail insert on tactile objects with shallow depth of field.',
+  };
+
+  const compositionDescriptions = {
+    'full-bleed': 'Vertical 9:16 full-bleed composition.',
+    'editorial-left': 'Editorial asymmetric composition: subject left, breathing space right.',
+    'editorial-right': 'Editorial asymmetric composition: subject right, breathing space left.',
+    'portrait-focus': 'Vertical portrait composition with clear visual hierarchy.',
+    'detail-insert': 'Detail insert capturing a domestic action.',
+    paper: 'Tactile keepsake memory framing with soft daylight.',
+  };
+
+  const scaleText = scaleDescriptions[shotScale] || scaleDescriptions.medium;
+  const compText = compositionDescriptions[composition] || compositionDescriptions['portrait-focus'];
+
+  return [
+    'SHOT: Vertical 9:16 editorial framing, candid, unposed.',
+    scaleText,
+    compText,
+  ].join('\n');
+}
+
+function buildGenericCastPrompt(scene) {
+  if (scene.character === 'male') {
+    return [
+      'CAST:',
+      'Use one natural Vietnamese male-presenting editorial character if a person is needed.',
+      'Keep age, hairstyle, wardrobe and facial design internally coherent within this scene.',
+      'Do not use stick figures.',
+    ].join('\n');
+  }
+
+  if (scene.character === 'female') {
+    return [
+      'CAST:',
+      'Use one natural Vietnamese female-presenting editorial character if a person is needed.',
+      'Keep age, hairstyle, wardrobe and facial design internally coherent within this scene.',
+      'Do not use stick figures.',
+    ].join('\n');
+  }
+
+  return [
+    'CAST:',
+    'Use natural Vietnamese editorial human characters only when the scene needs people.',
+    'Do not use stick figures, diagram people, icon people, mannequins, or infographic characters.',
+    'Do not add random extra people.',
+  ].join('\n');
+}
+
+export function buildPresentCastPrompt(scene, castId) {
+  if (scene.noPeople || (Array.isArray(scene.presentMembers) && scene.presentMembers.length === 0)) {
+    return [
+      'PEOPLE:',
+      'NO PEOPLE in frame.',
+      'Show only believable traces of the activity that just happened.',
+    ].join('\n');
+  }
+
+  const cast = CHARACTER_CASTS[castId];
+  if (!cast) {
+    return buildGenericCastPrompt(scene);
+  }
+
+  const validMemberKeys = cast.members ? Object.keys(cast.members) : [];
+
+  let requested;
+  if (Array.isArray(scene.presentMembers) && scene.presentMembers.length > 0) {
+    const invalid = scene.presentMembers.filter((m) => !cast.members || !cast.members[m]);
+    if (invalid.length > 0) {
+      throw new Error(
+        `Invalid cast member "${invalid[0]}" for cast "${castId}". Valid members: ${validMemberKeys.join(', ')}`
+      );
+    }
+    requested = scene.presentMembers;
+  } else {
+    requested = validMemberKeys;
+  }
+
+  if (requested.length === 0) {
+    return [
+      'PEOPLE:',
+      'NO PEOPLE in frame.',
+      'Show only believable traces of the activity that just happened.',
+    ].join('\n');
+  }
+
+  const lines = requested
+    .map((memberId) => `${memberId}: ${cast.members[memberId]}`);
+
+  return [
+    `CAST CONTINUITY — ${castId}:`,
+    ...lines,
+    'Use same recurring identities, no random extra people.',
+  ].join('\n');
+}
+
+function buildWorldPrompt(scene) {
+  if (scene.worldLock) {
+    return scene.worldLock;
+  }
+  return [
+    'WORLD:',
+    'Warm believable Vietnamese everyday-life environment.',
+    'Ivory / warm cream, muted sage, warm wood, charcoal details.',
+  ].join('\n');
+}
+
+function buildNegativeRules(scene) {
+  const rules = [
+    'NEGATIVE: NO TEXT, NO LOGO, NO WATERMARK.',
+    'No posed camera-facing portrait, no random extra people, no luxury showroom look.',
+  ];
+
+  if (scene.storyRole === 'detail-action') {
+    rules.push('Object must be actively used by hand, no product photography.');
+  } else if (scene.storyRole === 'interaction') {
+    rules.push('Show visible reactive exchange between people, no isolated portrait faces.');
+  } else if (scene.storyRole === 'memory') {
+    rules.push('Do not invent different faces or family.');
+  }
+
+  return rules.join('\n');
+}
+
+export function buildPrompt(scene, castId) {
+  const action = scene.action || scene.visual || scene.text;
+  const rawMeaning = scene.visual || scene.text;
+  const sceneMeaning = rawMeaning.replace(/\.\s*Convert this priority.*$/i, '.');
+
+  const sections = [
+    `ACTION:\n${action}`,
+    `SCENE MEANING:\n${sceneMeaning}`,
+    buildPresentCastPrompt(scene, castId),
+    buildWorldPrompt(scene),
+    STYLE_PROMPT,
+    buildShotPrompt(scene),
+    buildNegativeRules(scene),
+  ].filter(Boolean);
+
+  const full = sections.join('\n\n');
+
+  if (full.length > 1950) {
+    throw new Error(
+      `Image prompt too long: ${full.length}. ` +
+      `Compact individual sections; do not blind-slice.`,
+    );
+  }
+
+  return full;
+}
+
+export function computeSeeds({ slug, video, text, castId, sceneIndex = 0, explicitSeed }) {
+  if (Number.isFinite(explicitSeed) && explicitSeed !== null) {
+    const s = explicitSeed >>> 0;
+    return { videoSeed: s, castSeed: s, sceneSeed: s };
+  }
+  const identityText = slug || video || String(text || '').slice(0, 48);
+  const videoSeed = parseInt(crypto.createHash('sha256').update(String(identityText)).digest('hex').slice(0, 8), 16) >>> 0;
+  const castKey = `${videoSeed}|${castId || 'neutral'}`;
+  const castSeed = parseInt(crypto.createHash('sha256').update(castKey).digest('hex').slice(0, 8), 16) >>> 0;
+  const sceneSeed = (castSeed + ((Number(sceneIndex) || 0) * 7919)) >>> 0;
+  return { videoSeed, castSeed, sceneSeed };
 }
 
 function parseCloudflareImage(body, transport) {
@@ -498,15 +841,28 @@ async function generateWithCloudflare(prompt, seed) {
   }
 
   const url = `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/${CLOUDFLARE_MODEL}`;
-  const requestBody = JSON.stringify({
+  const payloadWithSeed = {
     prompt,
-  });
+    seed: seed >>> 0,
+    steps: 4,
+  };
+  let requestBody = JSON.stringify(payloadWithSeed);
 
   try {
-    console.error('Calling Cloudflare with Node fetch...');
+    console.error('Calling Cloudflare with Node fetch (with seed/steps)...');
     return await callCloudflareWithFetch(url, token, requestBody);
   } catch (fetchErr) {
-    console.error(`Node fetch failed: ${fetchErr.message}`);
+    console.error(`Cloudflare rejected seed/steps payload: ${fetchErr.message}`);
+    if (fetchErr.message.includes('/seed') || fetchErr.message.includes('/steps') || fetchErr.message.includes('Additional or unevaluated properties')) {
+      console.error('⚠️ Cloudflare schema rejected seed/steps. Retrying with prompt-only payload...');
+      requestBody = JSON.stringify({ prompt });
+      try {
+        return await callCloudflareWithFetch(url, token, requestBody);
+      } catch (fallbackErr) {
+        console.error(`Prompt-only fetch failed: ${fallbackErr.message}`);
+      }
+    }
+
     console.error('Retrying Cloudflare with curl...');
     try {
       return callCloudflareWithCurl(url, token, requestBody);
@@ -517,28 +873,9 @@ async function generateWithCloudflare(prompt, seed) {
 }
 
 function compressJpeg(inputPath, outputPath) {
-  if (process.platform === 'darwin') {
-    const result = spawnSync('sips', [
-      '--resampleHeightWidth',
-      String(OUTPUT_HEIGHT),
-      String(OUTPUT_WIDTH),
-      '--setProperty',
-      'formatOptions',
-      String(JPEG_QUALITY),
-      inputPath,
-      '--out',
-      outputPath,
-    ], {
-      cwd: ROOT,
-      encoding: 'utf-8',
-    });
-    if (result.status === 0) return;
-  }
-
   const result = spawnSync('ffmpeg', [
     '-y',
     '-i', inputPath,
-    '-vf', `scale=${OUTPUT_WIDTH}:${OUTPUT_HEIGHT}`,
     '-q:v', '3',
     outputPath,
   ], {
@@ -586,6 +923,11 @@ function appendGeneratedAsset(manifest, scene, reservedAsset) {
     tags: deriveTags(scene.text, scene.mood, scene.character),
     mood: scene.mood || 'reflective',
     source: 'cloudflare',
+    tier: ASSET_TIERS.CANDIDATE,
+    castId: scene.castId || undefined,
+    storyRole: scene.storyRole || undefined,
+    worldId: scene.worldId || undefined,
+    continuityGroup: scene.continuityGroup || undefined,
     reuse: false,
   };
 
@@ -600,20 +942,35 @@ async function main() {
 
   const args = parseArgs(process.argv);
   const character = inferCharacterFromText(args.text, args.character);
+  const castId = args.cast || inferCastId(args.text);
   const scene = {
     text: args.text,
     type: args.type,
     mood: args.mood,
     character,
+    castId,
+    noPeople: args.noPeople,
+    presentMembers: args.presentMembers,
     visual: args.visual,
+    storyRole: args.storyRole || undefined,
+    action: args.action || undefined,
+    worldId: args.worldId || undefined,
+    worldLock: args.worldLock || undefined,
+    shotScale: args.shotScale || undefined,
+    composition: args.composition || undefined,
   };
 
   const manifest = readManifest();
   const excludeSet = new Set((args.exclude || '').split(',').map((s) => s.trim()).filter(Boolean));
   const best = selectExistingAsset(manifest, scene, excludeSet);
 
-  if (best && isConfidentExistingMatch(best, args.threshold)) {
-    console.error(`Using existing asset "${best.asset.id}" (score ${best.score}).`);
+  const isHighTier = best && (effectiveTier(best.asset) === ASSET_TIERS.CORE || effectiveTier(best.asset) === ASSET_TIERS.COMPATIBLE);
+  const passesConfidence = args.strictHayDep
+    ? canReuseForHayDep(best, scene, args.threshold)
+    : (best && isConfidentExistingMatch(best, args.threshold));
+
+  if (passesConfidence && (isHighTier || !args.generate)) {
+    console.error(`Using existing asset "${best.asset.id}" (score ${best.score}, tier: ${best.asset.tier || 'unspecified'}).`);
     console.log(JSON.stringify({
       source: 'manifest',
       confidence: 'high',
@@ -623,11 +980,15 @@ async function main() {
         assetId: best.asset.id,
         path: best.asset.path,
       },
+      asset: best.asset,
     }, null, 2));
     return;
   }
 
   if (!args.generate) {
+    if (args.strictHayDep) {
+      throw new Error(`No safe compatible asset found in strict HAY & ĐẸP. mode for: "${scene.text}"`);
+    }
     if (!best) throw new Error('No manifest assets available');
     console.error(`No asset passed the semantic confidence gate; falling back to "${best.asset.id}" (score ${best.score}).`);
     console.log(JSON.stringify({
@@ -638,18 +999,27 @@ async function main() {
         assetId: best.asset.id,
         path: best.asset.path,
       },
+      asset: best.asset,
     }, null, 2));
     return;
   }
 
-  const prompt = buildPrompt(scene);
-  const seed = Number.parseInt(shortHash(`${scene.text}|${scene.character}`), 16);
+  const prompt = buildPrompt(scene, castId);
+  const seeds = computeSeeds({
+    slug: args.slug,
+    video: args.video,
+    text: scene.text,
+    castId,
+    sceneIndex: args.sceneIndex,
+    explicitSeed: args.seed,
+  });
+  const seed = seeds.sceneSeed;
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'human-insight-image-'));
   const rawPath = path.join(tempDir, 'raw.jpg');
   const reservedAsset = reserveGeneratedAsset(manifest, scene);
 
   try {
-    console.error('Generating with Cloudflare Workers AI...');
+    console.error(`Generating with Cloudflare Workers AI (seed: ${seed}, cast: ${castId || 'none'})...`);
     const imageBuffer = await generateWithCloudflare(prompt, seed);
     fs.writeFileSync(rawPath, imageBuffer);
     compressJpeg(rawPath, reservedAsset.outputPath);
@@ -657,6 +1027,8 @@ async function main() {
     console.error(`Generated asset "${asset.id}" at ${asset.path}.`);
     console.log(JSON.stringify({
       source: 'generated',
+      castId: castId || null,
+      seeds,
       previousBest: best ? {
         assetId: best.asset.id,
         score: best.score,
@@ -669,6 +1041,14 @@ async function main() {
       asset,
     }, null, 2));
   } catch (err) {
+    if (args.strictHayDep) {
+      const safeFallback = best && canReuseForHayDep(best, scene, args.threshold);
+      if (!safeFallback) {
+        throw new Error(
+          `HAY & ĐẸP. image generation failed and no safe compatible asset exists: ${err.message}`,
+        );
+      }
+    }
     if (!best) throw err;
     console.error(`Generation failed: ${err.message}`);
     console.error(`Falling back to "${best.asset.id}" (score ${best.score}).`);
@@ -681,6 +1061,7 @@ async function main() {
         assetId: best.asset.id,
         path: best.asset.path,
       },
+      asset: best.asset,
     }, null, 2));
   }
 }

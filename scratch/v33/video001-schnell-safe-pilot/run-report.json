@@ -1,0 +1,26 @@
+{
+  "experiment": "V3.3B-S.6 Video 001 Schnell-Safe Fulfillment Image Pilot",
+  "model": "@cf/black-forest-labs/flux-1-schnell",
+  "date": "2026-09-19",
+  "apiCalls": 9,
+  "retryCount": 0,
+  "counts": {
+    "total": 9,
+    "overallPass": 3,
+    "stylePass": 9,
+    "peoplePass": 6,
+    "semanticPass": 9,
+    "anatomyPass": 8,
+    "textPass": 4
+  },
+  "mandatoryArchetypes": {
+    "beat-02 (object meal)": "PASS",
+    "beat-04 (single child)": "PASS",
+    "beat-07 (school/work object)": "FAIL",
+    "beat-15 (no-people release)": "FAIL"
+  },
+  "severeAnatomyFailures": [
+    "beat-12 (detached arm/hand dangling behind hip)"
+  ],
+  "verdict": "FAIL"
+}

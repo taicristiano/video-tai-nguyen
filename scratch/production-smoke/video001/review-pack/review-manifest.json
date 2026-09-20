@@ -1,0 +1,51 @@
+{
+  "test": "HAY & ĐẸP. Production Smoke Test 01 (video001)",
+  "reviewTarget": "ALL ASSETS PASSED (Final Review Complete)",
+  "updatedAt": "2026-09-20T09:35:20.404Z",
+  "model": "@cf/black-forest-labs/flux-1-schnell",
+  "items": [
+    {
+      "slot": "scene-08-beat-02",
+      "exportedFile": "scratch/production-smoke/video001/review-pack/scene-08-beat-02.jpg",
+      "sourceAssetPath": "scratch/production-smoke/video001/assets/shot-08-vb2.jpg",
+      "frameRange": {
+        "startFrame": 956,
+        "endFrame": 1058,
+        "durationFrames": 102,
+        "timeSeconds": "31.87s - 35.26s"
+      },
+      "voiceNarrativeClause": "và điện thoại không nằm giữa bàn.",
+      "semanticIntent": "Top-down close detail of a simple warm wooden dining table prepared for a quiet home meal. EXACTLY 3 objects: 1 rice bowl, 1 small side bowl, 1 pair of chopsticks. Rest of tabletop completely empty uninterrupted wood. ABSOLUTELY NO PHONES/DEVICES.",
+      "peopleContract": "0 people",
+      "currentQaStatus": "PASS",
+      "qaStatus": "PASS",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS",
+        "reason": "Deterministic cleanup successfully removed the extra side bowl and lower-right cropped white artifact. The image now shows exactly: 1 main rice bowl, 1 small side bowl, 1 pair of chopsticks, with zero people, zero phones/electronic devices, no text/logo/signature pollution, and a clean uninterrupted wooden tabletop. The clean 2D editorial style remains intact.",
+        "source": "HUMAN_QA_FINAL_CLEANUP"
+      },
+      "cleanupMethod": "deterministic-raster",
+      "cleanupNote": "Deterministic raster restoration applied: removed extraneous upper small bowl via row-wise wood grain interpolation in Plank 1; removed lower-right cropped paper stack via tiled continuous wood grain and feathered masking. Tabletop now features exactly 3 tableware objects (1 main rice bowl, 1 side bowl, 1 pair of chopsticks) on plain uninterrupted wood with zero devices.",
+      "attempt": 3,
+      "priorFailures": [
+        {
+          "attempt": 1,
+          "failReason": "Smartphone visible at upper-left table edge."
+        },
+        {
+          "attempt": 2,
+          "failReason": "Smartphone still clearly visible on tabletop."
+        },
+        {
+          "attempt": 3,
+          "failReason": "Semantic failure: 2 small side bowls instead of exactly 1; cropped white paper stack at lower-right edge."
+        }
+      ],
+      "reviewedSource": "HUMAN_QA_FINAL_CLEANUP"
+    }
+  ]
+}

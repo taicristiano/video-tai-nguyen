@@ -30,6 +30,11 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import {
+  buildCanonicalTimeline,
+  buildCanonicalApproximateTimeline,
+  tokenizeCanonicalScript,
+} from './subtitle-canonical-aligner.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
@@ -287,18 +292,145 @@ console.log(`   Language: ${language}`);
 try {
   const timeline = await transcribe();
 
-  // ─── Write output ───────────────────────────────────────────────────────────
-  fs.writeFileSync(outputPath, JSON.stringify(timeline, null, 2), 'utf-8');
+  // ─── Write raw STT output ──────────────────────────────────────────────────
+  const rawOutputPath = path.join(ROOT, 'public', slug, 'timeline-stt-raw.json');
+  fs.writeFileSync(rawOutputPath, JSON.stringify(timeline, null, 2), 'utf-8');
+
+  // Check if canonical script exists for this slug
+  const scriptJsonPath = path.join(ROOT, 'videos', slug, 'script', 'script.json');
+  let finalTimeline = timeline;
+
+  if (fs.existsSync(scriptJsonPath)) {
+    try {
+      const scriptData = JSON.parse(fs.readFileSync(scriptJsonPath, 'utf-8'));
+      const canonicalText = Array.isArray(scriptData.script)
+        ? scriptData.script.map((s) => s.text).join('\n\n')
+        : '';
+
+      if (canonicalText.trim()) {
+        console.log(`\n🔗 Aligning canonical voice script with STT timings...`);
+        let alignedTimeline;
+        let diffs = [];
+        let metrics;
+
+        try {
+          const res = buildCanonicalTimeline({
+            canonicalText,
+            sttTimeline: timeline,
+          });
+          alignedTimeline = res.timeline;
+          diffs = res.diffs;
+          metrics = res.metrics;
+        } catch (alignErr) {
+          console.warn(`   ⚠️ Canonical alignment error: ${alignErr.message}. Falling back to CANONICAL_APPROXIMATE.`);
+          try {
+            alignedTimeline = buildCanonicalApproximateTimeline({
+              canonicalText,
+              sttTimeline: timeline,
+            });
+            const canonicalTokens = tokenizeCanonicalScript(canonicalText);
+            metrics = {
+              canonicalTokenCount: canonicalTokens.length,
+              sttTokenCount: Array.isArray(timeline?.words) ? timeline.words.length : 0,
+              exactMatches: 0,
+              fuzzyMatches: 0,
+              contextSubstitutions: 0,
+              interpolatedTokens: 0,
+              ignoredSttTokens: 0,
+              evidenceRatio: 0,
+              substitutionRatio: 0,
+              interpolationRatio: 0,
+              ignoredSttRatio: 0,
+              canonicalTextIntegrity: true,
+              alignmentStatus: 'DEGRADED',
+              timingMode: 'CANONICAL_APPROXIMATE',
+              validationErrors: [`Alignment exception: ${alignErr.message}`],
+              canonicalIntegrity: true,
+            };
+          } catch (fallbackErr) {
+            throw new Error(`Both canonical alignment and approximate fallback failed: ${alignErr.message} | ${fallbackErr.message}`);
+          }
+        }
+
+        finalTimeline = alignedTimeline;
+
+        // Save QA reports
+        const videosDir = path.join(ROOT, 'videos', slug);
+        if (fs.existsSync(videosDir)) {
+          fs.writeFileSync(
+            path.join(videosDir, 'subtitle-alignment-report.json'),
+            JSON.stringify(metrics, null, 2),
+            'utf-8',
+          );
+
+          const diffMdLines = [
+            '# Subtitle Alignment Diff',
+            '',
+            `- **Video Slug**: \`${slug}\``,
+            `- **Canonical Tokens**: ${metrics.canonicalTokenCount}`,
+            `- **STT Tokens**: ${metrics.sttTokenCount}`,
+            `- **Exact Matches**: ${metrics.exactMatches}`,
+            `- **Fuzzy Matches**: ${metrics.fuzzyMatches}`,
+            `- **Context Substitutions**: ${metrics.contextSubstitutions}`,
+            `- **Interpolated Tokens**: ${metrics.interpolatedTokens}`,
+            `- **Ignored STT Tokens**: ${metrics.ignoredSttTokens}`,
+            `- **Evidence Ratio**: ${metrics.evidenceRatio}`,
+            `- **Substitution Ratio**: ${metrics.substitutionRatio}`,
+            `- **Interpolation Ratio**: ${metrics.interpolationRatio}`,
+            `- **Ignored STT Ratio**: ${metrics.ignoredSttRatio}`,
+            `- **Canonical Text Integrity**: ${metrics.canonicalTextIntegrity ? 'PASS' : 'FAIL'}`,
+            `- **Alignment Status**: \`${metrics.alignmentStatus}\``,
+            `- **Timing Mode**: \`${metrics.timingMode}\``,
+            '',
+            '## Differences',
+            '',
+          ];
+
+          if (diffs.length === 0) {
+            diffMdLines.push('No differences found. STT text perfectly matches canonical voice script.');
+          } else {
+            diffs.forEach((d, idx) => {
+              diffMdLines.push(`### Diff ${idx + 1} (${d.type})`);
+              diffMdLines.push(`- **STT**: \`${d.stt}\``);
+              diffMdLines.push(`- **CANONICAL**: \`${d.canonical}\``);
+              if (d.start !== undefined && d.end !== undefined) {
+                diffMdLines.push(`- **TIMING**: \`${d.start}s – ${d.end}s\``);
+              }
+              diffMdLines.push(`- **ACTION**: ${d.action}`);
+              diffMdLines.push('');
+            });
+          }
+
+          fs.writeFileSync(
+            path.join(videosDir, 'subtitle-alignment-diff.md'),
+            diffMdLines.join('\n'),
+            'utf-8',
+          );
+        }
+
+        console.log(
+          `   Aligned: ${metrics.canonicalTokenCount} canonical tokens ` +
+          `(${metrics.exactMatches} exact, ${metrics.contextSubstitutions} subst, ` +
+          `${metrics.interpolatedTokens} interp). Status: ${metrics.alignmentStatus} (${metrics.timingMode})`
+        );
+      }
+    } catch (alignErr) {
+      throw alignErr;
+    }
+  }
+
+  // ─── Write final output for Subtitles and Remotion ──────────────────────────
+  fs.writeFileSync(outputPath, JSON.stringify(finalTimeline, null, 2), 'utf-8');
 
   console.log(`\n✅ Transcription complete`);
-  console.log(`   Segments: ${timeline.segments.length}`);
-  console.log(`   Words:    ${timeline.words.length}`);
-  console.log(`   Duration: ${timeline.duration}s`);
+  console.log(`   Segments: ${finalTimeline.segments.length}`);
+  console.log(`   Words:    ${finalTimeline.words.length}`);
+  console.log(`   Duration: ${finalTimeline.duration}s`);
   console.log(`   Output:   ${outputPath}`);
 
   // Print segment summary
   console.log('\n📋 Segments:');
-  for (const seg of timeline.segments) {
+  for (const seg of finalTimeline.segments) {
     const dur = (seg.end - seg.start).toFixed(2);
     console.log(`   [${seg.start.toFixed(2)}s – ${seg.end.toFixed(2)}s | ${dur}s] "${seg.text.slice(0, 60)}${seg.text.length > 60 ? '...' : ''}"`);
   }

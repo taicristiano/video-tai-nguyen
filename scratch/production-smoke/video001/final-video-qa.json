@@ -1,0 +1,122 @@
+{
+  "testName": "HAY & ĐẸP. Production Smoke Test 01",
+  "videoKey": "video001",
+  "slug": "phan-1-2026-09-19-co-nhung-bua-com-sau-nay-moi-hieu",
+  "title": "Có những bữa cơm sau này mới hiểu là rất quý",
+  "timestamp": "2026-09-20T09:42:00.000Z",
+  "renderFile": "scratch/production-smoke/video001/final.mp4",
+  "renderSizeBytes": 9935597,
+  "totalFrames": 1442,
+  "fps": 30,
+  "durationSeconds": 48.07,
+  "resolution": "1080x1920",
+  "overallVerdict": "PASS",
+  "checklist": [
+    {
+      "id": 1,
+      "criterion": "all assets load correctly",
+      "status": "PASS",
+      "detail": "All 11 visual image assets + OutroCard loaded successfully into Remotion without missing asset errors or placeholders."
+    },
+    {
+      "id": 2,
+      "criterion": "no stale Attempt-1/2/3 pre-cleanup image appears",
+      "status": "PASS",
+      "detail": "Verified frame-visualbeat-2.png and frame-memory-beat2.png: only the final cleaned/approved assets (shot-08-vb2 cleaned, shot-09-vb2 att2) appear in the render."
+    },
+    {
+      "id": 3,
+      "criterion": "scene-08 visual beat switches at authored timing",
+      "status": "PASS",
+      "detail": "Scene 8 visual beat switches precisely at frame 956 (from adult seated at table to clean phone-free tabletop close-up)."
+    },
+    {
+      "id": 4,
+      "criterion": "scene-09 memory echo switches at authored timing",
+      "status": "PASS",
+      "detail": "Scene 9 switches from memory echo (frame 1058-1135, shot-01 with tactile border) to beat 2 (frame 1136-1262, afternoon interior with empty chairs) at frame 1136."
+    },
+    {
+      "id": 5,
+      "criterion": "no accidental crop / blank edge exposure",
+      "status": "PASS",
+      "detail": "1080x1920 vertical canvas fully covered across all scenes; no black bars, letterboxing, or edge seams."
+    },
+    {
+      "id": 6,
+      "criterion": "no off-center framing regression",
+      "status": "PASS",
+      "detail": "Editorial framing remains centered and well-composed across all narrative moments and visual beats."
+    },
+    {
+      "id": 7,
+      "criterion": "no opacity dip at hard cuts",
+      "status": "PASS",
+      "detail": "Hard scene cuts transition instantaneously with 100% continuous opacity."
+    },
+    {
+      "id": 8,
+      "criterion": "title stable",
+      "status": "PASS",
+      "detail": "Title card 'Có những bữa cơm sau này mới hiểu là rất quý' renders stably at top: 170px, 2 lines max, fontSize: 44px."
+    },
+    {
+      "id": 9,
+      "criterion": "subtitle readable and synchronized",
+      "status": "PASS",
+      "detail": "Subtitles synchronized with speech timeline at bottomPlacement: 14%, fontSize: 38px, max 7 words; preserved 'nghe vài câu chuyện vụn'."
+    },
+    {
+      "id": 10,
+      "criterion": "watermark readable and non-obstructive",
+      "status": "PASS",
+      "detail": "Watermark rendered at top: 40px, right: 40px, width: 250px, opacity: 0.24, non-animated."
+    },
+    {
+      "id": 11,
+      "criterion": "watermark does not cover faces/actions",
+      "status": "PASS",
+      "detail": "Upper-right positioning keeps watermark completely clear of character faces and primary tabletop action."
+    },
+    {
+      "id": 12,
+      "criterion": "no title/subtitle/watermark collision",
+      "status": "PASS",
+      "detail": "Zero layout overlap between watermark (top-right: 40px), title (top: 170px), and subtitle (bottom: 14%)."
+    },
+    {
+      "id": 13,
+      "criterion": "SFX does not overpower voice",
+      "status": "PASS",
+      "detail": "Voice narration remains crisp, prominent, and fully intelligible over background ambient music and SFX."
+    },
+    {
+      "id": 14,
+      "criterion": "question scene renders correctly",
+      "status": "PASS",
+      "detail": "Scene 10 question card overlay renders cleanly over shot-10; hook title suppressed as authored."
+    },
+    {
+      "id": 15,
+      "criterion": "outro renders correctly",
+      "status": "PASS",
+      "detail": "Scene 11 OutroCard displays brand logo, tagline 'Điều hay để biết. Điều đẹp để giữ.', and warm editorial still life."
+    },
+    {
+      "id": 16,
+      "criterion": "no visible text pollution in production visuals",
+      "status": "PASS",
+      "detail": "All visual assets are free of unwanted text, calendar marks, phone UI, logos, or signatures."
+    }
+  ],
+  "representativeFrames": {
+    "frameHook": "scratch/production-smoke/video001/frame-hook.png",
+    "frameBody": "scratch/production-smoke/video001/frame-body.png",
+    "frameVisualBeat1": "scratch/production-smoke/video001/frame-visualbeat-1.png",
+    "frameVisualBeat2": "scratch/production-smoke/video001/frame-visualbeat-2.png",
+    "frameMemory": "scratch/production-smoke/video001/frame-memory.png",
+    "frameMemoryBeat2": "scratch/production-smoke/video001/frame-memory-beat2.png",
+    "frameQuestion": "scratch/production-smoke/video001/frame-question.png",
+    "frameOutro": "scratch/production-smoke/video001/frame-outro.png"
+  }
+}

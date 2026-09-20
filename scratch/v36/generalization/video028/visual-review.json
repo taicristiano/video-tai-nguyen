@@ -1,0 +1,217 @@
+{
+  "videoKey": "video028",
+  "slug": "phan-28-2026-09-17-khong-can-tra-loi-moi-thong-bao-ngay",
+  "title": "Không Cần Trả Lời Mọi Thông Báo",
+  "category": "family-emotional",
+  "qaStatus": "PASS",
+  "updatedAt": "2026-09-20T07:27:51.739Z",
+  "shots": [
+    {
+      "videoKey": "video028",
+      "shotIndex": 1,
+      "file": "assets/shot-01.jpg",
+      "voice": "Thông báo biến công việc thành chuỗi phản ứng nhỏ.",
+      "sceneText": "A person sits at a clean wooden work desk with a laptop, looking with slight distraction at a smartphone on the desk.",
+      "peopleContract": "1 visible adult",
+      "shortIntent": "Glancing at phone distraction at desk",
+      "sizeBytes": 297065,
+      "qaStatus": "PASS",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS",
+        "overall": "PASS",
+        "reason": "One adult distracted at desk; clean composition and semantics.",
+        "recordedAt": "2026-09-20T04:27:32.211Z"
+      },
+      "reviewedSource": null
+    },
+    {
+      "videoKey": "video028",
+      "shotIndex": 2,
+      "file": "assets/shot-02.jpg",
+      "voice": "Ta thường chỉ để ý tới những thay đổi đủ lớn để nhìn thấy ngay,",
+      "sceneText": "A person stands thoughtfully beside a sunlit window with a warm mug in hand, looking outward to take a mental pause.",
+      "peopleContract": "1 visible adult",
+      "shortIntent": "Taking mental pause by sunlit window",
+      "sizeBytes": 331760,
+      "qaStatus": "PASS",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS",
+        "overall": "PASS",
+        "reason": "One adult pausing by window; clean and readable.",
+        "recordedAt": "2026-09-20T04:27:32.225Z"
+      },
+      "reviewedSource": null
+    },
+    {
+      "videoKey": "video028",
+      "shotIndex": 3,
+      "file": "assets/shot-03.jpg",
+      "voice": "nhưng đời sống hàng ngày lại được tạo bởi những việc nhỏ lặp đi lặp lại.",
+      "sceneText": "A person sits peacefully at a wooden table, writing reflections in a paper notebook with a pen, completely undisturbed by devices.",
+      "peopleContract": "1 visible adult",
+      "shortIntent": "Writing undisturbed in notebook",
+      "sizeBytes": 434275,
+      "qaStatus": "PASS",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS",
+        "overall": "PASS",
+        "reason": "One adult writing in notebook; clean scene and anatomy.",
+        "recordedAt": "2026-09-20T04:27:32.240Z"
+      },
+      "reviewedSource": null
+    },
+    {
+      "videoKey": "video028",
+      "shotIndex": 4,
+      "file": "assets/shot-04.jpg",
+      "voice": "Chat nhóm.",
+      "sceneText": "A person at a tidy workstation glances calmly at an open laptop screen with a composed, deliberate expression.",
+      "peopleContract": "1 visible adult",
+      "shortIntent": "Composed glance at laptop screen",
+      "sizeBytes": 270834,
+      "qaStatus": "PASS",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS",
+        "overall": "PASS",
+        "reason": "Clean full-frame 2D illustration, exactly one adult at laptop, no side bars, laptop exterior is visually plain enough, no material text pollution.",
+        "recordedAt": "2026-09-20T06:01:18.671Z"
+      },
+      "reviewedSource": null,
+      "failureHistory": [
+        {
+          "style": "PASS",
+          "peopleContract": "PASS",
+          "semanticFidelity": "PASS",
+          "anatomy": "PASS",
+          "textPollution": "FAIL",
+          "overall": "FAIL",
+          "reason": "Visible signature/watermark-like mark in lower-right plus writing-like mark on laptop edge; fails TEXT_POLLUTION.",
+          "recordedAt": "2026-09-20T04:27:32.263Z",
+          "archivedAt": "2026-09-20T04:28:26.033Z"
+        },
+        {
+          "style": "FAIL",
+          "peopleContract": "PASS",
+          "semanticFidelity": "PASS",
+          "anatomy": "PASS",
+          "textPollution": "FAIL",
+          "overall": "FAIL",
+          "reason": "strong vertical purple side bars embedded inside the image; laptop still contains an Apple-like logo / brand mark.",
+          "recordedAt": "2026-09-20T04:38:46.556Z",
+          "archivedAt": "2026-09-20T04:39:57.148Z"
+        }
+      ],
+      "previousFailure": {
+        "style": "FAIL",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "FAIL",
+        "overall": "FAIL",
+        "reason": "strong vertical purple side bars embedded inside the image; laptop still contains an Apple-like logo / brand mark.",
+        "recordedAt": "2026-09-20T04:38:46.556Z"
+      },
+      "prompt": "CLEAN FLAT 2D CARTOON EDITORIAL ILLUSTRATION ONLY.\nExactly one visible adult seated at a tidy wooden desk, calmly glancing at an open generic laptop screen.\n\nLaptop must be generic and completely blank:\nNO Apple shape.\nNO fruit shape.\nNO brand mark.\nNO icon.\nNO writing.\nNO sticker.\nNO edge label.\n\nFULL-FRAME ARTWORK:\nillustration must naturally extend to every image edge.\nNo colored side bars.\nNo black bars.\nNo frame-within-frame.\nNo border strips.\nNo letterboxing.\n\nNo signature.\nNo watermark.\nNo pseudo-text.\n\nWarm ivory room, muted sage clothing, warm wood desk, clean 2D linework.",
+      "regeneratedAt": "2026-09-20T04:39:57.148Z",
+      "attempt": 3
+    },
+    {
+      "videoKey": "video028",
+      "shotIndex": 5,
+      "file": "assets/shot-05.jpg",
+      "voice": "Email.",
+      "sceneText": "A person seated at a desk rests hands thoughtfully above the keyboard, taking a breath before responding.",
+      "peopleContract": "1 visible adult",
+      "shortIntent": "Pausing above keyboard before typing",
+      "sizeBytes": 345957,
+      "qaStatus": "PASS",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS",
+        "overall": "PASS",
+        "reason": "One adult pausing at keyboard; clean scene and semantics.",
+        "recordedAt": "2026-09-20T04:27:32.297Z"
+      },
+      "reviewedSource": null
+    },
+    {
+      "videoKey": "video028",
+      "shotIndex": 6,
+      "file": "assets/shot-06.jpg",
+      "voice": "Comment trong tài liệu.",
+      "sceneText": "A person leans back comfortably in their office chair, closing laptop slightly to take a refreshing break in calm satisfaction.",
+      "peopleContract": "1 visible adult",
+      "shortIntent": "Leaning back in chair with closed laptop",
+      "sizeBytes": 138293,
+      "qaStatus": "PASS",
+      "qa": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "PASS",
+        "anatomy": "PASS",
+        "textPollution": "PASS",
+        "overall": "PASS",
+        "reason": "Apple-like logo was fully removed from the laptop lid.\nNo letterbox/side-bar artifact remains.\nThe scene clearly communicates one adult leaning back and disengaging from work;\nthe laptop is a separate secondary object and is acceptable at production threshold.",
+        "recordedAt": "2026-09-20T07:27:51.739Z"
+      },
+      "reviewedSource": null,
+      "failureHistory": [
+        {
+          "style": "FAIL",
+          "peopleContract": "PASS",
+          "semanticFidelity": "PASS",
+          "anatomy": "PASS",
+          "textPollution": "PASS",
+          "overall": "FAIL",
+          "reason": "Embedded black letterbox/border bars at top and bottom make the asset visually unclean; fails STYLE/CLEANLINESS.",
+          "recordedAt": "2026-09-20T04:27:32.319Z",
+          "archivedAt": "2026-09-20T04:28:32.329Z"
+        },
+        {
+          "style": "PASS",
+          "peopleContract": "PASS",
+          "semanticFidelity": "FAIL",
+          "anatomy": "PASS",
+          "textPollution": "FAIL",
+          "overall": "FAIL",
+          "reason": "laptop is visibly open although intent is relaxing back with a closed/slightly closed laptop; laptop contains an Apple-like logo / brand mark.",
+          "recordedAt": "2026-09-20T04:38:46.569Z",
+          "archivedAt": "2026-09-20T04:40:03.946Z"
+        }
+      ],
+      "previousFailure": {
+        "style": "PASS",
+        "peopleContract": "PASS",
+        "semanticFidelity": "FAIL",
+        "anatomy": "PASS",
+        "textPollution": "FAIL",
+        "overall": "FAIL",
+        "reason": "laptop is visibly open although intent is relaxing back with a closed/slightly closed laptop; laptop contains an Apple-like logo / brand mark.",
+        "recordedAt": "2026-09-20T04:38:46.569Z"
+      },
+      "prompt": "CLEAN FLAT 2D CARTOON EDITORIAL ILLUSTRATION ONLY.\n\nExactly one visible adult relaxing back in an office chair after finishing work.\nThe person's hands are away from the computer.\n\nA CLOSED plain generic laptop rests on the wooden desk beside the chair.\nThe laptop must be visibly closed.\n\nLaptop exterior:\ncompletely blank.\nNO Apple shape.\nNO fruit shape.\nNO logo.\nNO icon.\nNO text.\nNO sticker.\n\nDo NOT place an open laptop on the person's lap.\n\nFull-frame clean illustration.\nNo black bars.\nNo side bars.\nNo letterboxing.\nNo embedded frame.\nNo signature.\nNo watermark.\n\nWarm ivory background, muted sage clothing, warm wood, simple editorial cartoon linework.",
+      "regeneratedAt": "2026-09-20T04:40:03.946Z",
+      "attempt": 3,
+      "cleanupMethod": "deterministic-raster"
+    }
+  ]
+}
