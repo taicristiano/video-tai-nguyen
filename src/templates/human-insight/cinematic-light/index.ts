@@ -71,6 +71,67 @@ export type {
 export { CHARACTER_CASTS, inferCastId } from './characters';
 export type { CharacterCast } from './characters';
 
+export {
+  REFERENCE_SHOT_GRAMMAR,
+  ACTION_HINTS,
+  detectVisualVerb,
+  resolveVisualStrategy,
+  validateShotPlan,
+  buildShotGrammarMetrics,
+  evaluateAssetReuse,
+  resolveAssetStrategy,
+  buildImagePromptForShot,
+  repairScaleMonotony,
+  isValidHoldException,
+  chooseCompositionForShot,
+} from './referenceShotGrammar';
+export type {
+  ShotScale as ReferenceShotScale,
+  ShotSilhouette,
+  ShotStoryRole,
+  AssetStrategy,
+  CompositionType,
+  PlannedShot,
+  VisualStrategy,
+  ReuseSemanticMatch,
+  ReuseCandidateEvaluation,
+  ApprovedVisualAsset,
+  ShotGrammarMetrics,
+  ShotPlanValidation,
+  HoldExceptionKind,
+  HoldException,
+} from './referenceShotGrammar';
+
+export {
+  planHumanInsightVideo,
+  buildCandidateShotPlan,
+  applyReferenceShotGrammar,
+  normalizeCadence,
+  chooseHookPattern,
+  shouldSplitClause,
+  auditBrandContext,
+  buildTemplateScenes,
+  evaluateProductionReadiness,
+  buildReuseAudit,
+  validatePlannerArtifacts,
+  buildPlannerRunResult,
+  mapPlannerRoleToRendererRole,
+} from './storyPlanner';
+export type {
+  HumanInsightPlannerInput,
+  PlannerBrandContext,
+  BrandAuditResult,
+  HumanInsightPlannedStory,
+  PlannerValidationMode,
+  ProductionValidationResult,
+  ReuseAuditEvaluation,
+  ReuseAuditResult,
+  HeaderModel,
+  PlannerRunResult,
+  ArtifactConsistencyResult,
+} from './storyPlanner';
+
+
 // ─── Editorial Spec Types for human-insight/cinematic-light V2.1 ──────────────
 
 export interface HumanInsightImage {
@@ -127,6 +188,7 @@ export interface HumanInsightScene {
   sectionCard?: SectionCardConfig;
   insightText?: string;
   insightVariant?: 'overlay' | 'card';
+  plannerStoryRole?: import('./referenceShotGrammar').ShotStoryRole;
   storyRole?: StoryRole;
   narrativePurpose?: string;
   visualIntent?: string;

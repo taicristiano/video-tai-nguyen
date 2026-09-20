@@ -1,0 +1,93 @@
+﻿{
+  "status": "LOCKED",
+  "lockDate": "2026-09-20",
+  "version": "V3.6",
+  "imageModel": {
+    "modelId": "@cf/black-forest-labs/flux-1-schnell",
+    "provider": "cloudflare",
+    "policy": "STRICT_EXCLUSIVE"
+  },
+  "imageStyle": {
+    "genre": "clean 2D illustrated / cartoon editorial",
+    "photorealism": false,
+    "palette": {
+      "background": ["#FDFBF7", "#FFFBE7", "#F6F1E8"],
+      "clothing": ["#8A9A86", "#738670"],
+      "wood": "warm medium wood",
+      "linework": "charcoal / soft sepia",
+      "accents": ["terracotta", "amber"]
+    }
+  },
+  "identityContract": {
+    "crossShotConsistencyRequired": false,
+    "evaluation": "independent_per_shot"
+  },
+  "perImageQa": {
+    "requiredDimensions": [
+      "STYLE",
+      "PEOPLE_CONTRACT",
+      "SEMANTIC_FIDELITY",
+      "ANATOMY",
+      "TEXT_POLLUTION"
+    ],
+    "machineIntegrityOnlyRequiresVisualQa": true
+  },
+  "retryPolicy": {
+    "maxRealAttempts": 3,
+    "http429Action": "PAUSED_QUOTA",
+    "allowModelSwitch": false,
+    "deterministicRasterCleanupAllowedAfterAttempts": 3,
+    "cleanedAssetReturnsToPending": true
+  },
+  "framing": {
+    "cleanSquareAssetsComposition": "portrait-focus",
+    "focalPoint": null,
+    "prohibitAsymmetricForSquare": true
+  },
+  "motionGrammar": {
+    "version": "V3.4A",
+    "allowed": ["subtle_push_in_1_04", "breathing", "static_hold"],
+    "hardCuts": true,
+    "forbidden": ["bounce", "spring", "rotation", "cut_opacity_dip", "decorative_motion"]
+  },
+  "brandWatermark": {
+    "assetPath": "public/assets/hay-dep/brand/logo-full-horizontal-with-slogan.png",
+    "position": "top-right",
+    "insetTop": 40,
+    "insetRight": 40,
+    "width": 250,
+    "opacity": 0.24,
+    "animated": false
+  },
+  "typography": {
+    "title": {
+      "maxWidth": 820,
+      "fontSize": 44,
+      "lineHeight": 1.32,
+      "maxLines": 2,
+      "top": 170
+    },
+    "subtitle": {
+      "maxWidth": 860,
+      "fontSize": 38,
+      "lineHeight": 1.4,
+      "bottomPlacement": "14%",
+      "maxWords": 7
+    }
+  },
+  "safeZones": {
+    "resolution": {
+      "width": 1080,
+      "height": 1920
+    },
+    "topZone": [0, 300],
+    "centerArtworkZone": [300, 1380],
+    "bottomSubtitleZone": [1380, 1920]
+  },
+  "evidence": {
+    "videosCount": 5,
+    "shotsCount": 30,
+    "verifiedVideos": ["video001", "video005", "video007", "video013", "video028"],
+    "overallStatus": "PASS"
+  }
+}
