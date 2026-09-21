@@ -38,6 +38,7 @@ export interface LayoutProps {
   title: string;
   bgMusic?: string | null;
   watermarkSrc?: string;
+  timelineSrc?: string;
   slogan?: string;
   scenes?: SceneWindowInfo[];
   children?: React.ReactNode;
@@ -48,6 +49,7 @@ export const Layout: React.FC<LayoutProps> = ({
   title,
   bgMusic = null,
   watermarkSrc = BRAND_WATERMARK.staticPath,
+  timelineSrc,
   slogan = 'Điều hay để biết. Điều đẹp để giữ.',
   scenes,
   children,
@@ -126,8 +128,13 @@ export const Layout: React.FC<LayoutProps> = ({
   } else if (isQuestionScene) {
     finalTitleOpacity = 0;
     headerOpacity = 1.0;
-    activeCaptionMode = 'statement';
-    activeCaptionPlacement = 'hidden';
+    if (currentScene?.hasSectionCard || currentScene?.hasInsightCard) {
+      activeCaptionMode = 'statement';
+      activeCaptionPlacement = 'hidden';
+    } else {
+      activeCaptionMode = currentScene?.captionMode ?? 'phrase';
+      activeCaptionPlacement = currentScene?.captionPlacement ?? 'below-visual';
+    }
   }
 
   return (
@@ -244,6 +251,7 @@ export const Layout: React.FC<LayoutProps> = ({
       {!isOutroActive && activeCaptionPlacement !== 'hidden' ? (
         <Subtitles
           slug={slug}
+          timelineSrc={timelineSrc}
           mode={activeCaptionMode}
           placement={activeCaptionPlacement}
           bottomPlacement={SUBTITLE_TYPOGRAPHY.bottomPlacement}

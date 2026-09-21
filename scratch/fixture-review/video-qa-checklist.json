@@ -1,0 +1,26 @@
+{
+  "title": "Thử nghiệm hiển thị 7 cảnh quay",
+  "slug": "fixture-001-reading-dialogue-test",
+  "status": "PENDING_HUMAN_VIDEO_QA",
+  "automatedChecks": {
+    "specIntegrity": "PASS",
+    "sourceImageHashParity": "PASS",
+    "videoStreamDimensions": "1080x1920",
+    "videoFps": 30,
+    "videoFramesMatched": true,
+    "audioDurationAligned": true,
+    "blankFramesZero": true,
+    "flashFramesZero": true,
+    "hardCutsClean": true,
+    "outroRendered": true
+  },
+  "humanReviewCriteria": {
+    "motionCalmness": "PENDING_HUMAN_REVIEW",
+    "typographyLegibility": "PENDING_HUMAN_REVIEW",
+    "subtitleTimingAndSync": "PENDING_HUMAN_REVIEW",
+    "compositionAndCentering": "PENDING_HUMAN_REVIEW",
+    "overallVisualNarrative": "PENDING_HUMAN_REVIEW"
+  },
+  "reviewPackLocation": "scratch/fixture-review",
+  "timestamp": "2026-09-21T07:59:10.112Z"
+}

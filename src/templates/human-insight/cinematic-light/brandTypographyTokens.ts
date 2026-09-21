@@ -6,11 +6,20 @@
  * All measurements for 1080x1920 portrait format.
  */
 
+import { CINEMATIC_LIGHT_DEPENDENCIES } from './templateDependencies';
+
+export const HAY_DEP_BRAND = {
+  name: CINEMATIC_LIGHT_DEPENDENCIES.brand,
+  slogan: 'Điều hay để biết. Điều đẹp để giữ.',
+  watermarkStaticPath: CINEMATIC_LIGHT_DEPENDENCIES.defaults.defaultWatermark,
+  markSageStaticPath: CINEMATIC_LIGHT_DEPENDENCIES.defaults.defaultOutroBrandMark,
+} as const;
+
 export const BRAND_WATERMARK = {
   /** Exact target asset path relative to project root */
-  repoPath: 'public/assets/hay-dep/brand/logo-full-horizontal-with-slogan.png',
+  repoPath: `public/${CINEMATIC_LIGHT_DEPENDENCIES.defaults.defaultWatermark}`,
   /** Remotion staticFile relative path */
-  staticPath: 'assets/hay-dep/brand/logo-full-horizontal-with-slogan.png',
+  staticPath: CINEMATIC_LIGHT_DEPENDENCIES.defaults.defaultWatermark,
   /** Target width: 270px on 1080x1920 (V1.2.1 visibility patch) */
   width: 270,
   /** Target opacity: 0.34 (clearer on mobile, still restrained/secondary) */

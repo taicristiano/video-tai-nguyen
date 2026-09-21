@@ -1,0 +1,19 @@
+{
+  "title": "Thử nghiệm hiển thị 7 cảnh quay",
+  "slug": "fixture-001-reading-dialogue-test",
+  "fps": 30,
+  "totalFrames": 360,
+  "durationSeconds": 12,
+  "probedDuration": 12.053333,
+  "renderElapsedSeconds": 33.47,
+  "outputFile": "scratch/fixture-review/fixture.mp4",
+  "canonicalFile": "videos/fixture-001-reading-dialogue-test/video.mp4",
+  "fileSizeBytes": 6350890,
+  "totalShots": 7,
+  "totalTransitions": 6,
+  "blankFramesCount": 0,
+  "flashFramesCount": 0,
+  "imageGenerationCalls": 0,
+  "imageEditCalls": 0,
+  "timestamp": "2026-09-21T07:59:10.112Z"
+}

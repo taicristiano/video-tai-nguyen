@@ -1,0 +1,22 @@
+{
+  "videoIndex": 5,
+  "title": "Khi người thân kể chuyện, đừng vội sửa hộ",
+  "outputPath": "scratch/video005-production/final-video-review/video005-final.mp4",
+  "canonicalPath": "videos/phan-5-2026-09-20-khi-nguoi-than-ke-chuyen-dung-voi-sua/video.mp4",
+  "durationSeconds": 45.717333,
+  "totalFrames": 1370,
+  "fps": 30,
+  "resolution": "1080x1920",
+  "audioDuration": 45.717333,
+  "timelineDuration": 45.891,
+  "shotCount": 16,
+  "selectedImageCount": 16,
+  "renderStart": "2026-09-21T07:23:59.436Z",
+  "renderEnd": "2026-09-21T07:25:45.588Z",
+  "renderDurationSeconds": 106.15,
+  "renderSuccess": true,
+  "imageGenerationCalls": 0,
+  "imageEditCalls": 0,
+  "remotionRenderCount": 1,
+  "mp4Count": 1
+}

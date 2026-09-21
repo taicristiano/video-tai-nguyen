@@ -1,0 +1,12 @@
+{
+  "slug": "fixture-001-reading-dialogue-test",
+  "expectedTotalFrames": 360,
+  "expectedDurationSeconds": 12,
+  "probedContainerDuration": 12.053333,
+  "probedVideoDuration": 12,
+  "probedAudioDuration": 12.053333,
+  "probedVideoFrames": 360,
+  "videoWidth": 1080,
+  "videoHeight": 1920,
+  "totalShots": 7
+}

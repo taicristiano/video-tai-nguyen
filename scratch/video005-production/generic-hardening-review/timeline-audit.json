@@ -1,0 +1,12 @@
+{
+  "slug": "phan-5-2026-09-20-khi-nguoi-than-ke-chuyen-dung-voi-sua",
+  "expectedTotalFrames": 1370,
+  "expectedDurationSeconds": 45.67,
+  "probedContainerDuration": 45.717333,
+  "probedVideoDuration": 45.666667,
+  "probedAudioDuration": 45.717333,
+  "probedVideoFrames": 1370,
+  "videoWidth": 1080,
+  "videoHeight": 1920,
+  "totalShots": 16
+}

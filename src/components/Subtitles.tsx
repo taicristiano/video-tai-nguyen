@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useCurrentFrame, useVideoConfig, staticFile } from "remotion";
+import { useCurrentFrame, useVideoConfig, staticFile, delayRender, continueRender } from "remotion";
 import { loadFont } from "@remotion/google-fonts/BeVietnamPro";
 
 // Load font once at module level
@@ -35,8 +35,10 @@ interface Phrase {
 }
 
 export interface SubtitlesProps {
-  /** Slug used to load public/<slug>/timeline.json */
-  slug: string;
+  /** Slug used to load public/<slug>/timeline.json (fallback if timelineSrc is omitted) */
+  slug?: string;
+  /** Explicit timeline JSON path relative to staticFile root (public/). Priority over slug. */
+  timelineSrc?: string;
   /** Gap threshold in seconds to split into a new sentence. Default: 0.45s */
   sentenceGap?: number;
   /** Max words per line — sentences longer than this are split into chunks. Default: 7 */
@@ -155,6 +157,7 @@ function getChunkPhrases(words: WordTimestamp[]): Phrase[] {
 // ─── Component ───────────────────────────────────────────────────────────────
 export const Subtitles: React.FC<SubtitlesProps> = ({
   slug,
+  timelineSrc,
   sentenceGap = 0.45,
   maxWords = 7,
   mode = 'phrase',
@@ -170,11 +173,18 @@ export const Subtitles: React.FC<SubtitlesProps> = ({
   activeTextShadow,
 }) => {
   const [words, setWords] = useState<WordTimestamp[]>([]);
+  const resolvedTimeline = timelineSrc || (slug ? `${slug}/timeline.json` : '');
+  const [handle] = useState(() => delayRender(`Loading subtitles: ${resolvedTimeline || slug}`));
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
   useEffect(() => {
-    fetch(staticFile(`${slug}/timeline.json`))
+    if (!resolvedTimeline) {
+      setWords([]);
+      continueRender(handle);
+      return;
+    }
+    fetch(staticFile(resolvedTimeline))
       .then((r) => r.json())
       .then((data: Timeline | WordTimestamp[]) => {
         if (Array.isArray(data)) {
@@ -184,9 +194,13 @@ export const Subtitles: React.FC<SubtitlesProps> = ({
         } else {
           setWords([]);
         }
+        continueRender(handle);
       })
-      .catch(() => setWords([]));
-  }, [slug]);
+      .catch(() => {
+        setWords([]);
+        continueRender(handle);
+      });
+  }, [resolvedTimeline, handle]);
 
   // Build sentences, then split each into fixed chunks
   const chunks = useMemo(() => {

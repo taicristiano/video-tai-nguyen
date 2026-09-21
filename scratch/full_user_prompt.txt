@@ -1,0 +1,1067 @@
+<USER_REQUEST>
+# HAY & ĐẸP. — GENERIC RENDERER FINAL SSOT + OUTRO HARDENING
+# SHARED TEMPLATE / RUNTIME FIRST
+# VIDEO005 GOLDEN REGRESSION + 7-SHOT FIXTURE
+# NO IMAGE GENERATION
+# NO VIDEO005-ONLY PATCHES
+
+Bạn đang tiếp tục project sau khi generic renderer đã được triển khai và harden qua nhiều vòng.
+
+Hiện tại:
+- Video005 Golden MP4 đã Human-PASS.
+- Generic renderer đã chạy được Video005 và 7-shot fixture.
+- Brand HAY & ĐẸP., timelineSrc, generic Outro capability, 30fps contract đã được đưa vào shared layer.
+- Tuy nhiên Human review của output thật vẫn phát hiện 3 blocker reusable:
+  1. `production-render-spec.json` có thể lệch SSOT Human-approved, gây regression shot-15.
+  2. transition narrative → Outro vẫn có frame gần như empty cream canvas.
+  3. Video006 chưa thực sự "data-only" nếu `production-render-spec.json` vẫn phải viết/đồng bộ thủ công.
+
+Task này là vòng hardening cuối cho **shared production spec pipeline + shared Outro/hard-cut renderer + QA tooling**.
+
+Không quay lại image generation.
+Không chỉnh riêng Video005.
+Không redesign kiến trúc nếu không cần.
+
+---
+
+# 0. GOLDEN RULE — SHARED FIX FIRST
+
+Mọi lỗi reusable phải sửa ở:
+
+```text
+shared production spec builder
+shared validator
+shared renderer
+shared Layout / ImageScene / OutroCard
+shared QA tooling
+```
+
+KHÔNG được dùng:
+
+```js
+if (videoId === 'video005') ...
+if (slug.includes('phan-5')) ...
+if (shotId === 'shot-15') ...
+```
+
+trong shared runtime để vá lỗi.
+
+Video-specific behavior phải đến từ data/manifest chuẩn.
+
+---
+
+# 1. CURRENT VERIFIED BLOCKER #1 — PRODUCTION SPEC CAN DRIFT FROM HUMAN-APPROVED SSOT
+
+Human review đã phát hiện generic Video005 render regression tại `shot-15`.
+
+Golden Human-approved shot-15 contract:
+
+```text
+visualMode = EMPTY_RELEASE
+scale = RELEASE
+peopleContract = 0..0
+visibleMembers = []
+silhouette = empty-space
+hasInsightCard = false / absent
+```
+
+Nhưng `production-render-spec.json` hiện đã từng chứa state sai kiểu:
+
+```text
+visualMode = ENVIRONMENT_WIDE
+hasInsightCard = true
+```
+
+Kết quả actual MP4:
+
+```text
+shot-15 artwork bị suppress / gần như chỉ còn nền kem + subtitle
+```
+
+Ngoài shot-15, Human review đã thấy nhiều semantic metadata trong production spec có thể lệch `final-image-candidate/review-manifest.json`.
+
+Đây là lỗi pipeline SSOT, không phải lỗi riêng shot-15.
+
+---
+
+# 2. REQUIRED FIX — GENERIC `build-production-render-spec`
+
+Tạo một shared builder duy nhất, ví dụ:
+
+```text
+scripts/build-production-render-spec.mjs
+```
+
+Tên cụ thể có thể khác nếu architecture hiện tại có vị trí phù hợp hơn.
+
+Builder phải tạo:
+
+```text
+production-render-spec.json
+```
+
+từ các SSOT đã được duyệt.
+
+Target flow:
+
+```text
+story-plan / canonical video data
++
+final Human-approved image manifest
++
+audio/timeline paths
++
+shared brand/render defaults
+        ↓
+build-production-render-spec
+        ↓
+production-render-spec.json
+        ↓
+validate
+        ↓
+generic renderer
+```
+
+Không hand-copy 16 shot bằng tay.
+
+Không duplicate semantic shot metadata bằng manual JSON maintenance.
+
+---
+
+# 3. DEFINE CLEAR SSOT RESPONSIBILITIES
+
+Inspect repo hiện tại và xác định đúng nguồn cho từng field.
+
+Recommended responsibility:
+
+## Story/timing SSOT
+
+Lấy từ canonical planner/story data:
+
+```text
+shotId
+startFrame
+endFrame
+durationFrames
+visualMode
+scale / shotScale
+silhouette
+composition
+motionPreset
+storyRole
+caption behavior
+scene/card flags nếu planner thực sự quyết định
+```
+
+## Final image SSOT
+
+Lấy từ Human-approved final candidate manifest:
+
+```text
+shotId
+selected final image path
+Human QA state
+selected attempt / cleanup lineage nếu cần audit
+```
+
+Renderer không cần biết Attempt 1/2/3/Recovery.
+
+Renderer chỉ cần:
+
+```text
+final selected image
+```
+
+## Audio/timeline
+
+Lấy từ canonical existing assets:
+
+```text
+audioSrc
+timelineSrc
+```
+
+## Brand
+
+Lấy từ shared HAY & ĐẸP. brand tokens/defaults.
+
+Do not duplicate canonical watermark string across multiple video specs unless output serialization requires it.
+
+---
+
+# 4. SPEC BUILD MUST FAIL ON NON-PASS IMAGE STATE
+
+Builder chỉ được tạo production spec khi mọi required shot đã Human-PASS.
+
+For production:
+
+```text
+all final shots = PASS_HUMAN_QA
+```
+
+If:
+
+```text
+PENDING
+FAIL
+missing asset
+```
+
+then:
+
+```text
+BLOCK production spec generation
+```
+
+No silent fallback to older Attempt asset.
+
+---
+
+# 5. CROSS-VALIDATE SPEC AGAINST SSOT
+
+Sau khi build, shared validator phải cross-check.
+
+For every shot:
+
+```text
+spec.shotId == canonical shotId
+spec.startFrame == canonical startFrame
+spec.endFrame == canonical endFrame
+spec.visualMode == canonical visualMode
+spec.shotScale == canonical shotScale
+spec.composition == canonical composition
+spec.motionPreset == canonical motionPreset
+spec.imageSrc == final approved asset
+```
+
+Also validate card flags:
+
+```text
+hasInsightCard
+hasSectionCard
+isOutro
+captionMode
+```
+
+không được tự suy diễn sai.
+
+Nếu field không thuộc SSOT nào thì:
+- derive deterministically from shared template rule, hoặc
+- omit/default ở shared layer.
+
+Không hand-enter.
+
+---
+
+# 6. REGRESSION ASSERTION — SHOT-15 MUST MATCH GOLDEN CONTRACT
+
+Không hard-code shot-15 trong runtime.
+
+Nhưng test fixture Video005 phải assert regression:
+
+```text
+shot-15:
+visualMode = EMPTY_RELEASE
+shotScale = RELEASE / mapped renderer equivalent
+people = 0..0
+hasInsightCard = false
+imageSrc = final Human-approved shot-15
+```
+
+Mục đích:
+
+```text
+prove builder preserves SSOT
+```
+
+không phải tạo Video005 special case.
+
+---
+
+# 7. CURRENT VERIFIED BLOCKER #2 — NARRATIVE → OUTRO EMPTY-CANVAS GAP
+
+Human review của fixture actual MP4 cho thấy transition:
+
+```text
+shot-07 → OutroCard
+```
+
+có frame boundary gần như chỉ là empty cream canvas trước khi Outro thực sự visible.
+
+Automated luminance audit có thể không coi cream canvas là blank.
+
+Đây là shared hard-cut/Outro coverage bug.
+
+---
+
+# 8. REQUIRED FIX — OUTRO MUST COVER FRAME 0 OF ITS SEQUENCE
+
+At boundary:
+
+```text
+last narrative frame
+→ first Outro frame
+```
+
+must be visually covered.
+
+Rule:
+
+```text
+no fade-to-empty
+no opacity=0 frame
+no delayed Outro visual mount
+```
+
+Inspect shared:
+
+```text
+Layout.tsx
+OutroCard
+Sequence timing
+opacity/interpolate logic
+fade helpers
+```
+
+Potential anti-patterns:
+
+```js
+interpolate(frame, [0, ...], [0, 1])
+```
+
+at Outro local frame 0.
+
+Or:
+
+```js
+fadeInFrames || default
+```
+
+where 0 must mean 0.
+
+Fix shared Outro/template behavior.
+
+Do not patch fixture frame 300 manually.
+
+---
+
+# 9. OUTRO HARD-CUT CONTRACT
+
+When `outro.enabled = true`:
+
+```text
+Narrative endFrame = Outro startFrame
+```
+
+At Outro local frame 0:
+
+```text
+background/card/brand visual coverage already visible
+```
+
+If intentional inner text animation exists:
+
+```text
+background/card visible immediately
+text may animate subtly
+```
+
+but whole canvas must not become empty.
+
+---
+
+# 10. CURRENT VERIFIED BLOCKER #3 — EMPTY CREAM CANVAS NOT DETECTED
+
+Current luminance QA detects:
+
+```text
+near-black
+near-white
+isolated flash
+```
+
+but may miss:
+
+```text
+uniform cream / template background only
+```
+
+which is exactly the observed Outro boundary defect.
+
+Add a truthful shared metric.
+
+Do NOT call every low-detail frame blank.
+
+---
+
+# 11. EMPTY-CANVAS DETECTION — RECOMMENDED APPROACH
+
+For transition boundary frames, combine signals such as:
+
+```text
+color variance / standard deviation
+edge density
+entropy
+foreground occupancy proxy
+difference from known template background
+```
+
+A frame may be suspicious if:
+
+```text
+very low variance
+AND very low edge density
+AND close to template cream background
+```
+
+Use conservative thresholds.
+
+Output:
+
+```text
+emptyCanvasSuspects
+```
+
+rather than pretending semantic certainty.
+
+QA states:
+
+```text
+0 suspects -> PASS_AUTOMATED
+>0 suspects -> REVIEW_REQUIRED
+```
+
+If robust automated detection is not reliable:
+
+```text
+EMPTY_CANVAS = PENDING_HUMAN
+```
+
+is acceptable.
+
+Do not fake PASS.
+
+---
+
+# 12. RENDER SEGMENT MODEL MUST REMAIN GENERIC
+
+Keep:
+
+```text
+renderSegments =
+  narrative shots
+  + optional outro
+```
+
+For fixture:
+
+```text
+7 narrative + 1 outro = 8 segments
+7 transitions
+```
+
+Transition audit must include:
+
+```text
+shot-07 → outro
+```
+
+Video005:
+
+```text
+16 narrative
+outro disabled
+15 transitions
+```
+
+---
+
+# 13. VIDEO006 MUST NOT REQUIRE MANUAL PRODUCTION SPEC AUTHORING
+
+Target workflow:
+
+```text
+new video content
+→ planner/story plan
+→ images
+→ Human image QA
+→ final approved image manifest
+→ build-production-render-spec
+→ generic renderer
+```
+
+Human/developer should NOT manually copy 10–20 shot metadata into:
+
+```text
+production-render-spec.json
+```
+
+A command should exist, e.g.:
+
+```bash
+node scripts/build-production-render-spec.mjs --slug=phan-6-...
+```
+
+Then:
+
+```bash
+node scripts/render-production-video.mjs --slug=phan-6-...
+```
+
+Exact CLI design may differ.
+
+---
+
+# 14. PRODUCTION SPEC BUILDER MUST BE REUSABLE
+
+No Video005 constants:
+
+```text
+no 16
+no 1370
+no phan-5 slug
+no video005 candidate path
+```
+
+It should handle arbitrary:
+
+```text
+N shots
+frame counts
+titles
+timeline/audio paths
+final approved asset paths
+outro config
+```
+
+FPS remains HAY & ĐẸP. locked at:
+
+```text
+30
+```
+
+---
+
+# 15. DO NOT REGRESS PREVIOUS HARDENING
+
+Preserve:
+
+```text
+canonical HAY & ĐẸP. watermark
+legacy NẾP rejection
+timelineSrc end-to-end
+30fps validation
+generic Root calculateMetadata
+generic VideoContent
+generic selected asset paths
+N shots / N-1 or segment-based transition audit
+real luminance stats
+zero image generation
+hard cuts
+calm motion
+centered artwork
+subtitle reliability
+```
+
+---
+
+# 16. PACKAGE ALL RELEVANT SHARED FILES
+
+`changes.zip` must include every shared file required to reproduce the renderer changes.
+
+At minimum inspect/package relevant files such as:
+
+```text
+src/Root.tsx
+src/Video.tsx
+src/VideoContent.tsx
+
+src/components/Subtitles.tsx
+
+src/templates/human-insight/cinematic-light/Layout.tsx
+src/templates/human-insight/cinematic-light/ImageScene.tsx
+src/templates/human-insight/cinematic-light/OutroCard.tsx
+src/templates/human-insight/cinematic-light/brandTypographyTokens.ts
+
+src/types/production.ts
+
+scripts/production-spec-adapter.mjs
+scripts/build-production-render-spec.mjs
+scripts/render-production-video.mjs
+scripts/make-changes-zip.mjs
+```
+
+Use actual repo filenames.
+
+Do not invent nonexistent files.
+
+Package shared imports/dependencies if needed for handoff.
+
+---
+
+# 17. AUTOMATED TESTS REQUIRED
+
+Add focused tests.
+
+## A. Production spec generated from SSOT
+
+For Video005:
+
+```text
+builder output == canonical Human-approved metadata
+```
+
+No manual production spec fixture accepted as proof.
+
+## B. Semantic drift detection
+
+Deliberately mutate a test spec:
+
+```text
+EMPTY_RELEASE → ENVIRONMENT_WIDE
+```
+
+Validator must fail against SSOT.
+
+## C. Card flag drift detection
+
+Deliberately mutate:
+
+```text
+hasInsightCard false → true
+```
+
+Validator must fail.
+
+## D. Final image mismatch
+
+Point shot to non-approved asset.
+
+Must fail.
+
+## E. Human QA gate
+
+One `PENDING` asset:
+
+```text
+builder must refuse production spec
+```
+
+## F. Arbitrary shot count
+
+Builder works for non-16 fixture.
+
+## G. Outro coverage
+
+First rendered Outro frame must not evaluate to zero visual coverage.
+
+At minimum inspect actual rendered frame.
+
+## H. Empty canvas detector
+
+Known synthetic cream-only frame:
+
+```text
+flagged suspicious
+```
+
+Normal narrative frame:
+
+```text
+not flagged
+```
+
+Outro frame with card:
+
+```text
+not flagged
+```
+
+## I. No Video005 hard-code
+
+Scan generic builder/runtime.
+
+## J. Packaging
+
+ZIP contains:
+- builder
+- shared template files
+- Video005 generated production spec
+- fixture spec
+- review artifacts required for inspection.
+
+---
+
+# 18. REBUILD VIDEO005 SPEC FROM SSOT
+
+Delete/replace stale generated spec as appropriate.
+
+Run shared builder:
+
+```bash
+node scripts/build-production-render-spec.mjs \
+  --slug=phan-5-2026-09-20-khi-nguoi-than-ke-chuyen-dung-voi-sua
+```
+
+Then inspect generated spec.
+
+Video005 expected:
+
+```text
+16 shots
+1370 frames
+30fps
+outro disabled
+all final images Human-approved
+```
+
+Critical:
+
+```text
+shot-15 = EMPTY_RELEASE
+hasInsightCard = false
+```
+
+---
+
+# 19. RERENDER VIDEO005 GENERIC REGRESSION
+
+Render from newly built spec only.
+
+Output to NEW directory:
+
+```text
+scratch/video005-production/ssot-render-review/
+```
+
+Do not overwrite golden.
+
+Required Human review artifacts:
+
+```text
+video005-ssot.mp4
+frame-contact-sheet.jpg
+transition-strip.jpg
+render-report.json
+video-qa-checklist.json
+selected-assets.json
+production-spec-audit.json
+```
+
+Acceptance:
+
+```text
+shot-15 artwork visible
+EMPTY_RELEASE visually restored
+no unexpected card suppression
+all other 15 shots parity
+HAY & ĐẸP. brand
+subtitle correct
+0 blank/flash/empty-canvas defects
+```
+
+---
+
+# 20. RERENDER 7-SHOT FIXTURE
+
+Use generic builder/spec path where practical.
+
+Output:
+
+```text
+scratch/fixture-ssot-review/
+```
+
+Required:
+
+```text
+7 narrative shots
+1 Outro
+8 contact-sheet cards
+7 audited transitions
+```
+
+Critical Human regression:
+
+```text
+shot-07 → Outro:
+previous frame covered
+Outro frame 0 covered
+next frame covered
+```
+
+No empty cream gap.
+
+---
+
+# 21. DO NOT CHANGE VIDEO005 CREATIVE CONTENT
+
+No modifications to:
+
+```text
+images
+audio
+narration
+subtitle text
+shot timing
+title
+motion presets
+brand copy
+```
+
+unless source-of-truth data already says otherwise.
+
+This task fixes data propagation/rendering only.
+
+---
+
+# 22. ZERO IMAGE WORK
+
+Counters:
+
+```text
+Cloudflare generation = 0
+other image generation = 0
+image editing = 0
+```
+
+No exceptions.
+
+---
+
+# 23. FINAL PRODUCTION FLOW REQUIRED
+
+At completion flow must be:
+
+```text
+story plan
++
+Human-approved final-image manifest
++
+audio/timeline
++
+brand defaults
+        ↓
+generic build-production-render-spec
+        ↓
+validated production-render-spec.json
+        ↓
+generic render-production-video
+        ↓
+MP4 + QA pack
+```
+
+No manual shot metadata transcription.
+
+---
+
+# 24. VIDEO006 READINESS QUESTION
+
+Answer explicitly:
+
+```text
+For Video006, after image Human QA,
+does a developer need to manually edit
+production-render-spec.json shot-by-shot?
+```
+
+Required:
+
+```text
+NO
+```
+
+Also:
+
+```text
+shared source files requiring edit = 0
+```
+
+If not:
+
+```text
+DO NOT declare production ready
+```
+
+---
+
+# 25. FINAL ACCEPTANCE CRITERIA
+
+All must pass:
+
+```text
+Production spec generated automatically from SSOT
+
+Spec semantic metadata matches canonical story plan
+
+Spec final images match Human-approved manifest
+
+Non-PASS assets block production spec
+
+Video005 shot-15 restored:
+  EMPTY_RELEASE
+  no insight card suppression
+  artwork visible
+
+Outro first frame visually covered
+
+shot-07→Outro transition has no empty cream gap
+
+QA can identify empty-canvas suspect
+or truthfully leaves it for Human review
+
+Video005 SSOT render visually matches Golden
+
+7-shot fixture + Outro passes
+
+No Video005-specific runtime patch
+
+0 image generation/edit
+
+changes.zip includes complete shared implementation
+
+full tests pass
+```
+
+---
+
+# 26. FINAL REPORT FORMAT
+
+Report exactly:
+
+## A. SSOT root cause
+
+Explain why manually maintained production spec drifted.
+
+## B. Generic spec builder
+
+Show:
+
+```text
+inputs
+→ normalization
+→ validation
+→ output
+```
+
+## C. Source ownership
+
+Which SSOT provides:
+
+```text
+timing
+semantic metadata
+image selection
+audio/timeline
+brand
+outro
+```
+
+## D. Video005 spec diff
+
+Report stale vs rebuilt values for at least:
+
+```text
+shot-15
+```
+
+and total mismatch count before/after.
+
+## E. Shared Outro fix
+
+Explain root cause of empty cream boundary and shared fix.
+
+## F. Empty-canvas QA
+
+Explain actual detection, thresholds/status semantics.
+
+## G. Video005 SSOT render
+
+Report:
+
+```text
+frames
+duration
+shot-15 visibility
+brand
+subtitle
+transitions
+empty-canvas suspects
+```
+
+## H. Fixture SSOT render
+
+Report:
+
+```text
+7 narrative
+1 outro
+7 transitions
+shot-07→Outro actual boundary state
+```
+
+## I. Video006 workflow
+
+Show exact commands/workflow.
+
+Must state:
+
+```text
+manual production spec shot editing = 0
+shared source edits = 0
+```
+
+## J. Tests
+
+Exact counts.
+
+## K. Packaging
+
+Confirm all shared renderer/template/builder files included.
+
+## L. Side effects
+
+```text
+Image generation calls: 0
+Image edit calls: 0
+Video005 renders: N
+Fixture renders: N
+```
+
+End with exactly one:
+
+```text
+GENERIC PRODUCTION PIPELINE READY — VIDEO006 GO
+```
+
+or:
+
+```text
+GENERIC PRODUCTION PIPELINE STILL BLOCKED — DO NOT START VIDEO006
+```
+
+---
+
+# 27. MOST IMPORTANT PRINCIPLE
+
+The final target is NOT:
+
+```text
+Video005 works
+```
+
+The final target is:
+
+```text
+any future approved HAY & ĐẸP. video
+→ production spec built automatically from SSOT
+→ generic renderer
+→ correct MP4
+```
+
+without manually copying shot metadata or adding video-specific code.
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-09-21T16:11:21+07:00.
+</ADDITIONAL_METADATA>

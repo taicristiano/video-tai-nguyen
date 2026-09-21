@@ -1,0 +1,44 @@
+{
+  "totalShots": 16,
+  "distinctVisualModesCount": 7,
+  "visualModeDistribution": {
+    "ENVIRONMENT_WIDE": 2,
+    "INTERACTION_MEDIUM": 5,
+    "REACTION_CLOSE": 5,
+    "ACTION_DETAIL": 1,
+    "SOLO_MEDIUM": 1,
+    "OBJECT_DETAIL": 1,
+    "EMPTY_RELEASE": 1
+  },
+  "scaleDistribution": {
+    "WIDE": 2,
+    "MEDIUM": 6,
+    "CLOSE": 5,
+    "DETAIL": 2,
+    "RELEASE": 1
+  },
+  "peopleDistribution": {
+    "0": 2,
+    "1": 7,
+    "2": 7,
+    "3+": 0
+  },
+  "silhouetteDistribution": {
+    "two-person": 3,
+    "single-centered": 5,
+    "two-person-balanced": 3,
+    "hands-detail": 1,
+    "object-detail": 1,
+    "face-close": 1,
+    "empty-space": 1,
+    "two-person-wide": 1
+  },
+  "maxConsecutiveInteractionMedium": 2,
+  "visualModeDiversityPass": true,
+  "zeroPeopleContractPass": true,
+  "concreteVerbPass": true,
+  "targetReplacementsUnder1400Pass": true,
+  "promptLengthPass": true,
+  "rendererScaleInvariantPass": true,
+  "styleFirstOrderPass": true
+}

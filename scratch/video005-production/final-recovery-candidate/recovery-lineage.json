@@ -1,0 +1,166 @@
+[
+  {
+    "shotId": "shot-01",
+    "generationStage": "ATTEMPT_3",
+    "selectedAttempt": 3,
+    "source": "video005-attempt3-shot-01.jpg",
+    "currentState": "PASS_HUMAN_QA",
+    "humanQaVerdict": "PASS",
+    "details": "Passed human visual inspection (style, composition, and people contract approved)"
+  },
+  {
+    "shotId": "shot-02",
+    "generationStage": "ATTEMPT_2",
+    "selectedAttempt": 2,
+    "source": "video005-attempt2-shot-02.jpg",
+    "currentState": "PASS_HUMAN_QA",
+    "humanQaVerdict": "PASS",
+    "details": "Passed human visual inspection (style, composition, and people contract approved)"
+  },
+  {
+    "shotId": "shot-03",
+    "generationStage": "FINAL_RECOVERY_EXCEPTION",
+    "modelAttempt": 4,
+    "exceptionReason": "POST_ATTEMPT3_TEMPLATE_FIX",
+    "source": "video005-recovery-shot-03.jpg",
+    "previousAttempt": 3,
+    "previousVerdict": "FAIL_HUMAN_QA",
+    "currentState": "PENDING_RECOVERY_HUMAN_QA",
+    "promptLength": 1352,
+    "model": "@cf/black-forest-labs/flux-1-schnell",
+    "generationCallIndex": 1
+  },
+  {
+    "shotId": "shot-04",
+    "generationStage": "ATTEMPT_3",
+    "selectedAttempt": 3,
+    "source": "video005-attempt3-shot-04.jpg",
+    "currentState": "PASS_HUMAN_QA",
+    "humanQaVerdict": "PASS",
+    "details": "Passed human visual inspection (style, composition, and people contract approved)"
+  },
+  {
+    "shotId": "shot-05",
+    "generationStage": "FINAL_RECOVERY_EXCEPTION",
+    "modelAttempt": 4,
+    "exceptionReason": "POST_ATTEMPT3_TEMPLATE_FIX",
+    "source": "video005-recovery-shot-05.jpg",
+    "previousAttempt": 3,
+    "previousVerdict": "FAIL_HUMAN_QA",
+    "currentState": "PENDING_RECOVERY_HUMAN_QA",
+    "promptLength": 1390,
+    "model": "@cf/black-forest-labs/flux-1-schnell",
+    "generationCallIndex": 2
+  },
+  {
+    "shotId": "shot-06",
+    "generationStage": "ATTEMPT_2",
+    "selectedAttempt": 2,
+    "source": "video005-attempt2-shot-06.jpg",
+    "currentState": "PASS_HUMAN_QA",
+    "humanQaVerdict": "PASS",
+    "details": "Passed human visual inspection (style, composition, and people contract approved)"
+  },
+  {
+    "shotId": "shot-07",
+    "generationStage": "ATTEMPT_2",
+    "selectedAttempt": 2,
+    "source": "video005-attempt2-shot-07.jpg",
+    "currentState": "PASS_HUMAN_QA",
+    "humanQaVerdict": "PASS",
+    "details": "Passed human visual inspection (style, composition, and people contract approved)"
+  },
+  {
+    "shotId": "shot-08",
+    "generationStage": "ATTEMPT_3",
+    "selectedAttempt": 3,
+    "source": "video005-attempt3-shot-08.jpg",
+    "currentState": "PASS_HUMAN_QA",
+    "humanQaVerdict": "PASS",
+    "details": "Passed human visual inspection (style, composition, and people contract approved)"
+  },
+  {
+    "shotId": "shot-09",
+    "generationStage": "ATTEMPT_3",
+    "selectedAttempt": 3,
+    "source": "video005-attempt3-shot-09.jpg",
+    "currentState": "PASS_HUMAN_QA",
+    "humanQaVerdict": "PASS",
+    "details": "Passed human visual inspection (style, composition, and people contract approved)"
+  },
+  {
+    "shotId": "shot-10",
+    "generationStage": "ATTEMPT_2",
+    "selectedAttempt": 2,
+    "source": "video005-attempt2-shot-10.jpg",
+    "currentState": "PASS_HUMAN_QA",
+    "humanQaVerdict": "PASS",
+    "details": "Passed human visual inspection (style, composition, and people contract approved)"
+  },
+  {
+    "shotId": "shot-11",
+    "generationStage": "FINAL_RECOVERY_EXCEPTION",
+    "modelAttempt": 4,
+    "exceptionReason": "POST_ATTEMPT3_TEMPLATE_FIX",
+    "source": "video005-recovery-shot-11.jpg",
+    "previousAttempt": 3,
+    "previousVerdict": "FAIL_HUMAN_QA",
+    "currentState": "PENDING_RECOVERY_HUMAN_QA",
+    "promptLength": 1373,
+    "model": "@cf/black-forest-labs/flux-1-schnell",
+    "generationCallIndex": 3
+  },
+  {
+    "shotId": "shot-12",
+    "generationStage": "ATTEMPT_2",
+    "selectedAttempt": 2,
+    "source": "video005-attempt2-shot-12.jpg",
+    "currentState": "PASS_HUMAN_QA",
+    "humanQaVerdict": "PASS",
+    "details": "Passed human visual inspection (style, composition, and people contract approved)"
+  },
+  {
+    "shotId": "shot-13",
+    "generationStage": "FINAL_RECOVERY_EXCEPTION",
+    "modelAttempt": 4,
+    "exceptionReason": "POST_ATTEMPT3_TEMPLATE_FIX",
+    "source": "video005-recovery-shot-13.jpg",
+    "previousAttempt": 3,
+    "previousVerdict": "FAIL_HUMAN_QA",
+    "currentState": "PENDING_RECOVERY_HUMAN_QA",
+    "promptLength": 1251,
+    "model": "@cf/black-forest-labs/flux-1-schnell",
+    "generationCallIndex": 4
+  },
+  {
+    "shotId": "shot-14",
+    "generationStage": "ATTEMPT_2",
+    "selectedAttempt": 2,
+    "source": "video005-attempt2-shot-14.jpg",
+    "currentState": "PASS_HUMAN_QA",
+    "humanQaVerdict": "PASS",
+    "details": "Passed human visual inspection (style, composition, and people contract approved)"
+  },
+  {
+    "shotId": "shot-15",
+    "generationStage": "FINAL_RECOVERY_EXCEPTION",
+    "modelAttempt": 4,
+    "exceptionReason": "POST_ATTEMPT3_TEMPLATE_FIX",
+    "source": "video005-recovery-shot-15.jpg",
+    "previousAttempt": 3,
+    "previousVerdict": "FAIL_HUMAN_QA",
+    "currentState": "PENDING_RECOVERY_HUMAN_QA",
+    "promptLength": 1271,
+    "model": "@cf/black-forest-labs/flux-1-schnell",
+    "generationCallIndex": 5
+  },
+  {
+    "shotId": "shot-16",
+    "generationStage": "ATTEMPT_1",
+    "selectedAttempt": 1,
+    "source": "video005-attempt2-shot-16.jpg",
+    "currentState": "PASS_HUMAN_QA",
+    "humanQaVerdict": "PASS",
+    "details": "Passed human visual inspection (style, composition, and people contract approved)"
+  }
+]

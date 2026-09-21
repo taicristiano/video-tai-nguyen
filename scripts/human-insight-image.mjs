@@ -29,6 +29,13 @@ import os from 'node:os';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
+import {
+  buildImageSafetyRulesForShot,
+  validateActionPromptContract,
+  validateFinalImagePromptContract,
+  validateObjectDetailContract,
+} from '../src/templates/human-insight/cinematic-light/referenceShotGrammarRuntime.mjs';
+export { validateActionPromptContract, validateFinalImagePromptContract, validateObjectDetailContract };
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
@@ -50,11 +57,22 @@ export const ASSET_TIERS = {
 };
 
 export const STYLE_PROMPT = [
-  'STYLE LOCK:',
-  'Premium warm editorial 2D illustration for HAY & ĐẸP.',
-  'Soft ivory and warm cream palette, muted sage accents, warm wood, charcoal/sepia linework.',
-  'Natural gentle light, tactile editorial texture, proportional expressive Vietnamese characters.',
-  'Calm uncluttered composition, subtle depth, believable anatomy.',
+  'STYLE LOCK: HAY & ĐẸP.',
+  'Clearly hand-drawn 2D editorial illustration with charcoal/sepia outlines around characters, hands, and objects.',
+  'Simplified facial features; simplified grouped hair shapes, NOT individual realistic hair strands.',
+  'Matte painted / flat gouache color fills, soft simplified illustrated shadows.',
+  'Warm ivory/cream background, muted sage, warm wood, restrained terracotta accents.',
+  'Calm editorial look, clean forms.',
+  'Unmistakably DRAWN / ILLUSTRATED, not photographed.',
+].join('\n');
+
+export const STYLE_PROMPT_ZERO_PEOPLE = [
+  'STYLE LOCK: HAY & ĐẸP.',
+  'Clearly hand-drawn 2D editorial illustration with charcoal/sepia outlines around furniture, props, and domestic elements.',
+  'Matte painted / flat gouache color fills, soft simplified illustrated shadows.',
+  'Warm ivory/cream background, muted sage, warm wood, restrained terracotta accents.',
+  'Calm editorial-cartoon atmosphere, clean architectural and domestic forms.',
+  'Unmistakably DRAWN / ILLUSTRATED, not photographed.',
 ].join('\n');
 
 const CASTS_PATH = path.join(
@@ -202,7 +220,14 @@ function parseArgs(argv) {
     worldLock: '',
     strictHayDep: false,
     noPeople: false,
+    peopleMin: null,
+    peopleMax: null,
     presentMembers: [],
+    scale: '',
+    silhouette: '',
+    visualVerb: '',
+    semanticIntent: '',
+    visualMode: '',
   };
 
   for (let i = 2; i < argv.length; i++) {
@@ -213,6 +238,10 @@ function parseArgs(argv) {
       args.strictHayDep = true;
     } else if (arg === '--no-people') {
       args.noPeople = true;
+    } else if (arg === '--people-min') {
+      args.peopleMin = Number(argv[++i]);
+    } else if (arg === '--people-max') {
+      args.peopleMax = Number(argv[++i]);
     } else if (arg === '--present-members') {
       args.presentMembers = argv[++i]
         .split(',')
@@ -239,7 +268,17 @@ function parseArgs(argv) {
     } else if (arg === '--visual') {
       args.visual = argv[++i];
     } else if (arg === '--shot-scale') {
-      args.shotScale = argv[++i];
+      args.shotScale = String(argv[++i]).toLowerCase();
+    } else if (arg === '--scale') {
+      args.scale = argv[++i];
+    } else if (arg === '--visual-mode') {
+      args.visualMode = argv[++i];
+    } else if (arg === '--silhouette') {
+      args.silhouette = argv[++i];
+    } else if (arg === '--visual-verb') {
+      args.visualVerb = argv[++i];
+    } else if (arg === '--semantic-intent') {
+      args.semanticIntent = argv[++i];
     } else if (arg === '--composition') {
       args.composition = argv[++i];
     } else if (arg === '--story-role') {
@@ -586,33 +625,50 @@ function shortHash(text) {
 }
 
 function buildShotPrompt(scene) {
-  const shotScale = scene.shotScale || (scene.type === 'hook' ? 'wide' : scene.type === 'ending' ? 'close' : 'medium');
+  const rawScale =
+    scene.scale ||
+    scene.shotScale ||
+    (scene.type === 'hook'
+      ? 'wide'
+      : scene.type === 'ending'
+      ? 'close'
+      : 'medium');
+  const shotScale = String(rawScale).toLowerCase();
   const composition = scene.composition || 'portrait-focus';
 
   const scaleDescriptions = {
-    wide: 'Wide environmental establishing shot.',
-    medium: 'Medium editorial shot focusing on natural movement.',
-    close: 'Close intimate framing focusing on faces, hands, emotions.',
-    detail: 'Macro detail insert on tactile objects with shallow depth of field.',
+    wide: 'SCALE LOCK: WIDE ENVIRONMENTAL ILLUSTRATION. Substantial room context (~50%+ environment). People smaller, uncropped.',
+    medium: 'SCALE LOCK: MEDIUM INTERACTION ILLUSTRATION. Torso and physical action with room context.',
+    close: 'SCALE LOCK: CLOSE REACTION ILLUSTRATION. One primary face / shoulders / hands dominates frame. Minimal environment. No two-person sofa framing.',
+    detail: 'SCALE LOCK: DETAIL INSERT. Object or hand action dominates ~60%+ attention. No full seated two-person composition. No both full faces.',
+    release: 'SCALE LOCK: RELEASE / BREATHING FRAME. Quiet environmental visual. Zero people, zero hands or body parts when contract is 0..0.',
   };
 
   const compositionDescriptions = {
-    'full-bleed': 'Vertical 9:16 full-bleed composition.',
-    'editorial-left': 'Editorial asymmetric composition: subject left, breathing space right.',
-    'editorial-right': 'Editorial asymmetric composition: subject right, breathing space left.',
-    'portrait-focus': 'Vertical portrait composition with clear visual hierarchy.',
-    'detail-insert': 'Detail insert capturing a domestic action.',
-    paper: 'Tactile keepsake memory framing with soft daylight.',
+    'full-bleed': 'Vertical 9:16 framing.',
+    'editorial-left': 'Subject left framing.',
+    'editorial-right': 'Subject right framing.',
+    'portrait-focus': 'Vertical portrait framing.',
+    'detail-insert': 'Detail insert framing.',
+    paper: 'Keepsake framing.',
   };
 
   const scaleText = scaleDescriptions[shotScale] || scaleDescriptions.medium;
   const compText = compositionDescriptions[composition] || compositionDescriptions['portrait-focus'];
 
-  return [
-    'SHOT: Vertical 9:16 editorial framing, candid, unposed.',
+  const lines = [
     scaleText,
     compText,
-  ].join('\n');
+  ];
+
+  if (scene.silhouette) {
+    lines.push(`SILHOUETTE: ${scene.silhouette}.`);
+  }
+  if (scene.visualVerb && scene.visualVerb !== 'symbolic-detail') {
+    lines.push(`ACTION VERB: ${scene.visualVerb}.`);
+  }
+
+  return lines.join('\n');
 }
 
 function buildGenericCastPrompt(scene) {
@@ -621,6 +677,7 @@ function buildGenericCastPrompt(scene) {
       'CAST:',
       'Use one natural Vietnamese male-presenting editorial character if a person is needed.',
       'Keep age, hairstyle, wardrobe and facial design internally coherent within this scene.',
+      'Exact facial likeness across different generated images is not required; maintain consistent styling.',
       'Do not use stick figures.',
     ].join('\n');
   }
@@ -630,6 +687,7 @@ function buildGenericCastPrompt(scene) {
       'CAST:',
       'Use one natural Vietnamese female-presenting editorial character if a person is needed.',
       'Keep age, hairstyle, wardrobe and facial design internally coherent within this scene.',
+      'Exact facial likeness across different generated images is not required; maintain consistent styling.',
       'Do not use stick figures.',
     ].join('\n');
   }
@@ -637,106 +695,386 @@ function buildGenericCastPrompt(scene) {
   return [
     'CAST:',
     'Use natural Vietnamese editorial human characters only when the scene needs people.',
+    'Exact facial likeness across different generated images is not required; maintain consistent styling.',
     'Do not use stick figures, diagram people, icon people, mannequins, or infographic characters.',
     'Do not add random extra people.',
   ].join('\n');
 }
 
-export function buildPresentCastPrompt(scene, castId) {
-  if (scene.noPeople || (Array.isArray(scene.presentMembers) && scene.presentMembers.length === 0)) {
+function compactCastMember(desc) {
+  return String(desc || '')
+    .replace(/,\s*fixed\s+(?:oval|distinct|soft)?\s*facial\s+design/gi, '')
+    .replace(/,\s*NO GLASSES unless explicitly requested/gi, '')
+    .replace(/,\s*NO GLASSES/gi, '')
+    .replace(/,\s*30–34/g, '')
+    .replace(/,\s*34/g, '')
+    .replace(/,\s*32/g, '')
+    .replace(/,\s*50/g, '')
+    .replace(/,\s*48/g, '')
+    .replace(/,\s*68/g, '')
+    .replace(/,\s*65/g, '')
+    .replace(/,\s*28/g, '')
+    .replace(/,\s*27/g, '')
+    .replace(/,\s*26/g, '')
+    .replace(/,\s*8/g, '')
+    .replace(/,\s*7/g, '')
+    .replace(/,\s*6/g, '')
+    .replace(/Vietnamese adult,\s*27–32,\s*distinct fixed soft facial design,\s*shoulder-length or tied black hair,\s*warm neutral clothing\.?/i, 'Vietnamese adult, soft face, tied black hair, neutral clothes.')
+    .replace(/Vietnamese adult,\s*27–32,\s*fixed oval facial design,\s*short styled dark brown hair,\s*casual clothing\.?/i, 'Vietnamese adult, oval face, dark brown hair, casual clothes.')
+    .replace(/distinct\s+fixed\s+/gi, '')
+    .replace(/fixed\s+soft\s+facial\s+design/gi, 'soft face')
+    .replace(/fixed\s+oval\s+facial\s+design/gi, 'oval face')
+    .replace(/,\s*adult–32/g, '')
+    .replace(/,\s*27–32/g, '')
+    .replace(/,\s*24–28/g, '')
+    .replace(/,\s*26–29/g, '')
+    .replace(/shoulder-length or tied/gi, 'tied/shoulder')
+    .replace(/casual\s+clothing/gi, 'clothes')
+    .replace(/casual\s+attire/gi, 'clothes')
+    .replace(/warm\s+neutral\s+clothing/gi, 'neutral clothes')
+    .trim();
+}
+
+export function buildPresentCastPrompt(scene, castId, { compact = false } = {}) {
+  const min = typeof scene.peopleMin === 'number'
+    ? scene.peopleMin
+    : (typeof scene.peopleContract?.min === 'number' ? scene.peopleContract.min : (scene.noPeople ? 0 : null));
+  const max = typeof scene.peopleMax === 'number'
+    ? scene.peopleMax
+    : (typeof scene.peopleContract?.max === 'number' ? scene.peopleContract.max : (scene.noPeople ? 0 : null));
+
+  const isZeroPeople =
+    scene.noPeople ||
+    max === 0 ||
+    (min === 0 && max === 0) ||
+    scene.visualMode === 'EMPTY_RELEASE' ||
+    scene.visualMode === 'OBJECT_DETAIL' ||
+    (Array.isArray(scene.presentMembers) && scene.presentMembers.length === 0);
+
+  if (isZeroPeople) {
     return [
-      'PEOPLE:',
+      'PEOPLE LOCK: ZERO PEOPLE.',
       'NO PEOPLE in frame.',
+      'ZERO visible people/body parts, zero extra/background faces, zero hands, zero arms, or reflections in frame.',
+      'No framed portraits or wall art depicting human faces.',
       'Show only believable traces of the activity that just happened.',
     ].join('\n');
   }
 
+  let countDirective = '';
+  if (min === 0 && max === 0) {
+    countDirective = compact
+      ? 'PEOPLE LOCK: ZERO visible people.'
+      : 'PEOPLE LOCK: ZERO visible people/body parts in frame.';
+  } else if (min === 1 && max === 1) {
+    countDirective = compact
+      ? 'PEOPLE LOCK: EXACTLY one visible person.'
+      : 'PEOPLE LOCK: EXACTLY one visible person. No second person, background people, extra/background faces, or portraits.';
+  } else if (min === 2 && max === 2) {
+    countDirective = compact
+      ? 'PEOPLE LOCK: EXACTLY two visible people.'
+      : 'PEOPLE LOCK: EXACTLY two visible people. No third person, background people, extra/background faces, or portraits.';
+  } else if (min === 3 && max === 3) {
+    countDirective = 'PEOPLE LOCK: EXACTLY three visible people.';
+  } else if (typeof min === 'number' && typeof max === 'number') {
+    countDirective = `PEOPLE LOCK: Between ${min} and ${max} visible people.`;
+  }
+
   const cast = CHARACTER_CASTS[castId];
   if (!cast) {
-    return buildGenericCastPrompt(scene);
+    return [
+      countDirective,
+      buildGenericCastPrompt(scene),
+      'Exact facial likeness across different generated images is NOT required.',
+      'Coherent styling, no extra people.',
+    ].filter(Boolean).join('\n');
   }
 
   const validMemberKeys = cast.members ? Object.keys(cast.members) : [];
 
+  const targetMembers = scene.visibleMembers !== undefined ? scene.visibleMembers : scene.presentMembers;
   let requested;
-  if (Array.isArray(scene.presentMembers) && scene.presentMembers.length > 0) {
-    const invalid = scene.presentMembers.filter((m) => !cast.members || !cast.members[m]);
+  if (Array.isArray(targetMembers) && targetMembers.length > 0) {
+    const invalid = targetMembers.filter((m) => !cast.members || !cast.members[m]);
     if (invalid.length > 0) {
       throw new Error(
         `Invalid cast member "${invalid[0]}" for cast "${castId}". Valid members: ${validMemberKeys.join(', ')}`
       );
     }
-    requested = scene.presentMembers;
+    requested = targetMembers;
+  } else if (Array.isArray(targetMembers) && targetMembers.length === 0) {
+    requested = [];
+  } else if (max === 1 && validMemberKeys.length > 1) {
+    requested = [validMemberKeys[0]];
+  } else if (typeof max === 'number' && validMemberKeys.length > max) {
+    requested = validMemberKeys.slice(0, max);
   } else {
     requested = validMemberKeys;
   }
 
   if (requested.length === 0) {
     return [
-      'PEOPLE:',
+      'PEOPLE LOCK: ZERO PEOPLE.',
       'NO PEOPLE in frame.',
+      'ZERO visible people/body parts, zero extra/background faces, zero hands, zero arms, or reflections in frame.',
+      'No framed portraits or wall art depicting human faces.',
       'Show only believable traces of the activity that just happened.',
     ].join('\n');
   }
 
   const lines = requested
-    .map((memberId) => `${memberId}: ${cast.members[memberId]}`);
+    .map((memberId) => `${memberId}: ${compact ? compactCastMember(cast.members[memberId]) : cast.members[memberId]}`);
 
-  return [
-    `CAST CONTINUITY — ${castId}:`,
-    ...lines,
-    'Use same recurring identities, no random extra people.',
-  ].join('\n');
+  let outputLines;
+  if (compact) {
+    outputLines = [
+      countDirective,
+      'CAST CONTINUITY: ' + lines.join('; '),
+    ];
+  } else {
+    outputLines = [
+      countDirective,
+      `CAST CONTINUITY — ${castId}:`,
+      ...lines,
+      'Exact facial likeness across different generated images is NOT required.',
+      'Coherent styling, no extra people.',
+    ];
+  }
+
+  return outputLines.filter(Boolean).join('\n');
 }
 
 function buildWorldPrompt(scene) {
   if (scene.worldLock) {
-    return scene.worldLock;
+    const cleaned = scene.worldLock
+      .replace(/^WORLD LOCK:\s*[\w-]+(?:\s*—|\n)?\s*/i, '')
+      .replace(/Keep these dialogue anchors strictly consistent across all dialogue scenes\.?\s*/i, '')
+      .replace(/Keep these living-room anchors strictly consistent across all scenes\.?\s*/i, '')
+      .replace(/Keep these stable anchors across all connected scenes\.?\s*/i, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+    return `WORLD: ${cleaned}`;
   }
-  return [
-    'WORLD:',
-    'Warm believable Vietnamese everyday-life environment.',
-    'Ivory / warm cream, muted sage, warm wood, charcoal details.',
-  ].join('\n');
+  return 'WORLD: Believable Vietnamese everyday-life setting.';
 }
 
 function buildNegativeRules(scene) {
   const rules = [
-    'NEGATIVE: NO TEXT, NO LOGO, NO WATERMARK.',
-    'No posed camera-facing portrait, no random extra people, no luxury showroom look.',
+    'NEGATIVE EXCLUSIONS: NO WORDS, LETTERS, NUMBERS, LABELS, MARKS, WATERMARKS, TEXT POLLUTION.',
+    'STRICTLY BAN: NO speech bubbles, dialogue balloons, comic bubbles, thought bubbles, quotation text, captions, subtitles, signatures, pseudo-writing.',
+    'HARD EXCLUSIONS: NO photorealism, realistic skin/pores, individual hair strands, CGI, 3D render, anime, chibi, extra people.',
   ];
 
-  if (scene.storyRole === 'detail-action') {
-    rules.push('Object must be actively used by hand, no product photography.');
-  } else if (scene.storyRole === 'interaction') {
-    rules.push('Show visible reactive exchange between people, no isolated portrait faces.');
-  } else if (scene.storyRole === 'memory') {
-    rules.push('Do not invent different faces or family.');
+  if (scene.storyRole === 'detail-action' || scene.scale === 'detail' || scene.scale === 'DETAIL') {
+    rules.push('Object actively used by hand, no product shot.');
   }
 
   return rules.join('\n');
 }
 
 export function buildPrompt(scene, castId) {
-  const action = scene.action || scene.visual || scene.text;
-  const rawMeaning = scene.visual || scene.text;
-  const sceneMeaning = rawMeaning.replace(/\.\s*Convert this priority.*$/i, '.');
+  const rawAction = scene.action || scene.visual || scene.text || '';
+  const rawMeaning = scene.text || scene.visual || '';
+  let sceneMeaning = rawMeaning
+    .replace(/Show a concrete everyday relationship behavior with two people doing something, not a generic emotional portrait\.?\s*/i, '')
+    .replace(/\.?\s*Visual priority hint:\s*/i, '')
+    .replace(/\.\s*Convert this priority.*$/i, '.')
+    .trim();
+
+  const min = typeof scene.peopleMin === 'number'
+    ? scene.peopleMin
+    : (typeof scene.peopleContract?.min === 'number' ? scene.peopleContract.min : (scene.noPeople ? 0 : null));
+  const max = typeof scene.peopleMax === 'number'
+    ? scene.peopleMax
+    : (typeof scene.peopleContract?.max === 'number' ? scene.peopleContract.max : (scene.noPeople ? 0 : null));
+
+  const isZeroPeople =
+    scene.noPeople ||
+    max === 0 ||
+    (min === 0 && max === 0) ||
+    scene.visualMode === 'EMPTY_RELEASE' ||
+    scene.visualMode === 'OBJECT_DETAIL' ||
+    (Array.isArray(scene.presentMembers) && scene.presentMembers.length === 0);
+
+  let action = rawAction;
+  const actionLower = String(rawAction || '').toLowerCase();
+
+  if (isZeroPeople) {
+    sceneMeaning = 'Still atmosphere in the quiet everyday domestic living space after conversation.';
+
+    const forbidden = ['two people', 'two-person', 'speaker', 'listener', 'hands', 'person', 'people', 'human', 'face'];
+    for (const term of forbidden) {
+      if (term === 'face' && (actionLower.includes('face-down') || actionLower.includes('face down') || actionLower.includes('screen down'))) {
+        continue;
+      }
+      const regex = new RegExp(`\\b${term}\\b`, 'i');
+      if (regex.test(actionLower)) {
+        if (
+          !actionLower.includes(`no ${term}`) &&
+          !actionLower.includes(`without ${term}`) &&
+          !actionLower.includes(`zero ${term}`) &&
+          !actionLower.includes(`no visible ${term}`) &&
+          !actionLower.includes(`zero visible ${term}`)
+        ) {
+          throw new Error(`PROMPT_PEOPLE_CONTRADICTION: Zero-people beat action instructs "${term}" in: "${action}"`);
+        }
+      }
+    }
+
+    if (scene.visualMode === 'OBJECT_DETAIL') {
+      action = 'Two ceramic cups rest quietly on low wooden coffee table with steam rising, phone resting face-down and unused.';
+    } else {
+      action = 'Still atmosphere in the quiet everyday domestic living space after conversation. Two cups on table, empty sofa, ZERO people.';
+    }
+  } else if (scene.visualVerb === 'đặt' || String(scene.text || '').includes('đặt điện thoại') || actionLower.includes('đặt') || actionLower.includes('face-down') || actionLower.includes('put away')) {
+    if (actionLower.includes('holding the phone') || actionLower.includes('visibly holding') || actionLower.includes('cầm điện thoại') || actionLower.includes('phone in hand') || actionLower.includes('gripping')) {
+      throw new Error(`PROMPT_ACTION_CONTRADICTION: Beat action instructs holding phone when verb requires placing phone down`);
+    }
+    action = 'Phone resting FACE-DOWN and FLAT on wooden table. Hand released and away from phone. Phone is NOT held.';
+  } else {
+    action = action
+      .replace(/^Close reaction framing of /i, '')
+      .replace(/, sole human in frame, no second person\.?$/i, '.')
+      .replace(/, exactly one person in entire frame, no second body\.?$/i, '.');
+  }
+
+  // 1. MEDIUM + STYLE LOCK
+  const styleHeader = 'MEDIUM / STYLE LOCK: HAY & ĐẸP.';
+  const styleBody = isZeroPeople
+    ? 'Clean 2D hand-drawn editorial illustration, charcoal/sepia lines, matte gouache fills, non-photorealistic.'
+    : 'Clean 2D hand-drawn editorial illustration, charcoal/sepia lines, simplified features, non-photorealistic.';
+  const section1 = `${styleHeader}\n${styleBody}`;
+
+  // 2. RENDERING RECIPE
+  const section2 = 'RENDERING RECIPE: Matte gouache fills. Clearly DRAWN, not photographed.';
+
+  // 3. PALETTE
+  const section3 = 'PALETTE: Ivory/cream, muted sage, warm wood, terracotta/amber accents.';
+
+  // 4. VISUAL MODE + SCALE
+  const rawScale =
+    scene.scale ||
+    scene.shotScale ||
+    (scene.type === 'hook'
+      ? 'wide'
+      : scene.type === 'ending'
+      ? 'close'
+      : 'medium');
+  const shotScale = String(rawScale).toLowerCase();
+  const scaleDescriptions = {
+    wide: 'SCALE LOCK: WIDE ENVIRONMENTAL ILLUSTRATION. Substantial room context (~50%+ environment), uncropped.',
+    medium: 'SCALE LOCK: MEDIUM. Torso and physical interaction with room context.',
+    close: 'SCALE LOCK: CLOSE REACTION ILLUSTRATION. One face and shoulders dominate frame. No two-person sofa framing.',
+    detail: isZeroPeople
+      ? 'SCALE LOCK: DETAIL INSERT. Quiet tabletop object detail dominates frame.'
+      : 'SCALE LOCK: DETAIL INSERT. Object or hand action dominates frame. No full seated two-person composition.',
+    release: 'SCALE LOCK: RELEASE. Quiet environmental breathing room. Zero people, zero hands.',
+  };
+  const scaleText = scaleDescriptions[shotScale] || scaleDescriptions.medium;
+  const section4 = [
+    'VISUAL MODE & SCALE LOCK:',
+    `VISUAL MODE: ${scene.visualMode || 'SOLO_MEDIUM'}. ${scaleText}`,
+  ].join('\n');
+
+  // 5. PEOPLE CONTRACT
+  let section5 = '';
+  if (isZeroPeople) {
+    section5 = 'PEOPLE LOCK: ZERO PEOPLE. Zero visible people.';
+  } else {
+    section5 = buildPresentCastPrompt(scene, castId, { compact: true });
+  }
+
+  // 6. ACTION / PHYSICAL END-STATE
+  const section6 = `ACTION / PHYSICAL END-STATE:\nACTION: ${action}`;
+
+  // 7. WORLD / OBJECTS
+  let worldText = '';
+  if (scene.worldLock) {
+    worldText = scene.worldLock
+      .replace(/^WORLD LOCK:\s*[\w-]+(?:\s*—|\n)?\s*/i, '')
+      .replace(/Keep these dialogue anchors strictly consistent across all dialogue scenes\.?\s*/i, '')
+      .replace(/Keep these living-room anchors strictly consistent across all scenes\.?\s*/i, '')
+      .replace(/Keep these stable anchors across all connected scenes\.?\s*/i, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  } else {
+    worldText = 'Vietnamese everyday domestic living room setting.';
+  }
+  if (worldText.length > 50 && worldText.includes('.')) {
+    worldText = worldText.split('.')[0].trim() + '.';
+  } else if (worldText.length > 50) {
+    worldText = worldText.slice(0, 45).replace(/,[^,]*$/, '') + '.';
+  }
+  worldText = worldText.replace(/conversation area/i, 'space');
+  const section7 = `WORLD / OBJECTS: ${worldText}`;
+
+  // 8. FRAMING
+  const sil = scene.silhouette ? ` Silhouette: ${scene.silhouette}.` : '';
+  const section8 = `FRAMING: Vertical 9:16.${sil}`;
+
+  // 9. EXCLUSIONS
+  const exclusions = [
+    'NEGATIVE EXCLUSIONS: NO WORDS, LETTERS, NUMBERS, LABELS, MARKS, WATERMARKS, TEXT POLLUTION.',
+    'STRICTLY BAN: NO speech bubbles, dialogue balloons, comic bubbles, thought bubbles, quotation text, captions, subtitles, signatures, pseudo-writing.',
+    'HARD EXCLUSIONS: NO photorealism, photographic interior, photographic lighting, lens blur, shallow depth of field, realistic skin/pores, individual hair strands, CGI, 3D render, DSLR.',
+  ];
+  if (min === 0 && max === 0) {
+    exclusions.push('PEOPLE NEGATIVES: NO PEOPLE, background people, extra/background faces, portraits, framed photos, human reflections.');
+  } else if (max === 1) {
+    exclusions.push('PEOPLE NEGATIVES: NO second person, background people, extra/background faces, human portraits, framed photos, reflections.');
+  } else if (max === 2) {
+    exclusions.push('PEOPLE NEGATIVES: NO third person, background people, extra/background faces, human portraits, framed photos, reflections.');
+  }
+  const safetyRules = buildImageSafetyRulesForShot(scene);
+  if (safetyRules.length > 0) {
+    exclusions.push(...safetyRules);
+  }
+  const section9 = exclusions.join('\n');
 
   const sections = [
-    `ACTION:\n${action}`,
-    `SCENE MEANING:\n${sceneMeaning}`,
-    buildPresentCastPrompt(scene, castId),
-    buildWorldPrompt(scene),
-    STYLE_PROMPT,
-    buildShotPrompt(scene),
-    buildNegativeRules(scene),
+    section1,
+    section2,
+    section3,
+    section4,
+    section5,
+    section6,
+    section7,
+    section8,
+    section9,
   ].filter(Boolean);
 
   const full = sections.join('\n\n');
 
-  if (full.length > 1950) {
+  // Full Prompt Preflight Contract Validation:
+  const contractRes = validateFinalImagePromptContract({
+    prompt: full,
+    visualMode: scene.visualMode,
+    peopleContract: { min, max },
+    visibleMembers: scene.visibleMembers || scene.presentMembers,
+    visualVerb: scene.visualVerb,
+  });
+  if (!contractRes.valid) {
+    throw new Error(`PROMPT_CONTRACT_VALIDATION_FAILED: ${contractRes.error}`);
+  }
+
+  // ObjectDetailContract Validation
+  const objDetailRes = validateObjectDetailContract({
+    visualMode: scene.visualMode,
+    scale: scene.scale,
+    shotScale: scene.shotScale,
+    visibleMembers: scene.visibleMembers,
+    peopleContract: { min, max },
+    visiblePeopleContract: scene.peopleContract,
+    silhouette: scene.silhouette,
+    prompt: full,
+  });
+  if (!objDetailRes.valid) {
+    throw new Error(`OBJECT_DETAIL_VALIDATION_FAILED: ${objDetailRes.error}`);
+  }
+
+  if (full.length > 1600) {
     throw new Error(
-      `Image prompt too long: ${full.length}. ` +
+      `Image prompt too long: ${full.length} chars (hard max 1600). ` +
       `Compact individual sections; do not blind-slice.`,
     );
   }
@@ -785,7 +1123,11 @@ async function callCloudflareWithFetch(url, token, requestBody) {
 
   const body = await response.text();
   if (!response.ok) {
-    throw new Error(`Cloudflare fetch ${response.status}: ${body.slice(0, 1000)}`);
+    const err = new Error(`Cloudflare fetch ${response.status}: ${body.slice(0, 1000)}`);
+    if (response.status === 429 || body.includes('429') || /rate limit|quota/i.test(body)) {
+      err.isQuota429 = true;
+    }
+    throw err;
   }
 
   return parseCloudflareImage(body, 'fetch');
@@ -827,7 +1169,11 @@ function callCloudflareWithCurl(url, token, requestBody) {
   const status = newlineIndex === -1 ? '' : output.slice(newlineIndex + 1).trim();
 
   if (!/^2\d\d$/.test(status)) {
-    throw new Error(`Cloudflare curl ${status || 'unknown status'}: ${body.slice(0, 1000)}`);
+    const err = new Error(`Cloudflare curl ${status || 'unknown status'}: ${body.slice(0, 1000)}`);
+    if (status === '429' || /rate limit|quota/i.test(body)) {
+      err.isQuota429 = true;
+    }
+    throw err;
   }
 
   return parseCloudflareImage(body, 'curl');
@@ -852,6 +1198,9 @@ async function generateWithCloudflare(prompt, seed) {
     console.error('Calling Cloudflare with Node fetch (with seed/steps)...');
     return await callCloudflareWithFetch(url, token, requestBody);
   } catch (fetchErr) {
+    if (fetchErr.isQuota429) {
+      throw fetchErr;
+    }
     console.error(`Cloudflare rejected seed/steps payload: ${fetchErr.message}`);
     if (fetchErr.message.includes('/seed') || fetchErr.message.includes('/steps') || fetchErr.message.includes('Additional or unevaluated properties')) {
       console.error('⚠️ Cloudflare schema rejected seed/steps. Retrying with prompt-only payload...');
@@ -859,6 +1208,9 @@ async function generateWithCloudflare(prompt, seed) {
       try {
         return await callCloudflareWithFetch(url, token, requestBody);
       } catch (fallbackErr) {
+        if (fallbackErr.isQuota429) {
+          throw fallbackErr;
+        }
         console.error(`Prompt-only fetch failed: ${fallbackErr.message}`);
       }
     }
@@ -867,6 +1219,9 @@ async function generateWithCloudflare(prompt, seed) {
     try {
       return callCloudflareWithCurl(url, token, requestBody);
     } catch (curlErr) {
+      if (curlErr.isQuota429) {
+        throw curlErr;
+      }
       throw new Error(`Cloudflare API failed via fetch and curl. fetch: ${fetchErr.message}; curl: ${curlErr.message}`);
     }
   }
@@ -915,7 +1270,7 @@ function reserveGeneratedAsset(manifest, scene) {
   throw new Error(`Could not reserve a unique generated asset name for "${scene.text.slice(0, 80)}"`);
 }
 
-function appendGeneratedAsset(manifest, scene, reservedAsset) {
+function appendGeneratedAsset(manifest, scene, reservedAsset, attempt = 1) {
   const asset = {
     id: reservedAsset.id,
     path: reservedAsset.manifestPath,
@@ -928,6 +1283,10 @@ function appendGeneratedAsset(manifest, scene, reservedAsset) {
     storyRole: scene.storyRole || undefined,
     worldId: scene.worldId || undefined,
     continuityGroup: scene.continuityGroup || undefined,
+    scale: scene.scale || undefined,
+    silhouette: scene.silhouette || undefined,
+    visualVerb: scene.visualVerb || undefined,
+    attempt,
     reuse: false,
   };
 
@@ -950,6 +1309,8 @@ async function main() {
     character,
     castId,
     noPeople: args.noPeople,
+    peopleMin: args.peopleMin,
+    peopleMax: args.peopleMax,
     presentMembers: args.presentMembers,
     visual: args.visual,
     storyRole: args.storyRole || undefined,
@@ -957,6 +1318,10 @@ async function main() {
     worldId: args.worldId || undefined,
     worldLock: args.worldLock || undefined,
     shotScale: args.shotScale || undefined,
+    scale: args.scale || undefined,
+    silhouette: args.silhouette || undefined,
+    visualVerb: args.visualVerb || undefined,
+    semanticIntent: args.semanticIntent || undefined,
     composition: args.composition || undefined,
   };
 
@@ -1018,52 +1383,69 @@ async function main() {
   const rawPath = path.join(tempDir, 'raw.jpg');
   const reservedAsset = reserveGeneratedAsset(manifest, scene);
 
-  try {
-    console.error(`Generating with Cloudflare Workers AI (seed: ${seed}, cast: ${castId || 'none'})...`);
-    const imageBuffer = await generateWithCloudflare(prompt, seed);
-    fs.writeFileSync(rawPath, imageBuffer);
-    compressJpeg(rawPath, reservedAsset.outputPath);
-    const asset = appendGeneratedAsset(manifest, scene, reservedAsset);
-    console.error(`Generated asset "${asset.id}" at ${asset.path}.`);
-    console.log(JSON.stringify({
-      source: 'generated',
-      castId: castId || null,
-      seeds,
-      previousBest: best ? {
-        assetId: best.asset.id,
-        score: best.score,
-        reasons: best.reasons,
-      } : null,
-      image: {
-        assetId: asset.id,
-        path: asset.path,
-      },
-      asset,
-    }, null, 2));
-  } catch (err) {
-    if (args.strictHayDep) {
-      const safeFallback = best && canReuseForHayDep(best, scene, args.threshold);
-      if (!safeFallback) {
-        throw new Error(
-          `HAY & ĐẸP. image generation failed and no safe compatible asset exists: ${err.message}`,
-        );
+  const maxAttempts = 3;
+  let lastErr = null;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      console.error(`Generating with Cloudflare Workers AI [attempt ${attempt}/${maxAttempts}] (seed: ${seed}, cast: ${castId || 'none'})...`);
+      const imageBuffer = await generateWithCloudflare(prompt, seed);
+      fs.writeFileSync(rawPath, imageBuffer);
+      compressJpeg(rawPath, reservedAsset.outputPath);
+      const asset = appendGeneratedAsset(manifest, scene, reservedAsset, attempt);
+      console.error(`Generated asset "${asset.id}" at ${asset.path} on attempt ${attempt}.`);
+      console.log(JSON.stringify({
+        source: 'generated',
+        castId: castId || null,
+        attempt,
+        seeds,
+        previousBest: best ? {
+          assetId: best.asset.id,
+          score: best.score,
+          reasons: best.reasons,
+        } : null,
+        image: {
+          assetId: asset.id,
+          path: asset.path,
+        },
+        asset,
+      }, null, 2));
+      return;
+    } catch (err) {
+      if (err.isQuota429 || err.message?.includes('429') || /rate limit|quota/i.test(err.message || '')) {
+        console.error(`🛑 HTTP 429 QUOTA HIT on Cloudflare: ${err.message}`);
+        const quotaErr = new Error(`PAUSED_QUOTA: Cloudflare HTTP 429 quota reached: ${err.message}`);
+        quotaErr.isQuota429 = true;
+        throw quotaErr;
+      }
+      lastErr = err;
+      console.error(`Attempt ${attempt} failed: ${err.message}`);
+      if (attempt < maxAttempts) {
+        console.error(`Waiting 2000ms before attempt ${attempt + 1}...`);
+        await new Promise((resolve) => setTimeout(resolve, 2000));
       }
     }
-    if (!best) throw err;
-    console.error(`Generation failed: ${err.message}`);
-    console.error(`Falling back to "${best.asset.id}" (score ${best.score}).`);
-    console.log(JSON.stringify({
-      source: 'fallback-after-generate-failure',
-      error: err.message,
-      score: best.score,
-      reasons: best.reasons,
-      image: {
-        assetId: best.asset.id,
-        path: best.asset.path,
-      },
-      asset: best.asset,
-    }, null, 2));
   }
+
+  if (args.strictHayDep) {
+    throw new Error(
+      `HAY & ĐẸP. image generation failed after ${maxAttempts} attempts: ${lastErr?.message}`,
+    );
+  }
+  if (!best) throw lastErr;
+  console.error(`Generation failed: ${lastErr?.message}`);
+  console.error(`Falling back to "${best.asset.id}" (score ${best.score}).`);
+  console.log(JSON.stringify({
+    source: 'fallback-after-generate-failure',
+    error: lastErr?.message,
+    score: best.score,
+    reasons: best.reasons,
+    image: {
+      assetId: best.asset.id,
+      path: best.asset.path,
+    },
+    asset: best.asset,
+  }, null, 2));
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {

@@ -179,6 +179,7 @@ export type MotionPreset =
   | 'focus-shift'
   | 'emotional-hold'
   | 'STILL'
+  | 'AMBIENT_STILL'
   | 'PUSH_IN_SOFT'
   | 'PULL_OUT_SOFT'
   | 'DRIFT_LEFT'

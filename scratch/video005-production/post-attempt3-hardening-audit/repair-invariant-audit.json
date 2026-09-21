@@ -1,0 +1,51 @@
+{
+  "objectDetailSubtypePreserved": true,
+  "zeroPeopleNeverBecomes0to1": true,
+  "actionDetailPreservedSeparately": true,
+  "emptyReleasePreserved": true,
+  "shot05": {
+    "shotId": "shot-05",
+    "visualMode": "ACTION_DETAIL",
+    "scale": "DETAIL",
+    "shotScale": "detail",
+    "silhouette": "hands-detail",
+    "visiblePeopleContract": {
+      "min": 0,
+      "max": 1
+    },
+    "visibleMembers": [
+      "listener"
+    ],
+    "visualAction": "The smartphone is already resting FACE-DOWN and FLAT on the wooden table. One hand has just released it and is moving away. No fingers are wrapping around the phone. Phone is NOT held. Screen is NOT visible.",
+    "promptLength": 1390
+  },
+  "shot13": {
+    "shotId": "shot-13",
+    "visualMode": "OBJECT_DETAIL",
+    "scale": "DETAIL",
+    "shotScale": "detail",
+    "silhouette": "object-detail",
+    "visiblePeopleContract": {
+      "min": 0,
+      "max": 0
+    },
+    "visibleMembers": [],
+    "promptLength": 1251,
+    "objectDetailValid": true
+  },
+  "shot15": {
+    "shotId": "shot-15",
+    "visualMode": "EMPTY_RELEASE",
+    "scale": "RELEASE",
+    "shotScale": "wide",
+    "silhouette": "empty-space",
+    "visiblePeopleContract": {
+      "min": 0,
+      "max": 0
+    },
+    "visibleMembers": [],
+    "promptLength": 1271
+  },
+  "zeroPersonPromptsWithPositiveHumanLeakageCount": 0,
+  "styleFirstOrderAllPass": true
+}

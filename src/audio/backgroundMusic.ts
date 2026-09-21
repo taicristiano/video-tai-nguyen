@@ -1,5 +1,12 @@
-import creativeManifest from '../../public/assets/creative/manifest.json';
-import newsManifest from '../../public/assets/news/manifest.json';
+/**
+ * src/audio/backgroundMusic.ts
+ *
+ * Background music volume resolver.
+ * Self-contained registry of configured track volumes with DEFAULT_BG_MUSIC_VOLUME fallback.
+ * Eliminates accidental cross-boundary static imports from public/ directories.
+ */
+
+import { CINEMATIC_LIGHT_DEPENDENCIES } from '../templates/human-insight/cinematic-light/templateDependencies';
 
 export const DEFAULT_BG_MUSIC_VOLUME = 0.1;
 
@@ -8,33 +15,27 @@ type MusicTrack = {
   volume?: number;
 };
 
-const manifests = [
-  creativeManifest,
-  newsManifest,
-] as Array<{music?: MusicTrack[]}>;
+/**
+ * Registry of known track volumes.
+ */
+const REGISTERED_TRACK_VOLUMES: Record<string, number> = {
+  'assets/news/music/news-ambient-01.mp3': 0.09,
+  'assets/news/music/sonican-flash-news.mp3': 0.166,
+  'assets/news/music/the_mountain-news-news-music.mp3': 0.11,
+  'assets/news/music/sonican-tech-news-information.mp3': 0.072,
+  'assets/news/music/miromaxmusic-music-promotion.mp3': 0.08,
+  'assets/news/music/nastelbom-soft-music.mp3': 0.085,
+  'assets/news/music/grand_project-breaking-news-background-music_short.mp3': 0.089,
+  [CINEMATIC_LIGHT_DEPENDENCIES.defaults.defaultBgMusic]: 0.12,
+};
 
 const tracksByPath = new Map<string, MusicTrack>();
 
-for (const manifest of manifests) {
-  for (const track of manifest.music ?? []) {
-    const existing = tracksByPath.get(track.path);
-
-    if (
-      existing?.volume !== undefined &&
-      track.volume !== undefined &&
-      existing.volume !== track.volume
-    ) {
-      throw new Error(
-        `Conflicting background music volumes for "${track.path}": ${existing.volume} and ${track.volume}.`,
-      );
-    }
-
-    tracksByPath.set(track.path, {
-      ...existing,
-      ...track,
-      volume: track.volume ?? existing?.volume,
-    });
-  }
+for (const [trackPath, volume] of Object.entries(REGISTERED_TRACK_VOLUMES)) {
+  tracksByPath.set(trackPath, {
+    path: trackPath,
+    volume,
+  });
 }
 
 export const getBgMusicVolume = (path: string): number => {

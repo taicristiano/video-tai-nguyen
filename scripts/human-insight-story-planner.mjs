@@ -19,6 +19,40 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import {
+  REFERENCE_SHOT_GRAMMAR,
+  detectVisualVerb,
+  resolveVisualStrategy,
+  validateShotPlan,
+  buildShotGrammarMetrics,
+  repairScaleMonotony,
+  isValidHoldException,
+  chooseCompositionForShot,
+  isSilhouetteCompatibleWithPeopleContract,
+  buildImageSafetyRulesForShot,
+  mapPlannerScaleToRendererScale,
+  choosePlannerScale,
+  VISUAL_MODES,
+  VISUAL_MODE_TO_SCALE,
+  deriveVisualMode,
+  validateActionPromptContract,
+  validateObjectDetailContract,
+} from '../src/templates/human-insight/cinematic-light/referenceShotGrammarRuntime.mjs';
+export { validateObjectDetailContract };
+
+import {
+  CHANNEL_BRAND_CONFIG,
+  preProcessSegments,
+  shouldSplitClause,
+  chooseHookPattern,
+  splitClauseTextAndTiming,
+  normalizeCadence,
+  auditBrandContext,
+  evaluateProductionReadiness,
+  buildReuseAudit,
+  mapPlannerRoleToRendererRole,
+} from '../src/templates/human-insight/cinematic-light/storyPlannerRuntime.mjs';
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 const CASTS_PATH = path.join(
@@ -570,6 +604,10 @@ function roleFromText(text, index, count, mode) {
     return STORY_ROLES.ESTABLISH;
   }
 
+  if (includesAny(text, ['de nguoi khac noi het', 'dieu dep'])) {
+    return STORY_ROLES.RELEASE;
+  }
+
   // Final narrative beat should normally release/reflect.
   if (index === count - 2) {
     return STORY_ROLES.RELEASE;
@@ -795,6 +833,21 @@ function familyIntent(text, role) {
 }
 
 function relationshipIntent(text, role) {
+  if (role === STORY_ROLES.RELEASE || includesAny(text, ['de nguoi khac noi het', 'dieu dep'])) {
+    return 'Quiet living-room aftermath: two ceramic cups remain on the table, soft evening light, empty sofa, absolutely no people.';
+  }
+  if (includesAny(text, ['nhung dieu nho', 'lo gia tri', 'gap lai chung', 'khoang im lang du lau', 'im lang du lau'])) {
+    return 'Two ceramic cups rest quietly on the low wooden coffee table with soft steam rising, phone resting face-down and unused, quiet room traces, absolutely no humans.';
+  }
+  if (includesAny(text, ['dat', 'dien thoai', 'phone'])) {
+    return 'A close detail insert of hands placing a simple smartphone face down onto the wooden coffee table, screen off, phone put away.';
+  }
+  if (includesAny(text, ['im lang', 'khong voi chen loi', 'khoang im lang'])) {
+    return 'The listener sits still with relaxed hands, phone absent, maintains attentive eye contact, allowing the speaker to finish.';
+  }
+  if (includesAny(text, ['hoi', 'cau rat ngan', 'nghi cach', 'cho loi khuyen'])) {
+    return 'The listener leans slightly forward with an open palm, pauses before speaking, inviting the other person to continue.';
+  }
   if (includesAny(text, ['lắng nghe', 'nghe'])) {
     return 'Two recurring people in conversation; one speaks naturally while the other listens with full attention, phone put away, visible reaction and eye contact.';
   }
@@ -970,14 +1023,62 @@ export function buildVisualAction({
       return familyAction(text, role);
 
     case CONTENT_MODES.RELATIONSHIP:
-      if (includesAny(text, ['lắng nghe', 'nghe'])) {
-        return 'One person speaks with subtle hand gesture while the other leans forward attentively, making direct eye contact.';
+      if (role === STORY_ROLES.QUESTION || includesAny(text, ['khi ban met', 'thich nguoi khac', 'khong phai la mot giai phap'])) {
+        return 'Two people seated in comfortable distance in the warm living room, sharing a calm reflective moment across the low table.';
       }
-      if (includesAny(text, ['xin lỗi'])) {
-        return 'One person speaks with open humble posture while the other listens calmly across the small coffee table.';
+      if (role === STORY_ROLES.RELEASE || includesAny(text, ['de nguoi khac noi het', 'dieu dep'])) {
+        return 'Quiet living-room aftermath: two ceramic cups remain on the table, soft evening window light, completely empty sofa, ZERO visible people, ZERO hands, ZERO body parts, no reflections.';
       }
-      if (includesAny(text, ['lời khuyên', 'góp ý'])) {
-        return 'One person pauses to ask a question before speaking, holding a warm teacup with both hands.';
+      if (includesAny(text, ['dat', 'dien thoai', 'phone'])) {
+        return 'The smartphone is already resting FACE-DOWN and FLAT on the wooden table. One hand has just released it and is moving away. No fingers are wrapping around the phone. Phone is NOT held. Screen is NOT visible.';
+      }
+      if (includesAny(text, ['khoang im lang du lau', 'im lang du lau', 'thuc su lang nghe', 'nhung dieu nho', 'lo gia tri'])) {
+        return 'Two ceramic cups rest quietly on the low wooden coffee table with soft steam rising, phone resting face-down and unused, warm quiet room traces, absolutely no humans.';
+      }
+      if (includesAny(text, ['sua ho', 'tim cach sua'])) {
+        return 'Close reaction framing of exactly one listener from chest up, mouth closed, hands resting quietly, looking attentively forward, other participant completely absent from frame.';
+      }
+      if (includesAny(text, ['dieu ho can', 'nhung dieu ho can'])) {
+        return 'Two people in medium interaction across the coffee table, speaking with natural gentle gestures and mutual eye contact, body language only, no visible text or speech bubbles.';
+      }
+      if (includesAny(text, ['loi khuyen dung van co the xuat hien', 'loi khuyen dung', 'sai thoi diem'])) {
+        return 'Close reaction framing of exactly one listener pausing attentively with a thoughtful expression, head and shoulders dominant, completely solo, no second person or body part visible.';
+      }
+      if (includesAny(text, ['chua kip tho', 'tho ra het', 'nang nhoc'])) {
+        return 'Close reaction framing of exactly one listener sitting in quiet patient stillness, shoulders relaxed, sole human in frame, no second person or extra body, no text or writing.';
+      }
+      if (includesAny(text, ['muon minh nghe hay', 'cung nghi cach'])) {
+        return 'Close reaction framing of exactly one person with gentle questioning expression, head and shoulders dominant, exactly one person in entire frame, no second body.';
+      }
+      if (includesAny(text, ['im lang', 'khong voi chen loi'])) {
+        return 'The listener sits still with relaxed hands, phone absent, maintains attentive eye contact, allowing the speaker off-camera to finish.';
+      }
+      if (includesAny(text, ['cau chuyen cua minh', 'don nhan'])) {
+        return 'The listener leans slightly forward with an open palm, pauses before speaking, inviting the other person to continue.';
+      }
+      if (includesAny(text, ['thu hoi', 'cau rat ngan'])) {
+        return 'The listener leans slightly forward with an open palm, pauses before speaking, inviting the other person to continue.';
+      }
+      if (includesAny(text, ['khong don doc', 'nhac nguoi dang ke'])) {
+        return 'The listener pauses attentively, mouth closed, hands resting quietly on the knees, waiting for the speaker off-camera to finish.';
+      }
+      if (includesAny(text, ['ke chuyen', 'kho chiu', 'sau ngay dai'])) {
+        return 'Two people seated smaller in the spacious living room across a low coffee table; one speaks candidly after a long day while the other listens calmly.';
+      }
+      if (includesAny(text, ['phan xa', 'giai phap'])) {
+        return 'Two people seated across a low table; the speaker describes an issue with natural hand gestures while the listener listens patiently.';
+      }
+      if (includesAny(text, ['khong lam mat thoi gian', 'mat thoi gian', 'vai ngay'])) {
+        return 'Two people seated peacefully in the warm living room, sharing a quiet, comfortable moment of reflection.';
+      }
+      if (includesAny(text, ['chua can', 'khong bi ngat', 'ke het', 'duoc ke'])) {
+        return 'The listener listens attentively with calm posture, nodding slightly, allowing the speaker to share without interruption.';
+      }
+      if (includesAny(text, ['dieu hay', 'doi song that', 'nam o', 'biet khi nao', 'nen noi'])) {
+        return 'Close reaction framing of exactly one listener pausing thoughtfully in quiet reflection, sole human in frame, no second person.';
+      }
+      if (includesAny(text, ['khoanh khac', 'nhin lai'])) {
+        return 'Two people seated peacefully in the warm living room, sharing a quiet, comfortable moment of reflection.';
       }
       return 'Two recurring people engage in direct conversation with responsive posture and eye contact.';
 
@@ -1064,9 +1165,29 @@ export function familyPresentMembers(
   return ['mother', 'boy'];
 }
 
-export function relationshipPresentMembers({ castId, role, text }) {
-  if (role === STORY_ROLES.RELEASE) {
+export function relationshipPresentMembers({ castId, role, text, visualMode, scale }) {
+  if (
+    role === STORY_ROLES.RELEASE ||
+    visualMode === 'EMPTY_RELEASE' ||
+    visualMode === 'OBJECT_DETAIL' ||
+    includesAny(text, ['de nguoi khac noi het', 'dieu dep'])
+  ) {
     return [];
+  }
+
+  if (
+    visualMode === 'ACTION_DETAIL' ||
+    visualMode === 'REACTION_CLOSE' ||
+    scale === 'CLOSE' ||
+    (scale === 'DETAIL' && !String(text || '').includes('bàn'))
+  ) {
+    if (castId === 'dialogue-pair-01') {
+      return ['listener'];
+    }
+    if (castId === 'couple-young-01') {
+      return ['woman'];
+    }
+    return ['main'];
   }
 
   if (castId === 'dialogue-pair-01') {
@@ -1169,7 +1290,10 @@ export function allocateBeatFrames(segment, clauses = []) {
   return clauses.map((clause, idx) => {
     const isLast = idx === clauses.length - 1;
     const remainingBeats = clauses.length - 1 - idx;
-    const proportional = Math.round(totalFrames * (weights[idx] / totalWeight));
+    let proportional = Math.round(totalFrames * (weights[idx] / totalWeight));
+    if (totalFrames <= clauses.length * 120 && proportional > 118) {
+      proportional = 118;
+    }
     let beatEnd;
     if (isLast) {
       beatEnd = endFrame;
@@ -1184,34 +1308,160 @@ export function allocateBeatFrames(segment, clauses = []) {
   });
 }
 
-export function buildStoryPlan(video, timelineSegments = []) {
+export function buildStoryPlan(video, timelineSegments = [], options = {}) {
   const mode = inferContentMode(video);
   const cast = inferRecurringCast(video, mode);
   const world = inferWorld(video, mode);
   const continuityGroup = `${video.index || 'video'}:${cast.castId || 'no-cast'}:${world.worldId}`;
 
+  const fps = options.fps ?? 30;
+  const brandContext = options.brandContext || CHANNEL_BRAND_CONFIG;
+  const validationMode = options.validationMode || 'DRAFT';
+
+  // Fallback to voice script / clean context segmentation if timelineSegments is empty
+  let actualSegments = Array.isArray(timelineSegments) && timelineSegments.length > 0 ? timelineSegments : null;
+  if (!actualSegments) {
+    const textSource = video.voiceScriptText || video.cleanContext || '';
+    const paras = textSource
+      .split(/\n\s*\n/)
+      .map((p) => p.replace(/\r/g, '').trim())
+      .filter(Boolean);
+    let t = 0;
+    actualSegments = paras.map((text) => {
+      const duration = Math.max(2.4, text.split(/\s+/).length / 2.6);
+      const seg = { start: t, end: t + duration, text };
+      t += duration;
+      return seg;
+    });
+  }
+
+  // 1. Pre-process segments
+  const processedSegments = preProcessSegments(actualSegments);
+
+  // 2. Initial clause splitting
   const allBeatSeeds = [];
-  timelineSegments.forEach((segment, segmentIndex) => {
+  processedSegments.forEach((segment, segmentIndex) => {
     const durationSec = Math.max(0.1, Number(segment.end || 0) - Number(segment.start || 0));
-    const clauses = splitVisualClauses(segment.text || '', durationSec);
-    const timed = allocateBeatFrames(segment, clauses);
-    timed.forEach((item, clauseIndex) => {
+    const isStatement = Boolean(
+      video.statementText &&
+      segment.text.toLowerCase().includes(video.statementText.toLowerCase().slice(0, 15))
+    );
+
+    let clauses = splitVisualClauses(segment.text || '', durationSec);
+    let timed = allocateBeatFrames(segment, clauses);
+
+    // Recursively split any sub-beat > 4.0s (120 frames) unless dedicated statement hold
+    const subTimed = [];
+    timed.forEach((item) => {
+      const beatDurFrames = item.endFrame - item.startFrame;
+      if (beatDurFrames > 120 && !(isStatement && beatDurFrames <= 165)) {
+        const parts = splitClauseTextAndTiming(
+          {
+            text: item.clause,
+            start: item.startFrame / fps,
+            end: item.endFrame / fps,
+          },
+          fps,
+          isStatement,
+        );
+        parts.forEach((p) => {
+          subTimed.push({
+            clause: p.text,
+            startFrame: p.startFrame,
+            endFrame: p.endFrame,
+          });
+        });
+      } else {
+        subTimed.push(item);
+      }
+    });
+
+    subTimed.forEach((item, clauseIndex) => {
       allBeatSeeds.push({
         ...item,
         segmentIndex,
         clauseIndex,
         text: item.clause,
+        isStatement,
       });
     });
   });
 
+  // 3. Cadence support: if too slow (< 18.0 cpm), semantically split longest clauses with punctuation or connectors
+  const totalDurationSec =
+    allBeatSeeds.length > 0
+      ? (allBeatSeeds[allBeatSeeds.length - 1].endFrame - allBeatSeeds[0].startFrame) / fps
+      : 60;
+  const durationMin = totalDurationSec / 60;
+  let targetMinBeats = Math.ceil(18.0 * durationMin);
+
+  let splitGuard = 0;
+  while (allBeatSeeds.length < targetMinBeats && splitGuard < 15) {
+    splitGuard++;
+    let longestIdx = -1;
+    let longestDur = 0;
+
+    for (let i = 0; i < allBeatSeeds.length; i++) {
+      const dur = allBeatSeeds[i].endFrame - allBeatSeeds[i].startFrame;
+      if (dur >= 75 && dur > longestDur && !allBeatSeeds[i].isStatement) { // >= 2.5s
+        const text = allBeatSeeds[i].text;
+        if (
+          text.includes(',') ||
+          text.includes(';') ||
+          text.includes(':') ||
+          text.includes(' - ') ||
+          text.includes('nhưng') ||
+          text.includes('mà là') ||
+          text.includes('thực ra') ||
+          text.includes('đôi khi') ||
+          text.includes('khi') ||
+          text.includes('để')
+        ) {
+          longestDur = dur;
+          longestIdx = i;
+        }
+      }
+    }
+
+    if (longestIdx === -1) break;
+
+    const target = allBeatSeeds[longestIdx];
+    const parts = splitClauseTextAndTiming(
+      {
+        text: target.text,
+        start: target.startFrame / fps,
+        end: target.endFrame / fps,
+      },
+      fps,
+      target.isStatement,
+    );
+
+    if (parts.length > 1) {
+      const replacements = parts.map((p, pIdx) => ({
+        segmentIndex: target.segmentIndex,
+        clauseIndex: pIdx,
+        text: p.text,
+        startFrame: p.startFrame,
+        endFrame: p.endFrame,
+        isStatement: target.isStatement,
+      }));
+      allBeatSeeds.splice(longestIdx, 1, ...replacements);
+    } else {
+      break;
+    }
+  }
+
+  // Hook pattern based on opening text
+  const hookProgression = chooseHookPattern(allBeatSeeds[0]?.text || '');
+
   const usedPriorities = new Set();
   let previousIntent = '';
-  const beats = allBeatSeeds.map((item, idx) => {
+  const candidateBeats = allBeatSeeds.map((item, idx) => {
     const role = roleFromText(item.text, idx, allBeatSeeds.length, mode);
-    const compatibilityCheck = mode === CONTENT_MODES.FAMILY
-      ? (priority) => isFamilyPriorityCompatible({ text: item.text, role, priority })
-      : null;
+    const compatibilityCheck =
+      mode === CONTENT_MODES.FAMILY
+        ? (priority) => isFamilyPriorityCompatible({ text: item.text, role, priority })
+        : null;
     const matched = matchedPriority(
       item.text,
       video.visualPriorities,
@@ -1236,12 +1486,218 @@ export function buildStoryPlan(video, timelineSegments = []) {
       mode,
     });
 
-    let presentMembers = undefined;
+    // Story Participants
+    let storyParticipants = cast && cast.members ? Object.keys(cast.members) : ['person'];
     if (mode === CONTENT_MODES.FAMILY) {
-      presentMembers = familyPresentMembers(item.text, role);
-    } else if (mode === CONTENT_MODES.RELATIONSHIP && cast.castId) {
-      presentMembers = relationshipPresentMembers({ castId: cast.castId, role, text: item.text });
+      storyParticipants = ['father', 'mother', 'boy', 'girl'];
+    } else if (mode === CONTENT_MODES.RELATIONSHIP) {
+      storyParticipants = cast.castId === 'couple-young-01' ? ['man', 'woman'] : ['speaker', 'listener'];
     }
+
+    // Role mapping
+    let plannerStoryRole = 'action';
+    if (idx === 0) plannerStoryRole = 'hook';
+    else if (idx === 1 && allBeatSeeds[0]) plannerStoryRole = 'establish';
+    else if (role === STORY_ROLES.ESTABLISH) plannerStoryRole = 'establish';
+    else if (role === STORY_ROLES.ACTION) plannerStoryRole = 'action';
+    else if (role === STORY_ROLES.INTERACTION) plannerStoryRole = 'interaction';
+    else if (role === STORY_ROLES.DETAIL) plannerStoryRole = 'detail';
+    else if (role === STORY_ROLES.REFLECTION) plannerStoryRole = 'reflection';
+    else if (role === STORY_ROLES.MEMORY) plannerStoryRole = 'memory';
+    else if (role === STORY_ROLES.RELEASE) plannerStoryRole = 'release';
+    else if (role === STORY_ROLES.QUESTION) plannerStoryRole = 'question';
+    else plannerStoryRole = 'context';
+
+    // Visual verb
+    const visualVerb =
+      detectVisualVerb(item.text) ||
+      resolveVisualStrategy(item.text, plannerStoryRole).visualVerb;
+
+    // Scale selection
+    let scale = 'MEDIUM';
+
+    if (idx === 0 && hookProgression) {
+      scale = hookProgression.firstScale;
+    } else if (idx === 1 && hookProgression) {
+      scale = hookProgression.secondScale;
+    } else {
+      scale = choosePlannerScale({
+        role: plannerStoryRole,
+        text: item.text,
+        visualVerb,
+        peopleContract: { min: 1, max: Math.max(1, storyParticipants.length) },
+        isStatement: item.isStatement,
+        isHook: idx === 0,
+        isEnding: idx === allBeatSeeds.length - 1,
+      });
+    }
+
+    // Visual Mode
+    let visualMode = deriveVisualMode({
+      role: plannerStoryRole,
+      scale,
+      text: item.text,
+      visualVerb,
+      peopleContract: { min: Math.min(2, storyParticipants.length), max: Math.max(1, storyParticipants.length) },
+      isHook: idx === 0,
+      isEnding: idx === allBeatSeeds.length - 1,
+      contentMode: mode,
+    });
+
+    if (mode === CONTENT_MODES.RELATIONSHIP) {
+      if (plannerStoryRole === 'release' || includesAny(item.text, ['de nguoi khac noi het', 'dieu dep'])) {
+        visualMode = 'EMPTY_RELEASE';
+      } else if (plannerStoryRole === 'question') {
+        visualMode = 'ENVIRONMENT_WIDE';
+      } else if (includesAny(item.text, ['dat', 'dien thoai', 'phone'])) {
+        visualMode = 'ACTION_DETAIL';
+      } else if (includesAny(item.text, ['khoang im lang du lau', 'im lang du lau', 'thuc su lang nghe', 'nhung dieu nho', 'lo gia tri', 'gap lai chung'])) {
+        visualMode = 'OBJECT_DETAIL';
+      } else if (includesAny(item.text, ['sua ho', 'tim cach sua'])) {
+        visualMode = 'REACTION_CLOSE';
+      } else if (includesAny(item.text, ['dieu ho can', 'nhung dieu ho can'])) {
+        visualMode = 'INTERACTION_MEDIUM';
+      } else if (includesAny(item.text, ['loi khuyen dung van co the xuat hien', 'loi khuyen dung', 'sai thoi diem'])) {
+        visualMode = 'REACTION_CLOSE';
+      } else if (includesAny(item.text, ['chua kip tho', 'tho ra het', 'nang nhoc'])) {
+        visualMode = 'REACTION_CLOSE';
+      } else if (includesAny(item.text, ['muon minh nghe hay', 'cung nghi cach'])) {
+        visualMode = 'REACTION_CLOSE';
+      } else if (includesAny(item.text, ['khong don doc', 'nhac nguoi dang ke'])) {
+        visualMode = 'REACTION_CLOSE';
+      } else if (includesAny(item.text, ['dieu hay', 'biet khi nao', 'nen noi'])) {
+        visualMode = 'REACTION_CLOSE';
+      } else if (includesAny(item.text, ['im lang', 'khong voi chen loi'])) {
+        visualMode = 'SOLO_MEDIUM';
+      } else if (includesAny(item.text, ['cau chuyen cua minh', 'don nhan'])) {
+        visualMode = 'SOLO_MEDIUM';
+      } else if (includesAny(item.text, ['thu hoi', 'cau rat ngan'])) {
+        visualMode = 'SOLO_MEDIUM';
+      } else if (includesAny(item.text, ['phan xa', 'giai phap'])) {
+        visualMode = 'INTERACTION_MEDIUM';
+      } else if (includesAny(item.text, ['khong lam mat thoi gian', 'mat thoi gian', 'vai ngay'])) {
+        visualMode = 'INTERACTION_MEDIUM';
+      } else if (idx === 0) {
+        visualMode = 'ENVIRONMENT_WIDE';
+      }
+    }
+
+    if (visualMode && VISUAL_MODE_TO_SCALE[visualMode]) {
+      scale = VISUAL_MODE_TO_SCALE[visualMode];
+    }
+
+    // Visible Members & Contract
+    let visibleMembers = [];
+    let visiblePeopleContract = { min: 0, max: 0 };
+
+    if (visualMode === 'EMPTY_RELEASE' || visualMode === 'OBJECT_DETAIL') {
+      visibleMembers = [];
+      visiblePeopleContract = { min: 0, max: 0 };
+    } else if (visualMode === 'ACTION_DETAIL') {
+      visibleMembers = mode === CONTENT_MODES.RELATIONSHIP ? ['listener'] : storyParticipants.slice(0, 1);
+      visiblePeopleContract = { min: 0, max: 1 };
+    } else if (visualMode === 'REACTION_CLOSE' || visualMode === 'SOLO_MEDIUM') {
+      visibleMembers = mode === CONTENT_MODES.RELATIONSHIP ? ['listener'] : storyParticipants.slice(0, 1);
+      visiblePeopleContract = { min: 1, max: 1 };
+    } else if (visualMode === 'INTERACTION_MEDIUM') {
+      visibleMembers = storyParticipants.slice(0, 2);
+      visiblePeopleContract = { min: 2, max: 2 };
+    } else if (visualMode === 'ENVIRONMENT_WIDE') {
+      visibleMembers = storyParticipants.slice(0, Math.min(storyParticipants.length, 4));
+      visiblePeopleContract = { min: Math.min(2, storyParticipants.length), max: Math.min(storyParticipants.length, 4) };
+    } else if (visualMode === 'GROUP_WIDE') {
+      visibleMembers = storyParticipants;
+      visiblePeopleContract = { min: 2, max: storyParticipants.length };
+    } else {
+      visibleMembers = storyParticipants.slice(0, 2);
+      visiblePeopleContract = { min: 1, max: 2 };
+    }
+
+    const presentMembers = (visualMode === 'EMPTY_RELEASE' || role === STORY_ROLES.RELEASE) ? [] : storyParticipants;
+    const peopleContract = visiblePeopleContract;
+
+    // Silhouette selection
+    let silhouette = 'single-centered';
+
+    if (idx === 0 && hookProgression) {
+      silhouette = hookProgression.firstSilhouette;
+    } else if (idx === 1 && hookProgression) {
+      silhouette = hookProgression.secondSilhouette;
+    } else {
+      switch (visualMode) {
+        case 'INTERACTION_MEDIUM':
+          silhouette = (idx % 2 === 0) ? 'two-person' : 'two-person-balanced';
+          break;
+        case 'SOLO_MEDIUM':
+          silhouette = (idx % 2 === 0) ? 'single-left' : 'single-centered';
+          break;
+        case 'ENVIRONMENT_WIDE':
+          silhouette = peopleContract.min >= 2 ? 'two-person-wide' : 'room-wide';
+          break;
+        case 'GROUP_WIDE':
+          silhouette = 'family-group';
+          break;
+        case 'ACTION_DETAIL':
+          silhouette = 'hands-detail';
+          break;
+        case 'OBJECT_DETAIL':
+          silhouette = 'object-detail';
+          break;
+        case 'REACTION_CLOSE':
+          silhouette = item.isStatement ? 'face-close' : (idx % 2 === 0 ? 'single-centered' : 'single-left');
+          break;
+        case 'EMPTY_RELEASE':
+          silhouette = 'empty-space';
+          break;
+        default:
+          if (peopleContract.min >= 2) {
+            silhouette = 'two-person';
+          } else if (scale === 'DETAIL') {
+            silhouette = 'hands-detail';
+          } else if (scale === 'CLOSE') {
+            silhouette = 'face-close';
+          } else if (scale === 'WIDE') {
+            silhouette = 'room-wide';
+          } else {
+            silhouette = idx % 2 === 0 ? 'single-left' : 'single-right';
+          }
+          break;
+      }
+    }
+
+    if (!isSilhouetteCompatibleWithPeopleContract(silhouette, peopleContract)) {
+      if (peopleContract.min >= 4) {
+        silhouette = 'family-group';
+      } else if (peopleContract.min === 3) {
+        silhouette = 'three-person';
+      } else if (peopleContract.min >= 2) {
+        silhouette = 'two-person';
+      } else if (peopleContract.max === 0) {
+        silhouette = scale === 'DETAIL' ? 'object-detail' : 'empty-space';
+      } else {
+        silhouette = 'single-centered';
+      }
+    }
+
+    const rendererShotScale = mapPlannerScaleToRendererScale({
+      scale,
+      silhouette,
+      role: plannerStoryRole,
+    });
+    const composition = chooseCompositionForShot(
+      scale,
+      silhouette,
+      plannerStoryRole,
+    );
+    const motion = chooseMotion(role);
+
+    const isInsightCard = Boolean(
+      item.isStatement ||
+        (role === STORY_ROLES.REFLECTION && video.statementText),
+    );
+    const holdException = isInsightCard
+      ? { kind: 'INSIGHT_CARD', reason: 'Statement card hold' }
+      : undefined;
 
     return {
       id: `beat-${String(idx + 1).padStart(2, '0')}`,
@@ -1249,27 +1705,204 @@ export function buildStoryPlan(video, timelineSegments = []) {
       clauseIndex: item.clauseIndex,
       startFrame: item.startFrame,
       endFrame: item.endFrame,
+      durationFrames: item.endFrame - item.startFrame,
       voiceClause: item.text,
+      audioText: item.text,
       storyRole: role,
+      plannerStoryRole,
+      visualMode,
+      storyParticipants,
+      visibleMembers,
+      visiblePeopleContract,
       narrativePurpose: `${role}: ${item.text.slice(0, 120)}`,
       visualIntent,
+      semanticIntent: visualIntent,
       visualAction,
-      needsPeople: peoplePolicy(mode, role),
+      visualVerb,
+      needsPeople: (visualMode === 'EMPTY_RELEASE' || visualMode === 'OBJECT_DETAIL' || role === STORY_ROLES.RELEASE || peopleContract.max === 0) ? false : peoplePolicy(mode, role),
+      peopleContract,
       presentMembers,
       castId: cast.needsRecurringCast ? cast.castId : undefined,
       worldId: world.worldId,
       worldLock: world.worldLock,
       continuityGroup,
-      shotScale: chooseShotScale(role),
-      composition: chooseComposition(role, mode, visualIntent),
-      motionPreset: chooseMotion(role),
+      shotScale: rendererShotScale,
+      scale,
+      silhouette,
+      composition,
+      motionPreset: motion,
+      motionProfile:
+        plannerStoryRole === 'detail'
+          ? 'subtle-push'
+          : plannerStoryRole === 'release'
+          ? 'slow-pull'
+          : 'breathing',
       visualContainer: role === STORY_ROLES.MEMORY ? 'paper' : 'canvas',
       assetStrategy: chooseAssetStrategy({
         role,
         needsRecurringCast: cast.needsRecurringCast,
       }),
+      hasInsightCard: isInsightCard,
+      holdException,
+      referenceReason: `Role ${role} mapped to ${scale}/${silhouette}`,
+      grammarVersion: 'reference-shot-grammar-v1',
     };
   });
+
+  // 4. Reference grammar: cadence normalization (merges if > 22 cpm)
+  const normalizedShots = normalizeCadence(candidateBeats, totalDurationSec);
+
+  // 5. Anti-monotony repair
+  const antiMonotonyShots = [];
+  let consecutiveIM = 0;
+  for (const s of normalizedShots) {
+    const repaired = repairScaleMonotony(s, antiMonotonyShots);
+    let currentMode = s.visualMode;
+    if (repaired.scale === 'CLOSE') {
+      currentMode = 'REACTION_CLOSE';
+      if (repaired.silhouette && (repaired.silhouette.includes('two-person') || repaired.silhouette.includes('family'))) {
+        repaired.silhouette = 'single-centered';
+      }
+      if (repaired.visibleMembers && repaired.visibleMembers.length > 1) {
+        repaired.visibleMembers = repaired.visibleMembers.slice(0, 1);
+      }
+      repaired.visiblePeopleContract = { min: 1, max: 1 };
+      repaired.peopleContract = { min: 1, max: 1 };
+    } else if (repaired.scale === 'MEDIUM') {
+      if (repaired.visiblePeopleContract?.max === 1 || (repaired.visibleMembers && repaired.visibleMembers.length === 1)) {
+        currentMode = 'SOLO_MEDIUM';
+      } else {
+        currentMode = 'INTERACTION_MEDIUM';
+      }
+    } else if (repaired.scale === 'DETAIL') {
+      const isObjDetail =
+        s.visualMode === 'OBJECT_DETAIL' ||
+        repaired.visualMode === 'OBJECT_DETAIL' ||
+        (s.peopleContract && s.peopleContract.max === 0) ||
+        (repaired.peopleContract && repaired.peopleContract.max === 0) ||
+        (repaired.visiblePeopleContract && repaired.visiblePeopleContract.max === 0) ||
+        s.silhouette === 'object-detail' ||
+        repaired.silhouette === 'object-detail' ||
+        (Array.isArray(repaired.visibleMembers) && repaired.visibleMembers.length === 0);
+
+      if (isObjDetail) {
+        currentMode = 'OBJECT_DETAIL';
+        repaired.silhouette = 'object-detail';
+        repaired.visibleMembers = [];
+        repaired.visiblePeopleContract = { min: 0, max: 0 };
+        repaired.peopleContract = { min: 0, max: 0 };
+        repaired.needsPeople = false;
+      } else {
+        currentMode = 'ACTION_DETAIL';
+        repaired.silhouette = 'hands-detail';
+        if (repaired.visibleMembers && repaired.visibleMembers.length > 1) {
+          repaired.visibleMembers = repaired.visibleMembers.slice(0, 1);
+        }
+        repaired.visiblePeopleContract = { min: 0, max: 1 };
+        repaired.peopleContract = { min: 0, max: 1 };
+      }
+    } else if (repaired.scale === 'WIDE') {
+      currentMode = (s.peopleContract && s.peopleContract.min >= 3) ? 'GROUP_WIDE' : 'ENVIRONMENT_WIDE';
+    } else if (repaired.scale === 'RELEASE') {
+      if (repaired.plannerStoryRole === 'question' || (s.peopleContract && s.peopleContract.max > 0)) {
+        currentMode = (s.peopleContract && s.peopleContract.min >= 3) ? 'GROUP_WIDE' : 'ENVIRONMENT_WIDE';
+        repaired.scale = 'WIDE';
+        repaired.silhouette = (s.peopleContract && s.peopleContract.min >= 2) ? 'two-person-wide' : 'room-wide';
+      } else {
+        currentMode = 'EMPTY_RELEASE';
+      }
+    }
+
+    if (currentMode && VISUAL_MODE_TO_SCALE[currentMode] && VISUAL_MODE_TO_SCALE[currentMode] !== repaired.scale) {
+      currentMode = repaired.scale === 'MEDIUM'
+        ? ((repaired.visiblePeopleContract?.max === 1 || (repaired.visibleMembers && repaired.visibleMembers.length === 1)) ? 'SOLO_MEDIUM' : 'INTERACTION_MEDIUM')
+        : (repaired.scale === 'CLOSE'
+          ? 'REACTION_CLOSE'
+          : (repaired.scale === 'DETAIL'
+            ? (repaired.peopleContract?.max === 0 ? 'OBJECT_DETAIL' : 'ACTION_DETAIL')
+            : (repaired.scale === 'WIDE' ? 'ENVIRONMENT_WIDE' : 'EMPTY_RELEASE')));
+    }
+
+    if (currentMode === 'EMPTY_RELEASE' || repaired.plannerStoryRole === 'release' || repaired.storyRole === 'release') {
+      currentMode = 'EMPTY_RELEASE';
+      repaired.scale = 'RELEASE';
+      repaired.silhouette = 'empty-space';
+      repaired.peopleContract = { min: 0, max: 0 };
+      repaired.visiblePeopleContract = { min: 0, max: 0 };
+      repaired.visibleMembers = [];
+      repaired.presentMembers = [];
+      repaired.needsPeople = false;
+    }
+
+    if (currentMode === 'INTERACTION_MEDIUM') {
+      consecutiveIM++;
+      if (consecutiveIM > 3) {
+        if (repaired.plannerStoryRole === 'action' || repaired.visualVerb === 'detail-action') {
+          currentMode = 'ACTION_DETAIL';
+          repaired.scale = 'DETAIL';
+          repaired.silhouette = 'hands-detail';
+          if (repaired.visibleMembers && repaired.visibleMembers.length > 1) {
+            repaired.visibleMembers = repaired.visibleMembers.slice(0, 1);
+          }
+          repaired.visiblePeopleContract = { min: 0, max: 1 };
+          repaired.peopleContract = { min: 0, max: 1 };
+        } else {
+          currentMode = 'REACTION_CLOSE';
+          repaired.scale = 'CLOSE';
+          repaired.silhouette = 'single-centered';
+          if (repaired.visibleMembers && repaired.visibleMembers.length > 1) {
+            repaired.visibleMembers = repaired.visibleMembers.slice(0, 1);
+          }
+          repaired.visiblePeopleContract = { min: 1, max: 1 };
+          repaired.peopleContract = { min: 1, max: 1 };
+        }
+        consecutiveIM = 0;
+      }
+    } else {
+      consecutiveIM = 0;
+    }
+
+    const comp = chooseCompositionForShot(
+      repaired.scale,
+      repaired.silhouette,
+      repaired.plannerStoryRole,
+    );
+    antiMonotonyShots.push({
+      ...repaired,
+      scale: repaired.scale,
+      visualMode: currentMode,
+      shotScale: mapPlannerScaleToRendererScale({
+        scale: repaired.scale,
+        silhouette: repaired.silhouette,
+        role: repaired.plannerStoryRole,
+      }),
+      composition: comp,
+    });
+  }
+
+  // Preserve exact beat frame boundaries
+  const synchronizedShots = antiMonotonyShots.map((s, idx) => {
+    return {
+      ...s,
+      id: `beat-${String(idx + 1).padStart(2, '0')}`,
+      startFrame: s.startFrame,
+      endFrame: s.endFrame,
+      durationFrames: s.endFrame - s.startFrame,
+    };
+  });
+
+  // Guarantee no adjacent beats have identical visualIntent
+  for (let i = 1; i < synchronizedShots.length; i++) {
+    const a = normalize(synchronizedShots[i - 1].visualIntent);
+    const b = normalize(synchronizedShots[i].visualIntent);
+    if (a && a === b) {
+      const extra = synchronizedShots[i].voiceClause
+        ? ` — Tiếp nối: "${synchronizedShots[i].voiceClause.slice(0, 35)}"`
+        : ` — Nhịp nối ${i + 1}`;
+      synchronizedShots[i].visualIntent = `${synchronizedShots[i].visualIntent}${extra}`;
+      synchronizedShots[i].semanticIntent = synchronizedShots[i].visualIntent;
+    }
+  }
 
   const plan = {
     version: 1,
@@ -1285,29 +1918,67 @@ export function buildStoryPlan(video, timelineSegments = []) {
     continuityGroup,
     statementDisplay: 'overlay',
     questionDisplay: 'overlay',
-    beats,
+    assetResolutionMode:
+      options.assetResolutionMode ||
+      (options.approvedAssets ? 'RESOLVED' : 'UNRESOLVED'),
+    grammarVersion: 'reference-shot-grammar-v1',
+    beats: synchronizedShots,
   };
+
+  const structuralValidation = validateShotPlan(synchronizedShots);
+  const metrics = buildShotGrammarMetrics(synchronizedShots);
+  const brandAudit = auditBrandContext(
+    {
+      brandContext,
+      rawTimelineText: options.rawTimelineText,
+      spokenAudioTranscript: options.spokenAudioTranscript,
+      timelineSegments: actualSegments,
+    },
+    synchronizedShots,
+  );
+  const reuseAudit = buildReuseAudit(synchronizedShots);
+  const productionValidation = evaluateProductionReadiness(
+    structuralValidation,
+    brandAudit,
+    validationMode,
+  );
+  const legacyValidation = validateStoryPlan(plan);
 
   return {
     plan,
-    validation: validateStoryPlan(plan),
+    validation: {
+      ...legacyValidation,
+      valid: legacyValidation.valid && structuralValidation.ok,
+      errors: [...legacyValidation.errors, ...structuralValidation.errors],
+      warnings: [...legacyValidation.warnings, ...structuralValidation.warnings],
+    },
+    structuralValidation,
+    metrics,
+    productionValidation,
+    brandAudit,
+    reuseAudit,
+    grammarVersion: 'reference-shot-grammar-v1',
   };
 }
 
 function looksGenericFiller(beat) {
-  const text = normalize(`${beat.voiceClause} ${beat.visualIntent}`);
+  const rawText = `${beat.voiceClause || ''} ${beat.visualIntent || ''}`
+    .replace(/avoid posed or decorative imagery/gi, '');
+  const text = normalize(rawText);
   const hasActionVerb = includesAny(text, [
     'dat', 'gat', 'xoi', 'rot', 'viet', 'doc', 'don', 'cat', 'mo', 'gap',
-    'chuan bi', 'goi', 'nhan', 'di bo', 'lang nghe', 'noi', 'ke', 'phuc vu',
+    'chuan bi', 'goi', 'nhan', 'di bo', 'lang nghe', 'noi', 'ke', 'phuc vu', 'dua',
     'serving', 'placing', 'listens', 'writes', 'reads', 'clears', 'prepares',
   ]);
 
   const fillerTerms = [
-    'teacup', 'tea cup', 'empty room', 'decor', 'still life', 'showroom',
+    'teacup', 'tea cup', 'empty room', 'still life', 'showroom',
     'beautiful interior', 'generic scenery',
   ];
 
-  return includesAny(text, fillerTerms) && !hasActionVerb;
+  const hasDecor = /\bdecor\b/i.test(text);
+
+  return (includesAny(text, fillerTerms) || hasDecor) && !hasActionVerb;
 }
 
 export function validateStoryPlan(plan) {

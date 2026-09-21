@@ -26,6 +26,17 @@ export { OutroCard } from './OutroCard';
 export type { OutroCardProps } from './OutroCard';
 
 export {
+  CINEMATIC_LIGHT_DEPENDENCIES,
+  resolveEffectiveTemplateConfig,
+  resolveTemplateDependencies,
+} from './templateDependencies';
+export type {
+  TemplateStaticDependencyContract,
+  EffectiveTemplateConfig,
+  DependencyResolverOptions,
+} from './templateDependencies';
+
+export {
   COLORS,
   FONT_MAIN,
   LAYOUT,

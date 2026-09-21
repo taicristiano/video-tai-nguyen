@@ -9,6 +9,9 @@ import {
   buildCanonicalApproximateTimeline,
   tokenizeCanonicalScript,
 } from './subtitle-canonical-aligner.mjs';
+import { buildStoryPlan } from './human-insight-story-planner.mjs';
+import { CHANNEL_BRAND_CONFIG } from '../src/templates/human-insight/cinematic-light/storyPlannerRuntime.mjs';
+import { mapPlannerScaleToRendererScale } from '../src/templates/human-insight/cinematic-light/referenceShotGrammarRuntime.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
@@ -238,8 +241,33 @@ function resolveBeatAsset({
     args.push('--no-people');
   }
 
+  if (beat.peopleContract) {
+    if (typeof beat.peopleContract.min === 'number') {
+      args.push('--people-min', String(beat.peopleContract.min));
+    }
+    if (typeof beat.peopleContract.max === 'number') {
+      args.push('--people-max', String(beat.peopleContract.max));
+    }
+  }
+
   if (Array.isArray(beat.presentMembers) && beat.presentMembers.length > 0) {
     args.push('--present-members', beat.presentMembers.join(','));
+  }
+
+  if (beat.scale) {
+    args.push('--scale', beat.scale);
+  }
+  if (beat.silhouette) {
+    args.push('--silhouette', beat.silhouette);
+  }
+  if (beat.visualVerb) {
+    args.push('--visual-verb', beat.visualVerb);
+  }
+  if (beat.semanticIntent) {
+    args.push('--semantic-intent', beat.semanticIntent);
+  }
+  if (beat.visualMode) {
+    args.push('--visual-mode', beat.visualMode);
   }
 
   const result = spawnSync(
@@ -269,255 +297,31 @@ function resolveBeatAsset({
   };
 }
 
-export async function processVideo(videoData, { force = false } = {}) {
-  const {
-    index,
-    part,
-    title,
-    series,
-    category,
-    cleanContext,
-    voiceScriptText,
-    statementText,
-    visualPriorities,
-  } = videoData;
-  console.log(`\n======================================================`);
-  console.log(`▶ [Video ${index}/100] (Part ${part}): ${title}`);
-  console.log(`======================================================`);
-
-  const slug = deriveSlug(cleanContext);
-  console.log(`Slug: ${slug}`);
-
-  const videosDir = path.join(ROOT, 'videos', slug);
-  const videoMp4Path = path.join(videosDir, 'video.mp4');
-
-  if (!force && fs.existsSync(videoMp4Path)) {
-    const stat = fs.statSync(videoMp4Path);
-    if (stat.size > 1000000) {
-      console.log(`✅ video.mp4 already exists (${(stat.size / 1024 / 1024).toFixed(1)} MB). Skipping to next video.`);
-      return { slug, videoMp4Path, skipped: true };
-    }
-  }
-
-  const publicDir = path.join(ROOT, 'public', slug);
-  const scriptDir = path.join(videosDir, 'script');
-  fs.mkdirSync(scriptDir, { recursive: true });
-  fs.mkdirSync(publicDir, { recursive: true });
-
-  // Step 1: Setup artifacts
-  fs.writeFileSync(path.join(videosDir, 'context.txt'), cleanContext, 'utf-8');
-  fs.writeFileSync(path.join(videosDir, 'template.txt'), 'human-insight/cinematic-light', 'utf-8');
-  fs.writeFileSync(path.join(videosDir, 'audio.txt'), 'full', 'utf-8');
-
-  // Step 2 & 3: Planner & Teller
-  const rawParas = voiceScriptText
-    .split(/\n\s*\n/)
-    .map(p => p.replace(/\r/g, '').trim())
-    .filter(Boolean);
-
-  const scriptItems = [];
-  rawParas.forEach((p, idx) => {
-    if (idx === 0) {
-      scriptItems.push({ text: p, type: 'hook' });
-    } else if (idx === rawParas.length - 1) {
-      // Keep voice script intact from prompt; interactive question remains the last sentence
-      // Branding appears visually only on OutroCard
-      scriptItems.push({ text: p, type: 'ending' });
-    } else {
-      scriptItems.push({ text: p, type: 'body' });
-    }
-  });
-
-  const scriptPath = path.join(scriptDir, 'script.json');
-  fs.writeFileSync(scriptPath, JSON.stringify({ script: scriptItems }, null, 2), 'utf-8');
-
-  const planData = {
-    title,
-    hook: rawParas[0] || '',
-    segments: rawParas.slice(1, -1).map((text, i) => ({
-      title: `Ý ${i + 1}`,
-      content_summary: text
-    })),
-    ending: rawParas[rawParas.length - 1] || '',
-    estimated_duration: 75
-  };
-  fs.writeFileSync(path.join(videosDir, 'plan.json'), JSON.stringify(planData, null, 2), 'utf-8');
-
-  // Step 4: TTS
-  const voiceMp3Path = path.join(publicDir, 'voice.mp3');
-  if (!fs.existsSync(voiceMp3Path)) {
-    console.log(`🎙 Running TTS for ${slug}...`);
-    execWithRetry(`node scripts/tts.mjs "videos/${slug}/script/script.json" "${slug}"`);
-  } else {
-    console.log(`🎙 Reusing existing voice.mp3`);
-  }
-
-  // Step 5: Transcribe
-  const timelineJsonPath = path.join(publicDir, 'timeline.json');
-  const rawTimelineJsonPath = path.join(publicDir, 'timeline-stt-raw.json');
-  if (!fs.existsSync(timelineJsonPath)) {
-    console.log(`🎧 Running Transcribe for ${slug}...`);
-    execWithRetry(`node scripts/transcribe.mjs "${slug}"`);
-  } else {
-    console.log(`🎧 Reusing existing timeline.json`);
-  }
-
-  // Step 5b: Canonical Subtitle Alignment (Source A: voiceScriptText, Source B: STT timing)
-  if (!fs.existsSync(rawTimelineJsonPath)) {
-    fs.copyFileSync(timelineJsonPath, rawTimelineJsonPath);
-  }
-
-  const rawTimeline = JSON.parse(fs.readFileSync(rawTimelineJsonPath, 'utf-8'));
-  let alignedTimeline;
-  let alignmentDiffs = [];
-  let alignmentMetrics;
-
-  try {
-    const res = buildCanonicalTimeline({
-      canonicalText: voiceScriptText,
-      sttTimeline: rawTimeline,
-    });
-    alignedTimeline = res.timeline;
-    alignmentDiffs = res.diffs;
-    alignmentMetrics = res.metrics;
-  } catch (alignErr) {
-    console.warn(`   ⚠️ Canonical alignment error: ${alignErr.message}. Falling back to CANONICAL_APPROXIMATE.`);
-    alignedTimeline = buildCanonicalApproximateTimeline({
-      canonicalText: voiceScriptText,
-      sttTimeline: rawTimeline,
-    });
-    const canonicalTokens = tokenizeCanonicalScript(voiceScriptText);
-    alignmentMetrics = {
-      canonicalTokenCount: canonicalTokens.length,
-      sttTokenCount: Array.isArray(rawTimeline?.words) ? rawTimeline.words.length : 0,
-      exactMatches: 0,
-      fuzzyMatches: 0,
-      contextSubstitutions: 0,
-      interpolatedTokens: 0,
-      ignoredSttTokens: 0,
-      evidenceRatio: 0,
-      substitutionRatio: 0,
-      interpolationRatio: 0,
-      ignoredSttRatio: 0,
-      canonicalTextIntegrity: true,
-      alignmentStatus: 'DEGRADED',
-      timingMode: 'CANONICAL_APPROXIMATE',
-      validationErrors: [`Alignment exception: ${alignErr.message}`],
-      canonicalIntegrity: true,
-    };
-  }
-
-  fs.writeFileSync(timelineJsonPath, JSON.stringify(alignedTimeline, null, 2), 'utf-8');
-
-  // QA Artifacts: Report and Diff
-  fs.writeFileSync(
-    path.join(videosDir, 'subtitle-alignment-report.json'),
-    JSON.stringify(alignmentMetrics, null, 2),
-    'utf-8',
+export function beatCoversSegment(beat, segmentIndex) {
+  return (
+    beat.segmentIndex === segmentIndex ||
+    (Array.isArray(beat.continuedInSegments) && beat.continuedInSegments.includes(segmentIndex))
   );
+}
 
-  const diffMdLines = [
-    '# Subtitle Alignment Diff',
-    '',
-    `- **Video Slug**: \`${slug}\``,
-    `- **Canonical Tokens**: ${alignmentMetrics.canonicalTokenCount}`,
-    `- **STT Tokens**: ${alignmentMetrics.sttTokenCount}`,
-    `- **Exact Matches**: ${alignmentMetrics.exactMatches}`,
-    `- **Fuzzy Matches**: ${alignmentMetrics.fuzzyMatches}`,
-    `- **Context Substitutions**: ${alignmentMetrics.contextSubstitutions}`,
-    `- **Interpolated Tokens**: ${alignmentMetrics.interpolatedTokens}`,
-    `- **Ignored STT Tokens**: ${alignmentMetrics.ignoredSttTokens}`,
-    `- **Evidence Ratio**: ${alignmentMetrics.evidenceRatio}`,
-    `- **Substitution Ratio**: ${alignmentMetrics.substitutionRatio}`,
-    `- **Interpolation Ratio**: ${alignmentMetrics.interpolationRatio}`,
-    `- **Ignored STT Ratio**: ${alignmentMetrics.ignoredSttRatio}`,
-    `- **Canonical Text Integrity**: ${alignmentMetrics.canonicalTextIntegrity ? 'PASS' : 'FAIL'}`,
-    `- **Alignment Status**: \`${alignmentMetrics.alignmentStatus}\``,
-    `- **Timing Mode**: \`${alignmentMetrics.timingMode}\``,
-    '',
-    '## Differences',
-    '',
-  ];
-
-  if (alignmentDiffs.length === 0) {
-    diffMdLines.push('No differences found. STT text perfectly matches canonical voice script.');
-  } else {
-    alignmentDiffs.forEach((d, idx) => {
-      diffMdLines.push(`### Diff ${idx + 1} (${d.type})`);
-      diffMdLines.push(`- **STT**: \`${d.stt}\``);
-      diffMdLines.push(`- **CANONICAL**: \`${d.canonical}\``);
-      if (d.start !== undefined && d.end !== undefined) {
-        diffMdLines.push(`- **TIMING**: \`${d.start}s – ${d.end}s\``);
-      }
-      diffMdLines.push(`- **ACTION**: ${d.action}`);
-      diffMdLines.push('');
-    });
-  }
-
-  fs.writeFileSync(
-    path.join(videosDir, 'subtitle-alignment-diff.md'),
-    diffMdLines.join('\n'),
-    'utf-8',
-  );
-
-  console.log(
-    `📝 Subtitle Aligned: ${alignmentMetrics.canonicalTokenCount} tokens ` +
-    `(${alignmentMetrics.exactMatches} exact, ${alignmentMetrics.contextSubstitutions} subst, ` +
-    `${alignmentMetrics.interpolatedTokens} interp). Integrity: ${alignmentMetrics.canonicalIntegrity ? 'PASS' : 'FAIL'}`
-  );
-
-  const timeline = alignedTimeline;
+export function buildSpecFromStoryPlan({
+  storyPlan,
+  timeline,
+  assetResolver,
+  slug = 'video',
+  totalFrames: explicitTotalFrames,
+  videoData = {},
+}) {
   const segments = timeline.segments || [];
   if (segments.length === 0) {
-    throw new Error(`timeline.json has 0 segments!`);
+    throw new Error('timeline has 0 segments!');
   }
 
-  const storyResult = buildStoryPlan(
-    {
-      index,
-      part,
-      title,
-      series,
-      category,
-      voiceScriptText,
-      statementText,
-      visualPriorities,
-    },
-    segments,
-  );
-
-  if (!storyResult.validation.valid) {
-    throw new Error(
-      `Story plan invalid:\n${storyResult.validation.errors.join('\n')}`,
-    );
-  }
-
-  const storyPlan = storyResult.plan;
-
-  fs.writeFileSync(
-    path.join(videosDir, 'story-plan.json'),
-    JSON.stringify(storyPlan, null, 2),
-    'utf-8',
-  );
-
-  fs.writeFileSync(
-    path.join(videosDir, 'story-plan-validation.json'),
-    JSON.stringify(storyResult.validation, null, 2),
-    'utf-8',
-  );
-
-  console.log(
-    `🧠 Story mode=${storyPlan.contentMode}, ` +
-    `cast=${storyPlan.castId || 'none'}, ` +
-    `world=${storyPlan.worldId}, ` +
-    `beats=${storyPlan.beats.length}`,
-  );
-
-  // Step 6: Build Spec
-  console.log(`📋 Generating spec.json with story engine beats...`);
+  const { title = '', statementText = '' } = videoData;
   const usedAssetIds = new Set();
   let lastAssetId = null;
   const canonicalAssets = new Map();
+  const resolvedBeatAssetCache = new Map();
   const scenes = [];
   let previousSceneHadSfx = false;
   const FPS = 30;
@@ -600,9 +404,13 @@ export async function processVideo(videoData, { force = false } = {}) {
     const sceneType = isHook ? 'hook' : isEnding ? 'ending' : 'body';
     const mood = isHook || isEnding ? 'peaceful' : (isStatement ? 'contemplative' : 'reflective');
 
-    const plannedBeats = storyPlan.beats.filter(
-      (beat) => beat.segmentIndex === i,
+    const plannedBeats = (storyPlan.beats || []).filter(
+      (beat) => beatCoversSegment(beat, i),
     );
+
+    if (plannedBeats.length === 0) {
+      throw new Error(`SPEC_BRIDGE_ORPHAN_SEGMENT: Narrative segment ${i} ("${seg.text}") has no covering planned beat`);
+    }
 
     const primaryBeat =
       plannedBeats[0] ?? {
@@ -623,18 +431,29 @@ export async function processVideo(videoData, { force = false } = {}) {
     for (let beatIndex = 0; beatIndex < plannedBeats.length; beatIndex++) {
       const beat = plannedBeats[beatIndex];
 
-      const localStart = Math.max(
-        0,
-        beat.startFrame - sceneStartFrame,
+      const overlapStart = Math.max(
+        beat.startFrame,
+        sceneStartFrame,
       );
 
-      const localEnd = Math.min(
-        durFrames,
-        Math.max(
-          localStart + 1,
-          beat.endFrame - sceneStartFrame,
-        ),
+      const overlapEnd = Math.min(
+        beat.endFrame,
+        sceneEndFrame,
       );
+
+      if (overlapEnd <= overlapStart) continue;
+
+      const localStart =
+        overlapStart - sceneStartFrame;
+
+      const localEnd =
+        overlapEnd - sceneStartFrame;
+
+      const beatShotScale = mapPlannerScaleToRendererScale({
+        scale: beat.scale || beat.shotScale,
+        silhouette: beat.silhouette,
+        role: beat.storyRole,
+      });
 
       if (beat.assetStrategy === 'reuse-canonical') {
         const canonical = resolveCanonicalAsset(beat, canonicalAssets);
@@ -644,25 +463,42 @@ export async function processVideo(videoData, { force = false } = {}) {
           endFrame: localEnd,
           imageSrc: canonical.path,
           composition: beat.composition,
-          shotScale: beat.shotScale,
+          shotScale: beatShotScale,
           motionPreset: beat.motionPreset,
           transition: 'cut',
         });
         continue;
       }
 
-      const excludeSet = new Set(usedAssetIds);
-      if (lastAssetId) excludeSet.add(lastAssetId);
+      const beatCacheKey = beat.id || `beat-${beat.segmentIndex}-${beatIndex}`;
+      let resolved;
+      if (resolvedBeatAssetCache.has(beatCacheKey)) {
+        resolved = resolvedBeatAssetCache.get(beatCacheKey);
+      } else {
+        const excludeSet = new Set(usedAssetIds);
+        if (lastAssetId) excludeSet.add(lastAssetId);
 
-      const resolved = resolveBeatAsset({
-        beat,
-        slug,
-        sceneIndex: i,
-        beatIndex,
-        sceneType,
-        mood,
-        excludeSet,
-      });
+        resolved = assetResolver
+          ? assetResolver({
+              beat,
+              slug,
+              sceneIndex: i,
+              beatIndex,
+              sceneType,
+              mood,
+              excludeSet,
+            })
+          : {
+              asset: {
+                id: `asset-${i}-${beatIndex}`,
+                path: `assets/human-insight/images/asset-${i}-${beatIndex}.jpg`,
+              },
+              source: 'fallback',
+              score: 0,
+            };
+
+        resolvedBeatAssetCache.set(beatCacheKey, resolved);
+      }
 
       const key = canonicalKey(beat);
       if (
@@ -689,17 +525,21 @@ export async function processVideo(videoData, { force = false } = {}) {
         endFrame: localEnd,
         imageSrc: resolved.asset.path,
         composition: beat.composition,
-        shotScale: beat.shotScale,
+        shotScale: beatShotScale,
         motionPreset: beat.motionPreset,
         transition: 'cut',
       });
     }
 
-    const fallbackAsset =
-      primaryAsset ?? {
-        id: lastAssetId || 'fallback-asset',
-        path: (canonicalAssets.values().next().value?.path) || '',
-      };
+    if (!primaryAsset) {
+      throw new Error(`SPEC_BRIDGE_ORPHAN_SEGMENT: Narrative segment ${i} ("${seg.text}") resolved to no visual asset`);
+    }
+
+    const fallbackAsset = primaryAsset;
+
+    if (!fallbackAsset.path) {
+      throw new Error(`SPEC_BRIDGE_ORPHAN_SEGMENT: Narrative segment ${i} ("${seg.text}") has empty asset path`);
+    }
 
     const entrySfx = chooseSemanticEntrySfx({
       storyRole: primaryBeat.storyRole,
@@ -713,6 +553,12 @@ export async function processVideo(videoData, { force = false } = {}) {
       previousSceneHadSfx,
     });
     previousSceneHadSfx = Boolean(entrySfx);
+
+    const primaryShotScale = mapPlannerScaleToRendererScale({
+      scale: primaryBeat.scale || primaryBeat.shotScale || (isHook ? 'wide' : 'medium'),
+      silhouette: primaryBeat.silhouette,
+      role: primaryBeat.storyRole,
+    });
 
     const sceneObj = {
       type: isHook ? 'hook' : isEnding ? 'ending' : 'body',
@@ -728,7 +574,7 @@ export async function processVideo(videoData, { force = false } = {}) {
       continuityGroup: primaryBeat.continuityGroup,
 
       composition: primaryBeat.composition,
-      shotScale: primaryBeat.shotScale,
+      shotScale: primaryShotScale,
       visualContainer: primaryBeat.visualContainer,
       motionPreset: primaryBeat.motionPreset,
 
@@ -768,10 +614,6 @@ export async function processVideo(videoData, { force = false } = {}) {
     }
 
     scenes.push(sceneObj);
-
-    console.log(
-      `   Scene ${i + 1} [${sceneObj.storyRole}/${sceneObj.composition}]: "${seg.text.slice(0, 45)}..." -> [${fallbackAsset.id}] (beats: ${resolvedVisualBeats.length}, frames: ${sceneStartFrame}->${sceneStartFrame + durFrames})`,
-    );
   }
 
   // Final Outro Card
@@ -788,30 +630,459 @@ export async function processVideo(videoData, { force = false } = {}) {
     audioSegment: {
       start: timelineEndSec,
       end: timelineEndSec + 2.0,
-      text: ''
+      text: '',
     },
     image: {
       assetId: lastAssetId || 'gratitude-simple-life-01',
-      path: scenes[scenes.length - 1]?.image?.path || 'assets/human-insight/images/gratitude-simple-life-01.png'
-    }
+      path: scenes[scenes.length - 1]?.image?.path || 'assets/human-insight/images/gratitude-simple-life-01.png',
+    },
   });
 
-  const totalFrames = outroStartFrame + outroDurationFrames;
+  const totalFrames = explicitTotalFrames ?? (outroStartFrame + outroDurationFrames);
 
-  const specData = {
+  return {
     templateId: 'human-insight/cinematic-light',
     slug,
     totalFrames,
     video: {
       title,
-      bgMusic: 'assets/human-insight/music/music-bg-2.mp3'
+      bgMusic: 'assets/human-insight/music/music-bg-2.mp3',
     },
-    scenes
+    scenes,
   };
+}
+
+export async function processVideo(videoData, options = {}) {
+  const { force = false, planOnly = false, skipRender = false, plannerOverrides } = options;
+  const {
+    index,
+    part,
+    title,
+    series,
+    category,
+    cleanContext,
+    voiceScriptText,
+    statementText,
+    visualPriorities,
+  } = videoData;
+  console.log(`\n======================================================`);
+  console.log(`▶ [Video ${index}/100] (Part ${part}): ${title}`);
+  console.log(`======================================================`);
+
+  const slug = deriveSlug(cleanContext);
+  console.log(`Slug: ${slug}`);
+
+  const videosDir = path.join(ROOT, 'videos', slug);
+  const videoMp4Path = path.join(videosDir, 'video.mp4');
+
+  if (!force && !planOnly && fs.existsSync(videoMp4Path)) {
+    const stat = fs.statSync(videoMp4Path);
+    if (stat.size > 1000000) {
+      console.log(`✅ video.mp4 already exists (${(stat.size / 1024 / 1024).toFixed(1)} MB). Skipping to next video.`);
+      return { slug, videoMp4Path, skipped: true };
+    }
+  }
+
+  const publicDir = path.join(ROOT, 'public', slug);
+  const scriptDir = path.join(videosDir, 'script');
+  fs.mkdirSync(scriptDir, { recursive: true });
+  fs.mkdirSync(publicDir, { recursive: true });
+
+  // Step 1: Setup artifacts
+  fs.writeFileSync(path.join(videosDir, 'context.txt'), cleanContext, 'utf-8');
+  fs.writeFileSync(path.join(videosDir, 'template.txt'), 'human-insight/cinematic-light', 'utf-8');
+  fs.writeFileSync(path.join(videosDir, 'audio.txt'), 'full', 'utf-8');
+
+  // Step 2 & 3: Planner & Teller
+  const rawParas = voiceScriptText
+    .split(/\n\s*\n/)
+    .map(p => p.replace(/\r/g, '').trim())
+    .filter(Boolean);
+
+  const scriptItems = [];
+  rawParas.forEach((p, idx) => {
+    if (idx === 0) {
+      scriptItems.push({ text: p, type: 'hook' });
+    } else if (idx === rawParas.length - 1) {
+      // Keep voice script intact from prompt; interactive question remains the last sentence
+      // Branding appears visually only on OutroCard
+      scriptItems.push({ text: p, type: 'ending' });
+    } else {
+      scriptItems.push({ text: p, type: 'body' });
+    }
+  });
+
+  const scriptPath = path.join(scriptDir, 'script.json');
+  fs.writeFileSync(scriptPath, JSON.stringify({ script: scriptItems }, null, 2), 'utf-8');
+
+  const planData = {
+    title,
+    hook: rawParas[0] || '',
+    segments: rawParas.slice(1, -1).map((text, i) => ({
+      title: `Ý ${i + 1}`,
+      content_summary: text
+    })),
+    ending: rawParas[rawParas.length - 1] || '',
+    estimated_duration: 75
+  };
+  fs.writeFileSync(path.join(videosDir, 'plan.json'), JSON.stringify(planData, null, 2), 'utf-8');
+
+  // Step 4: TTS
+  const voiceMp3Path = path.join(publicDir, 'voice.mp3');
+  if (!fs.existsSync(voiceMp3Path)) {
+    if (!planOnly) {
+      console.log(`🎙 Running TTS for ${slug}...`);
+      execWithRetry(`node scripts/tts.mjs "videos/${slug}/script/script.json" "${slug}"`);
+    } else {
+      console.log(`🎙 [PLAN-ONLY] Skipping TTS for ${slug}`);
+    }
+  } else {
+    console.log(`🎙 Reusing existing voice.mp3`);
+  }
+
+  // Step 5: Transcribe
+  const timelineJsonPath = path.join(publicDir, 'timeline.json');
+  const rawTimelineJsonPath = path.join(publicDir, 'timeline-stt-raw.json');
+  if (!fs.existsSync(timelineJsonPath)) {
+    if (
+      options.plannerOverrides?.timelinePath &&
+      fs.existsSync(options.plannerOverrides.timelinePath)
+    ) {
+      console.log(
+        `🎧 Using timeline override from ${options.plannerOverrides.timelinePath}...`,
+      );
+      fs.copyFileSync(options.plannerOverrides.timelinePath, timelineJsonPath);
+    } else {
+      // Check if an existing timeline with matching topic slug exists
+      try {
+        const topicWords = slug.split('-').slice(4).join('-');
+        if (topicWords && topicWords.length > 5) {
+          const candidateDirs = fs
+            .readdirSync(path.join(ROOT, 'public'))
+            .filter((d) => d !== slug && d.includes(topicWords));
+          for (const cand of candidateDirs) {
+            const candTl = path.join(ROOT, 'public', cand, 'timeline.json');
+            if (fs.existsSync(candTl)) {
+              console.log(
+                `🎧 Found existing matching timeline.json in public/${cand}, reusing...`,
+              );
+              fs.copyFileSync(candTl, timelineJsonPath);
+              break;
+            }
+          }
+        }
+      } catch {}
+    }
+  }
+
+  if (!fs.existsSync(timelineJsonPath)) {
+    if (!planOnly) {
+      console.log(`🎧 Running Transcribe for ${slug}...`);
+      execWithRetry(`node scripts/transcribe.mjs "${slug}"`);
+    } else {
+      console.log(`🎧 [PLAN-ONLY] Skipping live Transcribe for ${slug}`);
+    }
+  } else {
+    console.log(`🎧 Reusing existing timeline.json`);
+  }
+
+  // Step 5b: Canonical Subtitle Alignment (Source A: voiceScriptText, Source B: STT timing)
+  let alignedTimeline;
+  let alignmentDiffs = [];
+  let alignmentMetrics;
+
+  if (fs.existsSync(timelineJsonPath)) {
+    if (!fs.existsSync(rawTimelineJsonPath)) {
+      fs.copyFileSync(timelineJsonPath, rawTimelineJsonPath);
+    }
+    const rawTimeline = JSON.parse(fs.readFileSync(rawTimelineJsonPath, 'utf-8'));
+    try {
+      const res = buildCanonicalTimeline({
+        canonicalText: voiceScriptText,
+        sttTimeline: rawTimeline,
+      });
+      alignedTimeline = res.timeline;
+      alignmentDiffs = res.diffs;
+      alignmentMetrics = res.metrics;
+    } catch (alignErr) {
+      console.warn(`   ⚠️ Canonical alignment error: ${alignErr.message}. Falling back to CANONICAL_APPROXIMATE.`);
+      alignedTimeline = buildCanonicalApproximateTimeline({
+        canonicalText: voiceScriptText,
+        sttTimeline: rawTimeline,
+      });
+      const canonicalTokens = tokenizeCanonicalScript(voiceScriptText);
+      alignmentMetrics = {
+        canonicalTokenCount: canonicalTokens.length,
+        sttTokenCount: Array.isArray(rawTimeline?.words) ? rawTimeline.words.length : 0,
+        exactMatches: 0,
+        fuzzyMatches: 0,
+        contextSubstitutions: 0,
+        interpolatedTokens: 0,
+        ignoredSttTokens: 0,
+        evidenceRatio: 0,
+        substitutionRatio: 0,
+        interpolationRatio: 0,
+        ignoredSttRatio: 0,
+        canonicalTextIntegrity: true,
+        alignmentStatus: 'DEGRADED',
+        timingMode: 'CANONICAL_APPROXIMATE',
+        validationErrors: [`Alignment exception: ${alignErr.message}`],
+        canonicalIntegrity: true,
+      };
+    }
+    fs.writeFileSync(timelineJsonPath, JSON.stringify(alignedTimeline, null, 2), 'utf-8');
+  } else {
+    // Zero-network fallback for plan-only when timeline.json does not exist yet
+    let t = 0;
+    const approxSegments = rawParas.map((text) => {
+      const duration = Math.max(2.4, text.split(/\s+/).length / 2.6);
+      const seg = { start: t, end: t + duration, text };
+      t += duration;
+      return seg;
+    });
+    alignedTimeline = {
+      duration: t,
+      segments: approxSegments,
+      words: [],
+    };
+    alignmentMetrics = {
+      canonicalTokenCount: tokenizeCanonicalScript(voiceScriptText).length,
+      sttTokenCount: 0,
+      exactMatches: 0,
+      fuzzyMatches: 0,
+      contextSubstitutions: 0,
+      interpolatedTokens: 0,
+      ignoredSttTokens: 0,
+      evidenceRatio: 0,
+      substitutionRatio: 0,
+      interpolationRatio: 0,
+      ignoredSttRatio: 0,
+      canonicalTextIntegrity: true,
+      alignmentStatus: 'APPROXIMATE',
+      timingMode: 'CANONICAL_APPROXIMATE',
+      validationErrors: [],
+      canonicalIntegrity: true,
+    };
+  }
+
+  // QA Artifacts: Report and Diff
+  fs.writeFileSync(
+    path.join(videosDir, 'subtitle-alignment-report.json'),
+    JSON.stringify(alignmentMetrics, null, 2),
+    'utf-8',
+  );
+
+  const diffMdLines = [
+    '# Subtitle Alignment Diff',
+    '',
+    `- **Video Slug**: \`${slug}\``,
+    `- **Canonical Tokens**: ${alignmentMetrics.canonicalTokenCount}`,
+    `- **STT Tokens**: ${alignmentMetrics.sttTokenCount}`,
+    `- **Exact Matches**: ${alignmentMetrics.exactMatches}`,
+    `- **Fuzzy Matches**: ${alignmentMetrics.fuzzyMatches}`,
+    `- **Context Substitutions**: ${alignmentMetrics.contextSubstitutions}`,
+    `- **Interpolated Tokens**: ${alignmentMetrics.interpolatedTokens}`,
+    `- **Ignored STT Tokens**: ${alignmentMetrics.ignoredSttTokens}`,
+    `- **Evidence Ratio**: ${alignmentMetrics.evidenceRatio}`,
+    `- **Substitution Ratio**: ${alignmentMetrics.substitutionRatio}`,
+    `- **Interpolation Ratio**: ${alignmentMetrics.interpolationRatio}`,
+    `- **Ignored STT Ratio**: ${alignmentMetrics.ignoredSttRatio}`,
+    `- **Canonical Text Integrity**: ${alignmentMetrics.canonicalTextIntegrity ? 'PASS' : 'FAIL'}`,
+    `- **Alignment Status**: \`${alignmentMetrics.alignmentStatus}\``,
+    `- **Timing Mode**: \`${alignmentMetrics.timingMode}\``,
+    '',
+    '## Differences',
+    '',
+  ];
+
+  if (alignmentDiffs.length === 0) {
+    diffMdLines.push('No differences found. STT text perfectly matches canonical voice script.');
+  } else {
+    alignmentDiffs.forEach((d, idx) => {
+      diffMdLines.push(`### Diff ${idx + 1} (${d.type})`);
+      diffMdLines.push(`- **STT**: \`${d.stt}\``);
+      diffMdLines.push(`- **CANONICAL**: \`${d.canonical}\``);
+      if (d.start !== undefined && d.end !== undefined) {
+        diffMdLines.push(`- **TIMING**: \`${d.start}s – ${d.end}s\``);
+      }
+      diffMdLines.push(`- **ACTION**: ${d.action}`);
+      diffMdLines.push('');
+    });
+  }
+
+  fs.writeFileSync(
+    path.join(videosDir, 'subtitle-alignment-diff.md'),
+    diffMdLines.join('\n'),
+    'utf-8',
+  );
+
+  console.log(
+    `📝 Subtitle Aligned: ${alignmentMetrics.canonicalTokenCount} tokens ` +
+    `(${alignmentMetrics.exactMatches} exact, ${alignmentMetrics.contextSubstitutions} subst, ` +
+    `${alignmentMetrics.interpolatedTokens} interp). Integrity: ${alignmentMetrics.canonicalIntegrity ? 'PASS' : 'FAIL'}`
+  );
+
+  const timeline = alignedTimeline;
+  const segments = timeline.segments || [];
+  if (segments.length === 0) {
+    throw new Error(`timeline.json has 0 segments!`);
+  }
+
+  const rawTimelineContent = fs.existsSync(rawTimelineJsonPath)
+    ? fs.readFileSync(rawTimelineJsonPath, 'utf-8')
+    : '';
+
+  const spokenAudioTranscript =
+    plannerOverrides?.spokenAudioTranscript ?? rawTimelineContent;
+
+  const storyResult = buildStoryPlan(
+    {
+      index,
+      part,
+      title,
+      series,
+      category,
+      cleanContext,
+      voiceScriptText,
+      statementText,
+      visualPriorities,
+    },
+    segments,
+    {
+      brandContext: CHANNEL_BRAND_CONFIG,
+      validationMode: planOnly ? 'DRAFT' : 'PRODUCTION',
+      rawTimelineText: rawTimelineContent,
+      spokenAudioTranscript,
+      ...plannerOverrides,
+    },
+  );
+
+  const storyPlan = storyResult.plan;
+  const storyValidation = storyResult.validation;
+  const storyMetrics = storyResult.metrics;
+  const productionReadiness = storyResult.productionValidation;
+
+  fs.writeFileSync(
+    path.join(videosDir, 'story-plan.json'),
+    JSON.stringify(storyPlan, null, 2),
+    'utf-8',
+  );
+
+  fs.writeFileSync(
+    path.join(videosDir, 'story-plan-validation.json'),
+    JSON.stringify(
+      {
+        ...storyValidation,
+        brandAudit: storyResult.brandAudit,
+        reuseAudit: storyResult.reuseAudit,
+      },
+      null,
+      2,
+    ),
+    'utf-8',
+  );
+
+  fs.writeFileSync(
+    path.join(videosDir, 'reference-grammar-metrics.json'),
+    JSON.stringify(storyMetrics, null, 2),
+    'utf-8',
+  );
+
+  fs.writeFileSync(
+    path.join(videosDir, 'production-readiness.json'),
+    JSON.stringify(productionReadiness, null, 2),
+    'utf-8',
+  );
+
+  console.log(
+    `🧠 Story mode=${storyPlan.contentMode}, ` +
+    `cast=${storyPlan.castId || 'none'}, ` +
+    `world=${storyPlan.worldId}, ` +
+    `beats=${storyPlan.beats.length}, ` +
+    `cpm=${storyMetrics.changesPerMinute}`,
+  );
+
+  // Production gate check: in production mode, block before image generation if productionReady is false
+  if (!planOnly && productionReadiness && !productionReadiness.productionReady) {
+    const mismatchReason =
+      productionReadiness.errors.join('; ') || 'Production gate validation failed';
+    const errorMsg = `[PRODUCTION GATE BLOCKED] ${mismatchReason}`;
+    console.error(`❌ ${errorMsg}`);
+    throw new Error(errorMsg);
+  }
+
+  if (planOnly) {
+    console.log(`\n======================================================`);
+    console.log(`PLAN-ONLY SUMMARY: Video ${index} - "${title}"`);
+    console.log(`======================================================`);
+    console.log(`  Mode:                ${storyPlan.contentMode}`);
+    console.log(`  Cast / World:        ${storyPlan.castId || 'none'} / ${storyPlan.worldId}`);
+    console.log(`  Beats:               ${storyPlan.beats.length}`);
+    console.log(`  Changes / Min (CPM): ${storyMetrics.changesPerMinute} (target: 18 - 22)`);
+    console.log(`  Hold Distribution:   median: ${storyMetrics.medianHoldSeconds}s, max: ${storyMetrics.maxHoldSeconds}s`);
+    console.log(`  Scales:              ${storyMetrics.uniqueScales} unique (${Object.entries(storyMetrics.scaleDistribution || {}).map(([k, v]) => `${k}:${v}`).join(', ')})`);
+    console.log(`  Silhouettes:         ${storyMetrics.uniqueSilhouettes} unique`);
+    console.log(`  Brand Audit:         ${storyResult.brandAudit.hasMismatch ? `MISMATCH (${storyResult.brandAudit.mismatchType || 'BRAND_AUDIO_MISMATCH'})` : 'ALIGNED'} [template: "${storyResult.brandAudit.templateBrand}", spoken: "${storyResult.brandAudit.audioBrandName || 'none'}"]`);
+    console.log(`  Production Verdict:  ${productionReadiness.productionReady ? '✅ READY' : '🚫 BLOCKED'} ${productionReadiness.errors.length > 0 ? `(${productionReadiness.errors.join('; ')})` : ''}`);
+    const assetSummary =
+      storyPlan.assetResolutionMode === 'UNRESOLVED' ||
+      (storyMetrics.newImageCount === 0 && storyMetrics.reuseCount === 0 && storyMetrics.componentCount === 0)
+        ? 'UNRESOLVED (dry run; resolution runs during asset selection)'
+        : `${storyMetrics.newImageCount} new, ${storyMetrics.reuseCount} reused, ${storyMetrics.componentCount} component`;
+    console.log(`  Asset Reuse:         ${assetSummary}`);
+    console.log(`======================================================\n`);
+    return {
+      slug,
+      storyPlan,
+      storyValidation,
+      storyMetrics,
+      productionReadiness,
+      brandAudit: storyResult.brandAudit,
+      reuseAudit: storyResult.reuseAudit,
+      planOnly: true,
+    };
+  }
+
+  if (!storyValidation.valid) {
+    throw new Error(
+      `Story plan invalid:\n${storyValidation.errors.join('\n')}`,
+    );
+  }
+
+  // Step 6: Build Spec
+  console.log(`📋 Generating spec.json with story engine beats...`);
+  const specData = buildSpecFromStoryPlan({
+    storyPlan,
+    timeline,
+    assetResolver: ({ beat, slug: s, sceneIndex, beatIndex, sceneType, mood, excludeSet }) =>
+      resolveBeatAsset({
+        beat,
+        slug: s,
+        sceneIndex,
+        beatIndex,
+        sceneType,
+        mood,
+        excludeSet,
+      }),
+    slug,
+    videoData: { title, statementText },
+  });
+  const scenes = specData.scenes;
+  const totalFrames = specData.totalFrames;
 
   fs.writeFileSync(path.join(videosDir, 'spec.json'), JSON.stringify(specData, null, 2), 'utf-8');
   fs.writeFileSync(path.join(videosDir, 'props.json'), JSON.stringify({ slug }, null, 2), 'utf-8');
   console.log(`Wrote spec.json (${scenes.length} scenes, ${totalFrames} frames / ${(totalFrames / 30).toFixed(1)}s)`);
+
+  if (skipRender) {
+    console.log(`\n🛑 [SKIP-RENDER] Assets and spec.json generated; skipping Remotion render.\n`);
+    return {
+      slug,
+      specData,
+      totalFrames,
+      skipRender: true,
+    };
+  }
 
   // Step 7: Update Remotion source files
   console.log(`⚙ Updating Remotion config files for ${slug}...`);
@@ -841,27 +1112,59 @@ export async function processVideo(videoData, { force = false } = {}) {
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const args = process.argv.slice(2);
   const force = args.includes('--force');
-  const numericArgs = args.filter(a => a !== '--force');
-  const fromIndex = numericArgs[0] ? parseInt(numericArgs[0], 10) : 1;
-  const toIndex = numericArgs[1] ? parseInt(numericArgs[1], 10) : 100;
+  const planOnly = args.includes('--plan-only');
+  const skipRender = args.includes('--skip-render');
+  const nonFlagArgs = args.filter((a) => !a.startsWith('--'));
 
   const vids = parseHayDepVideos();
-  console.log(`Starting Batch Engine strictly sequentially from Video ${fromIndex} to Video ${toIndex}${force ? ' (FORCE OVERWRITE)' : ''}...`);
+
+  let targetVideos = [];
+  if (nonFlagArgs.length === 0) {
+    targetVideos = vids;
+  } else if (nonFlagArgs.length === 1) {
+    const rawArg = nonFlagArgs[0].trim();
+    const num = parseInt(rawArg, 10);
+    if (!isNaN(num) && String(num) === rawArg) {
+      const found = vids.find((x) => x.index === num);
+      if (found) targetVideos = [found];
+    } else {
+      const cleaned = rawArg.toLowerCase().replace(/^video-?/i, '');
+      const numFromCleaned = parseInt(cleaned, 10);
+      let found = !isNaN(numFromCleaned) ? vids.find((x) => x.index === numFromCleaned) : null;
+      if (!found) {
+        found = vids.find((x) => {
+          const s = deriveSlug(x.cleanContext);
+          return s.includes(rawArg.toLowerCase());
+        });
+      }
+      if (found) targetVideos = [found];
+    }
+  } else if (nonFlagArgs.length >= 2) {
+    const fromIndex = parseInt(nonFlagArgs[0], 10);
+    const toIndex = parseInt(nonFlagArgs[1], 10);
+    targetVideos = vids.filter((x) => x.index >= fromIndex && x.index <= toIndex);
+  }
+
+  if (targetVideos.length === 0) {
+    console.error(`No matching videos found for arguments: ${args.join(' ')}`);
+    process.exit(1);
+  }
+
+  console.log(
+    `Starting Batch Engine (${planOnly ? 'PLAN-ONLY' : (skipRender ? 'ASSETS & SPEC ONLY (SKIP RENDER)' : 'FULL PRODUCTION')}${force ? ', FORCE OVERWRITE' : ''}) for ${targetVideos.length} video(s)...`,
+  );
 
   (async () => {
-    for (let idx = fromIndex; idx <= toIndex; idx++) {
-      const v = vids.find(x => x.index === idx);
-      if (!v) {
-        console.warn(`Video index ${idx} not found in catalog.`);
-        continue;
-      }
+    for (const v of targetVideos) {
       try {
-        await processVideo(v, { force });
+        await processVideo(v, { force, planOnly, skipRender });
       } catch (err) {
-        console.error(`❌ Error processing Video ${idx}:`, err);
-        throw err;
+        console.error(`❌ Error processing Video ${v.index}:`, err.message || err);
+        if (!planOnly) {
+          throw err;
+        }
       }
     }
-    console.log(`\n🏆 ALL REQUESTED VIDEOS (${fromIndex} to ${toIndex}) COMPLETED!`);
+    console.log(`\n🏆 ALL REQUESTED VIDEOS PROCESSED!`);
   })();
 }

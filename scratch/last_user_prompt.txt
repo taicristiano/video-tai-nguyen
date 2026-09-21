@@ -1,0 +1,222 @@
+<USER_REQUEST>
+# HAY & ĐẸP. — GENERIC RENDERER FINAL SSOT + OUTRO HARDENING
+# SHARED TEMPLATE / RUNTIME FIRST
+# VIDEO005 GOLDEN REGRESSION + 7-SHOT FIXTURE
+# NO IMAGE GENERATION
+# NO VIDEO005-ONLY PATCHES
+
+Bạn đang tiếp tục project sau khi generic renderer đã được triển khai và harden qua nhiều vòng.
+
+Hiện tại:
+- Video005 Golden MP4 đã Human-PASS.
+- Generic renderer đã chạy được Video005 và 7-shot fixture.
+- Brand HAY & ĐẸP., timelineSrc, generic Outro capability, 30fps contract đã được đưa vào shared layer.
+- Tuy nhiên Human review của output thật vẫn phát hiện 3 blocker reusable:
+  1. `production-render-spec.json` có thể lệch SSOT Human-approved, gây regression shot-15.
+  2. transition narrative → Outro vẫn có frame gần như empty cream canvas.
+  3. Video006 chưa thực sự "data-only" nếu `production-render-spec.json` vẫn phải viết/đồng bộ thủ công.
+
+Task này là vòng hardening cuối cho **shared production spec pipeline + shared Outro/hard-cut renderer + QA tooling**.
+
+Không quay lại image generation.
+Không chỉnh riêng Video005.
+Không redesign kiến trúc nếu không cần.
+
+---
+
+# 0. GOLDEN RULE — SHARED FIX FIRST
+
+Mọi lỗi reusable phải sửa ở:
+
+```text
+shared production spec builder
+shared validator
+shared renderer
+shared Layout / ImageScene / OutroCard
+shared QA tooling
+```
+
+KHÔNG được dùng:
+
+```js
+if (videoId === 'video005') ...
+if (slug.includes('phan-5')) ...
+if (shotId === 'shot-15') ...
+```
+
+trong shared runtime để vá lỗi.
+
+Video-specific behavior phải đến từ data/manifest chuẩn.
+
+---
+
+# 1. CURRENT VERIFIED BLOCKER #1 — PRODUCTION SPEC CAN DRIFT FROM HUMAN-APPROVED SSOT
+
+Human review đã phát hiện generic Video005 render regression tại `shot-15`.
+
+Golden Human-approved shot-15 contract:
+
+```text
+visualMode = EMPTY_RELEASE
+scale = RELEASE
+peopleContract = 0..0
+visibleMembers = []
+silhouette = empty-space
+hasInsightCard = false / absent
+```
+
+Nhưng `production-
+<truncated 13025 bytes>
+ fixture + Outro passes
+
+No Video005-specific runtime patch
+
+0 image generation/edit
+
+changes.zip includes complete shared implementation
+
+full tests pass
+```
+
+---
+
+# 26. FINAL REPORT FORMAT
+
+Report exactly:
+
+## A. SSOT root cause
+
+Explain why manually maintained production spec drifted.
+
+## B. Generic spec builder
+
+Show:
+
+```text
+inputs
+→ normalization
+→ validation
+→ output
+```
+
+## C. Source ownership
+
+Which SSOT provides:
+
+```text
+timing
+semantic metadata
+image selection
+audio/timeline
+brand
+outro
+```
+
+## D. Video005 spec diff
+
+Report stale vs rebuilt values for at least:
+
+```text
+shot-15
+```
+
+and total mismatch count before/after.
+
+## E. Shared Outro fix
+
+Explain root cause of empty cream boundary and shared fix.
+
+## F. Empty-canvas QA
+
+Explain actual detection, thresholds/status semantics.
+
+## G. Video005 SSOT render
+
+Report:
+
+```text
+frames
+duration
+shot-15 visibility
+brand
+subtitle
+transitions
+empty-canvas suspects
+```
+
+## H. Fixture SSOT render
+
+Report:
+
+```text
+7 narrative
+1 outro
+7 transitions
+shot-07→Outro actual boundary state
+```
+
+## I. Video006 workflow
+
+Show exact commands/workflow.
+
+Must state:
+
+```text
+manual production spec shot editing = 0
+shared source edits = 0
+```
+
+## J. Tests
+
+Exact counts.
+
+## K. Packaging
+
+Confirm all shared renderer/template/builder files included.
+
+## L. Side effects
+
+```text
+Image generation calls: 0
+Image edit calls: 0
+Video005 renders: N
+Fixture renders: N
+```
+
+End with exactly one:
+
+```text
+GENERIC PRODUCTION PIPELINE READY — VIDEO006 GO
+```
+
+or:
+
+```text
+GENERIC PRODUCTION PIPELINE STILL BLOCKED — DO NOT START VIDEO006
+```
+
+---
+
+# 27. MOST IMPORTANT PRINCIPLE
+
+The final target is NOT:
+
+```text
+Video005 works
+```
+
+The final target is:
+
+```text
+any future approved HAY & ĐẸP. video
+→ production spec built automatically from SSOT
+→ generic renderer
+→ correct MP4
+```
+
+without manually copying shot metadata or adding video-specific code.
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-09-21T16:11:21+07:00.
+</ADDITIONAL_METADATA>

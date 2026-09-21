@@ -1,0 +1,17 @@
+export const CHANNEL_BRAND_CONFIG: any;
+export function planHumanInsightVideo(input: any): any;
+export function buildCandidateShotPlan(input: any): any[];
+export function applyReferenceShotGrammar(shots: any[]): any[];
+export function normalizeCadence(shots: any[], totalDurationSec: number): any[];
+export function chooseHookPattern(text: string): any;
+export function shouldSplitClause(seg: any, isStatement: boolean): boolean;
+export function auditBrandContext(brandContext: any, input: any): any;
+export function buildTemplateScenes(shots: any[], input: any): any[];
+export function evaluateProductionReadiness(structuralValidation: any, brandAudit: any, validationMode?: any): any;
+export function buildReuseAudit(shots: any[], approvedAssets?: any[]): any;
+export function validatePlannerArtifacts(result: any): any;
+export function buildPlannerRunResult(params: any): any;
+export function mapPlannerRoleToRendererRole(role: string): string;
+export function preProcessSegments(segments: any[]): any[];
+export function splitClauseTextAndTiming(seg: any, fps: number, isStatement: boolean): any[];
+export function normalizeContinuedSegments(...groups: any[]): number[];

@@ -1,29 +1,29 @@
 import React, { useState } from 'react';
 import { AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame } from 'remotion';
 import { COLORS, FONT_MAIN, TYPOGRAPHY } from './tokens';
+import { CINEMATIC_LIGHT_DEPENDENCIES } from './templateDependencies';
 
 export interface OutroCardProps {
   artworkSrc?: string;
+  brandMarkSrc?: string;
   brandName?: string;
   slogan?: string;
   durationFrames?: number;
 }
 
 export const OutroCard: React.FC<OutroCardProps> = ({
-  artworkSrc = 'assets/human-insight/brand/outro-9-16.png',
-  brandName = 'HAY & ĐẸP.',
+  artworkSrc = CINEMATIC_LIGHT_DEPENDENCIES.defaults.defaultOutroArtwork,
+  brandMarkSrc = CINEMATIC_LIGHT_DEPENDENCIES.defaults.defaultOutroBrandMark,
+  brandName = CINEMATIC_LIGHT_DEPENDENCIES.brand,
   slogan = 'Điều hay để biết. Điều đẹp để giữ.',
   durationFrames = 60, // 2.0s at 30fps
 }) => {
   const frame = useCurrentFrame();
   const [artworkFailed, setArtworkFailed] = useState(false);
 
-  // ── Motion Contract V2: 60f total, fade-in 8-10f, scale 1.02 -> 1.00 (book closing feel) ──
-  const fadeDuration = 9;
-  const opacity = interpolate(frame, [0, fadeDuration], [0, 1], {
-    extrapolateLeft: 'clamp',
-    extrapolateRight: 'clamp',
-  });
+  // ── Motion Contract V2: 60f total, hard-cut coverage from frame 0, scale 1.02 -> 1.00 (book closing feel) ──
+  // Visual coverage must be 100% visible immediately at frame 0 (no opacity fade to 0 / empty cream canvas)
+  const opacity = 1;
 
   const scale = interpolate(frame, [0, durationFrames], [1.02, 1.00], {
     extrapolateLeft: 'clamp',
@@ -46,7 +46,7 @@ export const OutroCard: React.FC<OutroCardProps> = ({
         }}
       >
         <Img
-          src={staticFile('assets/human-insight/brand/hay-dep-mark-sage.png')}
+          src={staticFile(brandMarkSrc)}
           style={{
             height: 120,
             width: 'auto',

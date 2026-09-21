@@ -1,0 +1,158 @@
+{
+  "totalShots": 16,
+  "minLength": 1251,
+  "maxLength": 1506,
+  "averageLength": 1406.1,
+  "numberOver1400": 9,
+  "numberOver1600": 0,
+  "targetBudget": 1400,
+  "hardMaxBudget": 1600,
+  "targetReplacementsUnder1400Pass": true,
+  "allWithinHardBudget": true,
+  "shots": [
+    {
+      "shotId": "shot-01",
+      "visualMode": "ENVIRONMENT_WIDE",
+      "promptLength": 1506,
+      "isTargetReplacement": false,
+      "withinTarget": false,
+      "withinHardBudget": true,
+      "budgetPass": true
+    },
+    {
+      "shotId": "shot-02",
+      "visualMode": "INTERACTION_MEDIUM",
+      "promptLength": 1460,
+      "isTargetReplacement": false,
+      "withinTarget": false,
+      "withinHardBudget": true,
+      "budgetPass": true
+    },
+    {
+      "shotId": "shot-03",
+      "visualMode": "REACTION_CLOSE",
+      "promptLength": 1352,
+      "isTargetReplacement": true,
+      "withinTarget": true,
+      "withinHardBudget": true,
+      "budgetPass": true
+    },
+    {
+      "shotId": "shot-04",
+      "visualMode": "INTERACTION_MEDIUM",
+      "promptLength": 1485,
+      "isTargetReplacement": false,
+      "withinTarget": false,
+      "withinHardBudget": true,
+      "budgetPass": true
+    },
+    {
+      "shotId": "shot-05",
+      "visualMode": "ACTION_DETAIL",
+      "promptLength": 1390,
+      "isTargetReplacement": true,
+      "withinTarget": true,
+      "withinHardBudget": true,
+      "budgetPass": true
+    },
+    {
+      "shotId": "shot-06",
+      "visualMode": "SOLO_MEDIUM",
+      "promptLength": 1382,
+      "isTargetReplacement": false,
+      "withinTarget": true,
+      "withinHardBudget": true,
+      "budgetPass": true
+    },
+    {
+      "shotId": "shot-07",
+      "visualMode": "REACTION_CLOSE",
+      "promptLength": 1445,
+      "isTargetReplacement": false,
+      "withinTarget": false,
+      "withinHardBudget": true,
+      "budgetPass": true
+    },
+    {
+      "shotId": "shot-08",
+      "visualMode": "INTERACTION_MEDIUM",
+      "promptLength": 1457,
+      "isTargetReplacement": false,
+      "withinTarget": false,
+      "withinHardBudget": true,
+      "budgetPass": true
+    },
+    {
+      "shotId": "shot-09",
+      "visualMode": "INTERACTION_MEDIUM",
+      "promptLength": 1448,
+      "isTargetReplacement": false,
+      "withinTarget": false,
+      "withinHardBudget": true,
+      "budgetPass": true
+    },
+    {
+      "shotId": "shot-10",
+      "visualMode": "REACTION_CLOSE",
+      "promptLength": 1407,
+      "isTargetReplacement": false,
+      "withinTarget": false,
+      "withinHardBudget": true,
+      "budgetPass": true
+    },
+    {
+      "shotId": "shot-11",
+      "visualMode": "REACTION_CLOSE",
+      "promptLength": 1373,
+      "isTargetReplacement": true,
+      "withinTarget": true,
+      "withinHardBudget": true,
+      "budgetPass": true
+    },
+    {
+      "shotId": "shot-12",
+      "visualMode": "INTERACTION_MEDIUM",
+      "promptLength": 1440,
+      "isTargetReplacement": false,
+      "withinTarget": false,
+      "withinHardBudget": true,
+      "budgetPass": true
+    },
+    {
+      "shotId": "shot-13",
+      "visualMode": "OBJECT_DETAIL",
+      "promptLength": 1251,
+      "isTargetReplacement": true,
+      "withinTarget": true,
+      "withinHardBudget": true,
+      "budgetPass": true
+    },
+    {
+      "shotId": "shot-14",
+      "visualMode": "REACTION_CLOSE",
+      "promptLength": 1347,
+      "isTargetReplacement": false,
+      "withinTarget": true,
+      "withinHardBudget": true,
+      "budgetPass": true
+    },
+    {
+      "shotId": "shot-15",
+      "visualMode": "EMPTY_RELEASE",
+      "promptLength": 1271,
+      "isTargetReplacement": true,
+      "withinTarget": true,
+      "withinHardBudget": true,
+      "budgetPass": true
+    },
+    {
+      "shotId": "shot-16",
+      "visualMode": "ENVIRONMENT_WIDE",
+      "promptLength": 1483,
+      "isTargetReplacement": false,
+      "withinTarget": false,
+      "withinHardBudget": true,
+      "budgetPass": true
+    }
+  ]
+}

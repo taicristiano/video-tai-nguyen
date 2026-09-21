@@ -86,7 +86,7 @@ describe('reference-derived shot grammar contracts & planner integration', () =>
 
     const result = validateShotPlan(shots, { checkCadence: true });
     expect(result.ok).toBe(false);
-    expect(result.errors.some((e) => e.includes('cadence above max'))).toBe(true);
+    expect(result.errors.some((e: any) => e.includes('cadence above max'))).toBe(true);
   });
 
   it('rejects cadence below configured minimum (18.0 changes/min)', () => {
@@ -107,7 +107,7 @@ describe('reference-derived shot grammar contracts & planner integration', () =>
 
     const result = validateShotPlan(shots, { checkCadence: true });
     expect(result.ok).toBe(false);
-    expect(result.errors.some((e) => e.includes('cadence below min'))).toBe(true);
+    expect(result.errors.some((e: any) => e.includes('cadence below min'))).toBe(true);
   });
 
   it('produces warning for hold duration outside recommended scale range without failing plan', () => {
@@ -146,7 +146,7 @@ describe('reference-derived shot grammar contracts & planner integration', () =>
     ];
     const gapResult = validateShotPlan(gapShots, { checkCadence: false });
     expect(gapResult.ok).toBe(false);
-    expect(gapResult.errors.some((e) => e.includes('Timeline mismatch'))).toBe(true);
+    expect(gapResult.errors.some((e: any) => e.includes('Timeline mismatch'))).toBe(true);
   });
 
   it('applies document text-safety exclusions when scene involves paper/notebooks', () => {
@@ -276,7 +276,7 @@ describe('reference-derived shot grammar contracts & planner integration', () =>
     expect(fakeRunResult.reuseAudit.summary.reuseCount).toBe(0);
     // Verifies no fake REUSE_CROP or REUSE_FULL claims exist in evaluations
     const hasAnyReuse = fakeRunResult.reuseAudit.evaluations.some(
-      (e) => e.strategy === 'REUSE_FULL' || e.strategy === 'REUSE_CROP',
+      (e: any) => e.strategy === 'REUSE_FULL' || e.strategy === 'REUSE_CROP',
     );
     expect(hasAnyReuse).toBe(false);
   });
@@ -454,7 +454,7 @@ describe('reference-derived shot grammar contracts & planner integration', () =>
     const prodValidation = evaluateProductionReadiness(structural, brandAudit, 'PRODUCTION');
     expect(prodValidation.ok).toBe(false);
     expect(prodValidation.productionReady).toBe(false);
-    expect(prodValidation.errors.some((e) => e.includes('BRAND_AUDIO_MISMATCH'))).toBe(true);
+    expect(prodValidation.errors.some((e: any) => e.includes('BRAND_AUDIO_MISMATCH'))).toBe(true);
   });
 
   // 13. DRAFT mode surfaces brand mismatch without pretending productionReady
@@ -477,7 +477,7 @@ describe('reference-derived shot grammar contracts & planner integration', () =>
     const draftValidation = evaluateProductionReadiness(structural, brandAudit, 'DRAFT');
     expect(draftValidation.ok).toBe(true); // structurally ok, no blocking errors in draft
     expect(draftValidation.productionReady).toBe(false); // but NOT production ready
-    expect(draftValidation.warnings.some((w) => w.includes('BRAND_AUDIO_MISMATCH'))).toBe(true);
+    expect(draftValidation.warnings.some((w: any) => w.includes('BRAND_AUDIO_MISMATCH'))).toBe(true);
   });
 
   // 14. video005 generated from real reusable planner

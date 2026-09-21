@@ -1,0 +1,14 @@
+{
+  "auditStage": "PRE_RENDER",
+  "timestamp": "2026-09-21T08:46:59.711Z",
+  "totalImages": 7,
+  "images": {
+    "shot-01": "e1842e85a2dc8ee246ff870bc6f465b118a5d2982ee7ac0aff4e1071c548956e",
+    "shot-02": "76e835002eb12f998bb27cb8be743d273f37eaa37eb29447dadc19056248b436",
+    "shot-03": "0ca226c04b2d7bc1d881c11f12869c3a7778979c0162ae8ee7eae9283f4cb802",
+    "shot-04": "85b9520c14f070f1e197ad7a5e91c5f0efa2f123ab41192e877ce46e511666d7",
+    "shot-05": "5965d456954acbfe80dfcfb12f5deb6a8d2d58f8f9b473633c3b17446690d6f7",
+    "shot-06": "92a5845434e9c7eae9828569e7acb584ef61b0c081ea8225d413bc1939bdc66a",
+    "shot-07": "0f285b27b715c99ba571dcc4857be21b80421b2678dbdac937e6457397c0433c"
+  }
+}
