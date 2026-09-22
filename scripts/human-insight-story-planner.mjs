@@ -128,7 +128,7 @@ export function inferContentMode(video) {
 
   const title = normalize(video.title || '');
   if (includesAny(title, [
-    'bua com', 'gia dinh', 'bo me', 'con cai', 'anh chi em',
+    'bua com', 'gia dinh', 'con cai', 'anh chi em',
     'to am', 'cho com', 'tre con', 'ky niem gia dinh',
   ])) {
     return CONTENT_MODES.FAMILY;
@@ -180,7 +180,7 @@ export function inferContentMode(video) {
   }
 
   if (includesAny(haystack, [
-    'gia đình', 'bố mẹ', 'con cái', 'anh chị em', 'bữa cơm',
+    'gia đình', 'con cái', 'anh chị em', 'bữa cơm',
     'tổ ấm', 'người thân', 'chờ cơm', 'trẻ con', 'kỷ niệm gia đình',
   ])) {
     return CONTENT_MODES.FAMILY;
@@ -766,6 +766,220 @@ export function isFamilyPriorityCompatible({ text, role, priority }) {
   return true;
 }
 
+export function extractTimeCue(source = '') {
+  if (/đêm|tối|khuya|nửa đêm|muộn|night|evening|late/i.test(source)) return 'night';
+  if (/chiều|hoàng hôn|chập tối|afternoon/i.test(source)) return 'afternoon';
+  if (/buổi sáng|buổi sớm|ban mai|bình minh|sáng sớm/i.test(source) || (/sáng/i.test(source) && !/đèn/i.test(source))) return 'morning';
+  if (/trưa|buổi trưa|noon/i.test(source)) return 'daytime';
+  return 'daytime';
+}
+
+export function extractSetting(source = '', timeCue = 'daytime') {
+  if (/bếp|nấu|đun|pha/i.test(source)) return 'warm domestic kitchen';
+  if (/bàn ăn|mâm cơm|bữa cơm|bát đũa|dọn sẵn/i.test(source)) return 'lived-in home dining area with wooden table';
+  if (/phòng ngủ|gối|đệm|ngăn tủ|kệ/i.test(source)) return 'quiet domestic bedroom or lived-in room corner';
+  if (/cửa sổ|bên cửa/i.test(source)) return 'room beside window with soft natural light';
+  if (/vườn|hiên|ban công|cây xanh/i.test(source)) return 'veranda, home garden, or balcony with natural daylight';
+  if (/cửa|về nhà|entryway|doorway/i.test(source)) {
+    return timeCue === 'night'
+      ? 'nighttime home entryway, doorway or quiet living room with warm lamp'
+      : 'home entryway or doorway';
+  }
+  if (/bàn làm việc|bàn học|sách|vở|đọc|viết/i.test(source)) return 'quiet wooden study desk or reading area';
+  return timeCue === 'night'
+    ? 'quiet domestic room at night'
+    : 'lived-in domestic room environment';
+}
+
+export function deriveVisualSemanticAnchor({
+  text = '',
+  priority = '',
+  role = '',
+  mode = '',
+} = {}) {
+  const p = (priority || '').trim();
+  const t = (text || '').trim();
+  const source = p || t;
+
+  // 1. Concluding Breathing Space / Quiet Aftermath / Reflection (when no priority visual forces an action)
+  const isEndingOrReflection =
+    role === STORY_ROLES.RELEASE ||
+    role === STORY_ROLES.REFLECTION ||
+    /kết luận|khoảng thở|bình yên|khoảng lặng|yên lặng|lặng lẽ|kết thúc|outro|breathing room|peaceful conclusion|chiêm nghiệm/i.test(source);
+
+  if (isEndingOrReflection && !p) {
+    const timeCue = extractTimeCue(t) || 'peaceful afternoon or evening';
+    return {
+      rawSemantic: t || 'khoảng lặng chiêm nghiệm bình yên',
+      source: 'SPOKEN_VOICE',
+      mustShow: [t || 'contemplative pause or quiet everyday domestic scene'],
+      avoidGenericFallback: false,
+      voiceSpan: t,
+      subject: 'quiet domestic environment or thoughtful person',
+      action: 'contemplative pause or quiet everyday domestic scene',
+      object: 'lived-in home elements',
+      setting: 'warm lived-in everyday domestic space',
+      timeCue,
+      relationshipCue: 'contemplation and quiet reflection',
+    };
+  }
+
+  // 2. Primary Generic Semantic Payload (No action dictionaries or keyword branches)
+  const rawSemantic = source;
+  const isPriority = Boolean(p);
+  const semanticSource = isPriority ? 'PRIORITY_VISUAL' : 'SPOKEN_VOICE';
+  const timeCue = extractTimeCue(rawSemantic);
+  const setting = extractSetting(rawSemantic, timeCue);
+
+  return {
+    rawSemantic,
+    source: semanticSource,
+    mustShow: [rawSemantic],
+    avoidGenericFallback: true,
+    voiceSpan: t,
+    timeCue,
+    setting,
+    subject: 'person performing everyday action',
+    action: rawSemantic,
+    object: 'concrete focal elements from scene',
+    relationshipCue: 'everyday domestic interaction',
+  };
+}
+
+export function allocatePriorityVisuals(beatSeeds = [], rawPriorities = []) {
+  if (!Array.isArray(rawPriorities) || rawPriorities.length === 0) {
+    return {
+      beatPriorityMap: new Map(),
+      coverageReport: [],
+    };
+  }
+
+  const priorities = rawPriorities
+    .map((p) => String(p || '').replace(/^[-*•\d.]+\s*/, '').replace(/[.;,]+$/, '').trim())
+    .filter(Boolean);
+
+  const coverageReport = [];
+  const beatPriorityMap = new Map();
+  const assignedPriorities = new Set();
+
+  function scoreMatch(prio, beatText, beatIndex, totalBeats) {
+    const normPrio = normalize(prio);
+    const normBeat = normalize(beatText);
+
+    const isEndingPrio = /kết luận|khoảng thở|bình yên|khoảng lặng|yên lặng|lặng lẽ|kết thúc|outro|lặng/i.test(prio);
+    const isLateBeat = beatIndex >= Math.max(0, totalBeats - 4);
+    if (isEndingPrio) {
+      if (isLateBeat) {
+        return /khoảng thở|bình yên|yên|lặng|hành động mới|ở đó rất lâu/i.test(normBeat) ? 0.95 : 0.75;
+      }
+      return 0.05;
+    }
+
+    const prioTokens = normPrio.split(/\s+/).filter((w) => w.length >= 2);
+    if (!prioTokens.length) return 0;
+
+    let hits = 0;
+    for (const t of prioTokens) {
+      if (normBeat.includes(t)) hits++;
+    }
+    let tokenScore = hits / prioTokens.length;
+
+    // Generic bigram boost for exact phrases
+    for (let j = 0; j < prioTokens.length - 1; j++) {
+      const bigram = `${prioTokens[j]} ${prioTokens[j + 1]}`;
+      if (normBeat.includes(bigram)) {
+        tokenScore = Math.min(1.0, tokenScore + 0.25);
+      }
+    }
+
+    return tokenScore;
+  }
+
+  // 1. Direct and high-scoring match pass
+  for (const prio of priorities) {
+    let bestIdx = -1;
+    let bestScore = 0;
+
+    for (let i = 0; i < beatSeeds.length; i++) {
+      if (beatPriorityMap.has(i)) continue;
+      const score = scoreMatch(prio, beatSeeds[i].text, i, beatSeeds.length);
+      if (score > bestScore) {
+        bestScore = score;
+        bestIdx = i;
+      }
+    }
+
+    if (bestIdx !== -1 && bestScore >= 0.25) {
+      beatPriorityMap.set(bestIdx, prio);
+      assignedPriorities.add(prio);
+      coverageReport.push({
+        source: prio,
+        matchedShotId: `beat-${String(bestIdx + 1).padStart(2, '0')}`,
+        matchedVoiceText: beatSeeds[bestIdx].text,
+        coverage: bestScore >= 0.4 ? 'DIRECT' : 'PARTIAL',
+      });
+    }
+  }
+
+  // 2. Replanning pass: Allocate any remaining unmatched priorities to feasible narrative beats
+  for (const prio of priorities) {
+    if (assignedPriorities.has(prio)) continue;
+
+    let candidateIdx = -1;
+    const isEndingPrio = /kết luận|khoảng thở|bình yên|kết thúc|outro|lặng/i.test(prio);
+
+    if (isEndingPrio) {
+      for (let i = beatSeeds.length - 1; i >= 0; i--) {
+        if (!beatPriorityMap.has(i) && !beatSeeds[i].isStatement) {
+          candidateIdx = i;
+          break;
+        }
+      }
+    } else {
+      // Find unassigned narrative beat that is not hook or statement
+      for (let i = 1; i < beatSeeds.length - 1; i++) {
+        if (!beatPriorityMap.has(i) && !beatSeeds[i].isStatement) {
+          candidateIdx = i;
+          break;
+        }
+      }
+      if (candidateIdx === -1) {
+        for (let i = 0; i < beatSeeds.length; i++) {
+          if (!beatPriorityMap.has(i)) {
+            candidateIdx = i;
+            break;
+          }
+        }
+      }
+    }
+
+    if (candidateIdx !== -1) {
+      beatPriorityMap.set(candidateIdx, prio);
+      assignedPriorities.add(prio);
+      coverageReport.push({
+        source: prio,
+        matchedShotId: `beat-${String(candidateIdx + 1).padStart(2, '0')}`,
+        matchedVoiceText: beatSeeds[candidateIdx].text,
+        coverage: 'PARTIAL',
+        reason: 'Assigned to nearest feasible narrative beat during planner replenishment',
+      });
+    } else {
+      coverageReport.push({
+        source: prio,
+        matchedShotId: null,
+        matchedVoiceText: null,
+        coverage: 'UNMATCHED',
+        reason: 'Insufficient narrative shot capacity to allocate priority visual',
+      });
+    }
+  }
+
+  return {
+    beatPriorityMap,
+    coverageReport,
+  };
+}
+
 export function matchedPriority(
   text,
   priorities = [],
@@ -783,11 +997,19 @@ export function matchedPriority(
     if (usedSet.has(key)) continue;
     if (typeof isCompatible === 'function' && !isCompatible(p)) continue;
 
-    const words = key.split(/\s+/).filter((w) => w.length >= 4);
+    const words = key.split(/\s+/).filter((w) => w.length >= 2);
     if (!words.length) continue;
 
     const hits = words.filter((w) => n.includes(w)).length;
-    const score = hits / words.length;
+    let score = hits / words.length;
+
+    // Generic bigram boost for exact phrases
+    for (let j = 0; j < words.length - 1; j++) {
+      const bigram = `${words[j]} ${words[j + 1]}`;
+      if (n.includes(bigram)) {
+        score = Math.min(1.0, score + 0.25);
+      }
+    }
 
     if (score > bestScore) {
       bestScore = score;
@@ -795,10 +1017,19 @@ export function matchedPriority(
     }
   }
 
-  return bestScore >= 0.45 ? best : '';
+  return bestScore >= 0.25 ? best : '';
 }
 
-function familyIntent(text, role) {
+function familyIntent(text, role, semanticAnchor, priority) {
+  const raw = priority || semanticAnchor?.rawSemantic;
+  if (raw) {
+    return `Concrete family moment illustrating: "${raw}"; avoid generic family portrait fallback.`;
+  }
+  if (semanticAnchor?.avoidGenericFallback && semanticAnchor?.action) {
+    const objPart = semanticAnchor.object ? `, focusing on ${semanticAnchor.object}` : '';
+    return `Concrete domestic scene showing ${semanticAnchor.action}${objPart}; avoid generic family portrait fallback.`;
+  }
+
   // 1. Explicit focal object/detail
   if (includesAny(text, ['điện thoại'])) {
     return 'A family remains the main subject while one hand deliberately places the phone away from the dining table on a side shelf; the phone is secondary, not the hero object.';
@@ -815,7 +1046,7 @@ function familyIntent(text, role) {
   }
 
   // 4. Dinner/domestic action
-  if (includesAny(text, ['bữa cơm', 'bữa ăn', 'ăn cơm', 'ăn tối'])) {
+  if (includesAny(text, ['bữa cơm', 'ăn cơm', 'ăn tối'])) {
     if (role === STORY_ROLES.ESTABLISH) {
       return 'The recurring family shares an ordinary simple dinner at home; people are eating and talking naturally, not posing for camera.';
     }
@@ -908,7 +1139,15 @@ function habitIntent(text, role) {
   return 'Show a concrete everyday routine with the recurring person acting, not generic motivational imagery.';
 }
 
-export function buildVisualIntent({ text, role, mode, visualPriorities, priority: explicitPriority, previousIntent = '' }) {
+export function buildVisualIntent({
+  text,
+  role,
+  mode,
+  visualPriorities,
+  priority: explicitPriority,
+  semanticAnchor,
+  previousIntent = '',
+}) {
   let priority = explicitPriority;
   if (!priority && visualPriorities) {
     const compatibilityCheck = mode === CONTENT_MODES.FAMILY
@@ -917,10 +1156,12 @@ export function buildVisualIntent({ text, role, mode, visualPriorities, priority
     priority = matchedPriority(text, visualPriorities, undefined, compatibilityCheck);
   }
 
+  const anchor = semanticAnchor || deriveVisualSemanticAnchor({ text, priority, role, mode });
+
   let modeIntent = '';
   switch (mode) {
     case CONTENT_MODES.FAMILY:
-      modeIntent = familyIntent(text, role);
+      modeIntent = familyIntent(text, role, anchor, priority);
       break;
     case CONTENT_MODES.RELATIONSHIP:
       modeIntent = relationshipIntent(text, role);
@@ -942,7 +1183,12 @@ export function buildVisualIntent({ text, role, mode, visualPriorities, priority
   }
 
   let baseIntent = modeIntent;
-  if (priority) {
+  const rawPayload = anchor?.rawSemantic || priority;
+  if (anchor?.avoidGenericFallback && rawPayload) {
+    baseIntent = `${modeIntent} Concrete visual focus: "${rawPayload}". Avoid generic family portrait fallback.`;
+  } else if (anchor?.avoidGenericFallback && anchor?.action) {
+    baseIntent = `${modeIntent} Concrete visual focus: ${anchor.action}. Avoid generic family portrait fallback.`;
+  } else if (priority) {
     baseIntent = `${modeIntent} Visual priority hint: ${priority}. Convert this priority into a specific visible human action whenever possible; avoid posed or decorative imagery.`;
   }
 
@@ -966,7 +1212,15 @@ export function buildVisualIntent({ text, role, mode, visualPriorities, priority
   return baseIntent;
 }
 
-function familyAction(text, role) {
+function familyAction(text, role, semanticAnchor, priority) {
+  if (priority) {
+    return `A concrete domestic scene illustrating: ${priority}.`;
+  }
+  if (semanticAnchor?.avoidGenericFallback && semanticAnchor?.action) {
+    const objPart = semanticAnchor.object ? ` focusing directly on ${semanticAnchor.object}` : '';
+    return `A concrete domestic action showing ${semanticAnchor.action}${objPart}.`;
+  }
+
   // 1. Explicit focal object/detail
   if (includesAny(text, ['điện thoại'])) {
     return 'A parent places the phone face-down on a side shelf while the family keeps eating in the background.';
@@ -995,7 +1249,7 @@ function familyAction(text, role) {
   if (
     includesAny(
       text,
-      ['bữa cơm', 'bữa ăn', 'mâm cơm'],
+      ['bữa cơm', 'mâm cơm'],
     )
   ) {
     if (role === STORY_ROLES.ESTABLISH) {
@@ -1017,10 +1271,21 @@ export function buildVisualAction({
   text,
   role,
   mode,
+  semanticAnchor,
+  priority,
 }) {
+  const raw = priority || semanticAnchor?.rawSemantic;
+  if (raw) {
+    return `A concrete domestic action scene illustrating: "${raw}".`;
+  }
+  if (semanticAnchor?.avoidGenericFallback && semanticAnchor?.action) {
+    const objPart = semanticAnchor.object ? ` focusing directly on ${semanticAnchor.object}` : '';
+    return `A concrete domestic action showing ${semanticAnchor.action}${objPart}.`;
+  }
+
   switch (mode) {
     case CONTENT_MODES.FAMILY:
-      return familyAction(text, role);
+      return familyAction(text, role, semanticAnchor, priority);
 
     case CONTENT_MODES.RELATIONSHIP:
       if (role === STORY_ROLES.QUESTION || includesAny(text, ['khi ban met', 'thich nguoi khac', 'khong phai la mot giai phap'])) {
@@ -1454,28 +1719,27 @@ export function buildStoryPlan(video, timelineSegments = [], options = {}) {
   // Hook pattern based on opening text
   const hookProgression = chooseHookPattern(allBeatSeeds[0]?.text || '');
 
-  const usedPriorities = new Set();
+  const { beatPriorityMap, coverageReport } = allocatePriorityVisuals(
+    allBeatSeeds,
+    video.visualPriorities,
+  );
+
   let previousIntent = '';
   const candidateBeats = allBeatSeeds.map((item, idx) => {
     const role = roleFromText(item.text, idx, allBeatSeeds.length, mode);
-    const compatibilityCheck =
-      mode === CONTENT_MODES.FAMILY
-        ? (priority) => isFamilyPriorityCompatible({ text: item.text, role, priority })
-        : null;
-    const matched = matchedPriority(
-      item.text,
-      video.visualPriorities,
-      usedPriorities,
-      compatibilityCheck,
-    );
-    if (matched) {
-      usedPriorities.add(normalize(matched));
-    }
+    const matched = beatPriorityMap.get(idx) || null;
+    const semanticAnchor = deriveVisualSemanticAnchor({
+      text: item.text,
+      priority: matched,
+      role,
+      mode,
+    });
     const visualIntent = buildVisualIntent({
       text: item.text,
       role,
       mode,
       priority: matched,
+      semanticAnchor,
       previousIntent,
     });
     previousIntent = visualIntent;
@@ -1484,6 +1748,8 @@ export function buildStoryPlan(video, timelineSegments = [], options = {}) {
       text: item.text,
       role,
       mode,
+      semanticAnchor,
+      priority: matched,
     });
 
     // Story Participants
@@ -1708,6 +1974,27 @@ export function buildStoryPlan(video, timelineSegments = [], options = {}) {
       durationFrames: item.endFrame - item.startFrame,
       voiceClause: item.text,
       audioText: item.text,
+      voiceSpan: {
+        text: item.text,
+        startFrame: item.startFrame,
+        endFrame: item.endFrame,
+      },
+      semanticAnchor,
+      semanticTrace: {
+        rawSemantic: semanticAnchor.rawSemantic,
+        source: semanticAnchor.source,
+        mustShow: semanticAnchor.mustShow,
+        avoidGenericFallback: semanticAnchor.avoidGenericFallback,
+        voiceSpan: item.text,
+      },
+      mustShow: semanticAnchor.mustShow || (semanticAnchor.rawSemantic ? [semanticAnchor.rawSemantic] : []),
+      avoidGenericFallback: semanticAnchor.avoidGenericFallback,
+      semanticSource: matched
+        ? 'priority-visual'
+        : semanticAnchor.avoidGenericFallback
+        ? 'voice-semantic'
+        : 'contextual-fallback',
+      priorityVisualSource: matched || null,
       storyRole: role,
       plannerStoryRole,
       visualMode,
@@ -1717,7 +2004,9 @@ export function buildStoryPlan(video, timelineSegments = [], options = {}) {
       narrativePurpose: `${role}: ${item.text.slice(0, 120)}`,
       visualIntent,
       semanticIntent: visualIntent,
-      visualAction,
+      visualAction: (visualMode === 'EMPTY_RELEASE' || peopleContract.max === 0)
+        ? 'Still atmosphere in the quiet room with soft natural light, clean surfaces, and zero people.'
+        : visualAction,
       visualVerb,
       needsPeople: (visualMode === 'EMPTY_RELEASE' || visualMode === 'OBJECT_DETAIL' || role === STORY_ROLES.RELEASE || peopleContract.max === 0) ? false : peoplePolicy(mode, role),
       peopleContract,
@@ -1891,16 +2180,78 @@ export function buildStoryPlan(video, timelineSegments = [], options = {}) {
     };
   });
 
-  // Guarantee no adjacent beats have identical visualIntent
+  // Guarantee no adjacent beats have identical visualIntent or generic semantic duplication
   for (let i = 1; i < synchronizedShots.length; i++) {
-    const a = normalize(synchronizedShots[i - 1].visualIntent);
-    const b = normalize(synchronizedShots[i].visualIntent);
+    const prev = synchronizedShots[i - 1];
+    const curr = synchronizedShots[i];
+    const a = normalize(prev.visualIntent);
+    const b = normalize(curr.visualIntent);
     if (a && a === b) {
-      const extra = synchronizedShots[i].voiceClause
-        ? ` — Tiếp nối: "${synchronizedShots[i].voiceClause.slice(0, 35)}"`
+      const extra = curr.voiceClause
+        ? ` — Tiếp nối: "${curr.voiceClause.slice(0, 35)}"`
         : ` — Nhịp nối ${i + 1}`;
-      synchronizedShots[i].visualIntent = `${synchronizedShots[i].visualIntent}${extra}`;
-      synchronizedShots[i].semanticIntent = synchronizedShots[i].visualIntent;
+      curr.visualIntent = `${curr.visualIntent}${extra}`;
+      curr.semanticIntent = curr.visualIntent;
+    }
+
+    // Semantic duplication check: prevent adjacent generic scenes when voice contains distinctions
+    const prevActionNorm = normalize(prev.visualAction);
+    const currActionNorm = normalize(curr.visualAction);
+    if (
+      prevActionNorm &&
+      currActionNorm &&
+      (prevActionNorm === currActionNorm ||
+        (prevActionNorm.includes('dining table') &&
+          currActionNorm.includes('dining table') &&
+          !curr.semanticAnchor?.avoidGenericFallback))
+    ) {
+      if (curr.semanticAnchor?.avoidGenericFallback) {
+        curr.visualAction = buildVisualAction({
+          text: curr.voiceClause,
+          role: curr.storyRole,
+          mode,
+          semanticAnchor: curr.semanticAnchor,
+          priority: curr.priorityVisualSource,
+        });
+      } else {
+        const extraAction = curr.voiceClause
+          ? ` Distinct quiet moment during: "${curr.voiceClause.slice(0, 40)}".`
+          : ` Distinct domestic moment ${i + 1}.`;
+        curr.visualAction = `${curr.visualAction}${extraAction}`;
+      }
+    }
+  }
+
+  const effectiveFinalQuestion = video.finalQuestionText || options.finalQuestionText || '';
+  const effectiveStatementText = video.statementText || options.statementText || '';
+
+  if (effectiveFinalQuestion) {
+    let qBeat = synchronizedShots.find(
+      (b) => b.storyRole === STORY_ROLES.QUESTION || b.plannerStoryRole === 'question'
+    );
+    if (!qBeat && synchronizedShots.length > 0) {
+      qBeat = synchronizedShots[synchronizedShots.length - 1];
+    }
+    if (qBeat) {
+      qBeat.isQuestion = true;
+      qBeat.questionText = effectiveFinalQuestion;
+      qBeat.card = {
+        kind: 'question',
+        text: effectiveFinalQuestion,
+        durationFrames: qBeat.durationFrames,
+      };
+    }
+  }
+
+  if (effectiveStatementText) {
+    let sBeat = synchronizedShots.find((b) => b.isStatement || b.hasInsightCard);
+    if (sBeat) {
+      sBeat.statementText = effectiveStatementText;
+      sBeat.card = {
+        kind: 'statement',
+        text: effectiveStatementText,
+        durationFrames: sBeat.durationFrames || 66,
+      };
     }
   }
 
@@ -1911,6 +2262,8 @@ export function buildStoryPlan(video, timelineSegments = [], options = {}) {
     series: video.series,
     category: video.category,
     contentMode: mode,
+    statementText: effectiveStatementText || null,
+    finalQuestionText: effectiveFinalQuestion || null,
     needsRecurringCast: cast.needsRecurringCast,
     castId: cast.castId,
     worldId: world.worldId,
@@ -1922,6 +2275,7 @@ export function buildStoryPlan(video, timelineSegments = [], options = {}) {
       options.assetResolutionMode ||
       (options.approvedAssets ? 'RESOLVED' : 'UNRESOLVED'),
     grammarVersion: 'reference-shot-grammar-v1',
+    priorityVisualCoverage: coverageReport,
     beats: synchronizedShots,
   };
 
@@ -2024,6 +2378,16 @@ export function validateStoryPlan(plan) {
 
   if (plan.needsRecurringCast && !plan.castId) {
     errors.push('Recurring cast requested but castId is missing.');
+  }
+
+  if (Array.isArray(plan.priorityVisualCoverage)) {
+    for (const cov of plan.priorityVisualCoverage) {
+      if (cov.coverage === 'UNMATCHED') {
+        errors.push(
+          `Priority visual remained UNMATCHED: "${cov.source}" (${cov.reason || 'no feasible shot capacity'}).`
+        );
+      }
+    }
   }
 
   return {

@@ -1,0 +1,12 @@
+{
+  "slug": "v56-test-17-duration-blocks-qa",
+  "expectedTotalFrames": 1710,
+  "expectedDurationSeconds": 57,
+  "probedContainerDuration": 57,
+  "probedVideoDuration": 57,
+  "probedAudioDuration": 57,
+  "probedVideoFrames": 1710,
+  "videoWidth": 1080,
+  "videoHeight": 1920,
+  "totalShots": 1
+}

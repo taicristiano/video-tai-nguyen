@@ -15,6 +15,7 @@ Cài đặt tất cả dependencies và cấu hình môi trường tự động.
 ```bash
 /gen-video <context>
 /gen-video --template news/current-affairs-dark --audio=voice-only <context>
+/gen-video --resume=<slug>
 ```
 
 Without `--template`, generation uses `creative/free-style`: AI creates
@@ -23,6 +24,16 @@ and verification contracts.
 
 `--audio` accepts `full`, `music`, `sfx`, or `voice-only`. Omit it to preserve
 the selected template's default audio behavior.
+
+`--resume=<slug>` resumes a previously paused generation (e.g. after Human QA
+review) from its next pending stage.
+
+Đối với template production có cổng kiểm duyệt (`human-insight/cinematic-light`):
+- AI **bắt buộc dừng** tại `PENDING_HUMAN_IMAGE_QA` và `PENDING_HUMAN_VIDEO_QA`, tuyệt đối không được tự ý auto-pass.
+- Con người review và duyệt qua script:
+  - Duyệt ảnh: `node scripts/record-human-review.mjs --slug=<slug> --action=image-pass-all`
+  - Duyệt video: `node scripts/record-human-review.mjs --slug=<slug> --action=video-pass`
+- Hợp đồng thời lượng chuẩn 70–85s (mục tiêu 75–80s) được kiểm soát tự động qua cân chỉnh nhịp giọng đọc (`ffmpeg atempo`), giữ nguyên 100% văn bản kịch bản gốc.
 
 Tạo video từ nội dung context được cung cấp.
 
@@ -99,9 +110,9 @@ Xem hướng dẫn đa nền tảng đầy đủ tại
   → Step 3: Teller      (script.json — tiếng Việt)
   → Step 4: Audio       (voice.mp3 — ElevenLabs / Gemini)
   → Step 5: Transcribe  (timeline.json — Groq hoặc api.stt.ai)
-  → Step 6: Spec        (spec.json — scene timing từ timeline.json)
-  → Step 7: Coder       (template/custom scenes + VideoContent.tsx + Root.tsx)
-  → Step 8: Render      (video.mp4)
+  → Step 6: Spec        (spec.json / production-render-spec.json)
+  → Step 7: Coder       (data-driven production props; 0 shared source edits for locked templates)
+  → Step 8: Render & QA (video.mp4 + Human-QA verification)
 ```
 
 ## Cấu trúc thư mục
@@ -112,11 +123,11 @@ create-video-with-ai/
 │   ├── tts.mjs          ← TTS: ElevenLabs (primary) / Gemini (fallback)
 │   └── transcribe.mjs   ← STT: Groq / api.stt.ai → timeline.json
 ├── src/
-│   ├── Root.tsx          ← Cập nhật defaultSlug + defaultDuration mỗi run
+│   ├── Root.tsx          ← Remotion Root (tự động nhận props runtime, không sửa khi chạy template cố định)
 │   ├── Video.tsx         ← Không sửa
-│   ├── VideoContent.tsx  ← Tạo lại mỗi run (có <Audio>)
+│   ├── VideoContent.tsx  ← Shared component có <Audio> (không sửa cho locked template)
 │   ├── tokens.ts         ← Interface DesignTokens (không sửa)
-│   └── scenes/           ← Tạo lại mỗi run
+│   └── scenes/           ← Tạo lại mỗi run cho custom template (locked template dùng data-driven renderer)
 │       ├── tokens.ts
 │       ├── Scene1Hook.tsx
 │       └── ...

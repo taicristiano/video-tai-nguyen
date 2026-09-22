@@ -1,0 +1,35 @@
+{
+  "slug": "v56-test-18-duration-passes-qa",
+  "dryRun": true,
+  "passedAutomatedCriteria": true,
+  "automatedChecks": {
+    "durationAudit": {
+      "plannedDurationSeconds": 77.5,
+      "actualMp4DurationSeconds": 77.5,
+      "allowedRange": "70–85s",
+      "preferredRange": "75–80s",
+      "durationVerdict": "PASS"
+    },
+    "plannedDurationSeconds": 77.5,
+    "actualMp4DurationSeconds": 77.5,
+    "allowedRange": "70–85s",
+    "preferredRange": "75–80s",
+    "durationVerdict": "PASS"
+  },
+  "durationAudit": {
+    "plannedDurationSeconds": 77.5,
+    "actualMp4DurationSeconds": 77.5,
+    "allowedRange": "70–85s",
+    "preferredRange": "75–80s",
+    "durationVerdict": "PASS"
+  },
+  "humanReviewCriteria": {
+    "motionCalmness": "PENDING_HUMAN_REVIEW",
+    "typographyLegibility": "PENDING_HUMAN_REVIEW",
+    "subtitleTimingAndSync": "PENDING_HUMAN_REVIEW",
+    "compositionAndCentering": "PENDING_HUMAN_REVIEW",
+    "overallVisualNarrative": "PENDING_HUMAN_REVIEW"
+  },
+  "reviewPackLocation": "scratch/v56-test-18-duration-passes-qa/review",
+  "timestamp": "2026-09-22T14:17:38.227Z"
+}

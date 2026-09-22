@@ -5,9 +5,18 @@
  * Single source of truth for all runtime assets required by human-insight/cinematic-light.
  */
 
+export const CINEMATIC_LIGHT_DURATION_CONTRACT = Object.freeze({
+  minDurationSec: 70,
+  preferredMinDurationSec: 75,
+  preferredMaxDurationSec: 80,
+  maxDurationSec: 85,
+  targetMidpointSec: 77.5,
+});
+
 export const CINEMATIC_LIGHT_DEPENDENCIES = {
   templateId: 'human-insight/cinematic-light',
   brand: 'HAY & ĐẸP.',
+  durationContract: CINEMATIC_LIGHT_DURATION_CONTRACT,
   required: [
     'assets/hay-dep/brand/logo-full-horizontal-with-slogan.png',
   ],
@@ -18,6 +27,10 @@ export const CINEMATIC_LIGHT_DEPENDENCIES = {
     outro: [
       'assets/human-insight/brand/hay-dep-mark-sage.png',
       'assets/human-insight/brand/outro-9-16.png',
+    ],
+    sfx: [
+      'assets/human-insight/sfx/page-turn.wav',
+      'assets/human-insight/sfx/whoosh.wav',
     ],
   },
   defaults: {
@@ -101,10 +114,14 @@ export function resolveEffectiveTemplateConfig(spec = {}, options = {}) {
     if (effectiveOutroArtwork) addDep(effectiveOutroArtwork);
   }
 
-  // Shot images
+  // Shot images and local entrySfx (only when SFX is enabled by audioMode)
+  const sfxActive = spec.audioMode !== 'music' && spec.audioMode !== 'voice-only';
   for (const shot of spec.shots || []) {
     if (shot.imageSrc) {
       addDep(shot.imageSrc);
+    }
+    if (sfxActive && shot.entrySfx?.src && typeof shot.entrySfx.src === 'string' && !shot.entrySfx.src.startsWith('http://') && !shot.entrySfx.src.startsWith('https://')) {
+      addDep(shot.entrySfx.src);
     }
   }
 

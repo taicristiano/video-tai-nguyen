@@ -246,7 +246,7 @@ describe('Story Planner Generalization & Single Cast Source of Truth', () => {
     expect(STYLE_PROMPT.toLowerCase()).not.toMatch(/\bfamily\b|\bbooks?\b|\bhome\b|\bdinner\b|\bphone\b/);
   });
 
-  it('orders image prompt with STYLE first before CAST and ACTION, within 1600 char budget', async () => {
+  it('orders image prompt semantic-first with ACTION before STYLE, within 1600 char budget', async () => {
     // @ts-expect-error JS module
     const { buildPrompt } = await import('../../../../scripts/human-insight-image.mjs');
     const prompt = buildPrompt({
@@ -257,13 +257,13 @@ describe('Story Planner Generalization & Single Cast Source of Truth', () => {
       presentMembers: ['mother', 'boy'],
     }, 'family-young-01');
 
-    const styleIdx = prompt.indexOf('STYLE LOCK:');
-    const castIdx = prompt.indexOf('CAST CONTINUITY');
     const actionIdx = prompt.indexOf('ACTION:');
+    const castIdx = prompt.indexOf('CAST CONTINUITY');
+    const styleIdx = prompt.indexOf('STYLE LOCK:');
 
-    expect(styleIdx).toBeGreaterThanOrEqual(0);
-    expect(castIdx).toBeGreaterThan(styleIdx);
-    expect(actionIdx).toBeGreaterThan(castIdx);
+    expect(actionIdx).toBeGreaterThanOrEqual(0);
+    expect(castIdx).toBeGreaterThan(actionIdx);
+    expect(styleIdx).toBeGreaterThan(castIdx);
     expect(prompt.length).toBeLessThanOrEqual(1600);
   });
 

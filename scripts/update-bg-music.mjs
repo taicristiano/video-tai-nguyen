@@ -115,9 +115,11 @@ function extractRegistryEntries(source) {
     const text = source.slice(open, close + 1);
     const id = text.match(/\bid:\s*"([^"]+)"/)?.[1];
     const assetManifestPath = text.match(/\bassetManifestPath:\s*(?:"([^"]+)"|null)/)?.[1] ?? null;
+    const dependencyContractPath = text.match(/\bdependencyContractPath:\s*"([^"]+)"/)?.[1] ?? null;
+    const productionLockPath = text.match(/\bproductionLockPath:\s*"([^"]+)"/)?.[1] ?? null;
 
     if (id) {
-      entries.push({id, assetManifestPath, start: open, end: close + 1, text});
+      entries.push({id, assetManifestPath, dependencyContractPath, productionLockPath, start: open, end: close + 1, text});
     }
 
     index = close + 1;
@@ -274,6 +276,31 @@ try {
   const updated = updateDefaultBgMusic(source, template, music.path);
 
   fs.writeFileSync(REGISTRY_PATH, updated);
+
+  if (template.dependencyContractPath) {
+    const contractPath = path.join(ROOT, template.dependencyContractPath);
+    if (fs.existsSync(contractPath)) {
+      let contractSource = fs.readFileSync(contractPath, 'utf8');
+      contractSource = contractSource.replace(
+        /\bdefaultBgMusic:\s*(['"`])[^'"`]*\1/,
+        `defaultBgMusic: '${music.path}'`,
+      );
+      fs.writeFileSync(contractPath, contractSource, 'utf8');
+      console.log(`Synced dependency contract: ${template.dependencyContractPath}`);
+    }
+  }
+
+  if (template.productionLockPath) {
+    const lockPath = path.join(ROOT, template.productionLockPath);
+    if (fs.existsSync(lockPath)) {
+      const lockData = JSON.parse(fs.readFileSync(lockPath, 'utf8'));
+      if (lockData.audioContract) {
+        lockData.audioContract.defaultBgMusic = music.path;
+        fs.writeFileSync(lockPath, JSON.stringify(lockData, null, 2) + '\n', 'utf8');
+        console.log(`Synced production lock: ${template.productionLockPath}`);
+      }
+    }
+  }
 
   console.log(`Updated ${template.id}`);
   console.log(`defaultBgMusic: ${music.path}`);

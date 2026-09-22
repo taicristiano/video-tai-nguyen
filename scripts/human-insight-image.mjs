@@ -45,7 +45,7 @@ const IMAGE_DIR = path.join(ROOT, 'public/assets/human-insight/images');
 // Be deliberately conservative when reusing an existing illustration.
 // A single mood/emotion overlap must never be enough to suppress generation.
 const DEFAULT_THRESHOLD = 14;
-const CLOUDFLARE_MODEL = '@cf/black-forest-labs/flux-1-schnell';
+export const CLOUDFLARE_MODEL = '@cf/black-forest-labs/flux-1-schnell';
 
 // TODO: Audit remaining historical 394 assets into HAYDEP_CORE, HAYDEP_COMPATIBLE, LEGACY_NEP, REJECT_OFFSTYLE
 export const ASSET_TIERS = {
@@ -91,7 +91,6 @@ export function inferCastId(text, category) {
     lower.includes('bữa cơm') ||
     lower.includes('gia đình') ||
     lower.includes('con cái') ||
-    lower.includes('bố mẹ') ||
     lower.includes('nhà mình')
   ) {
     return 'family-young-01';
@@ -183,19 +182,39 @@ const GENERIC_MOOD_TAGS = new Set([
   'stressed',
 ]);
 
-function loadEnvFile(filename) {
-  const envPath = path.join(ROOT, filename);
-  if (!fs.existsSync(envPath)) return;
-  const lines = fs.readFileSync(envPath, 'utf-8').split('\n');
-  for (const line of lines) {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith('#')) continue;
-    const eqIdx = trimmed.indexOf('=');
-    if (eqIdx === -1) continue;
-    const key = trimmed.slice(0, eqIdx).trim();
-    const value = trimmed.slice(eqIdx + 1).trim().replace(/^['"]|['"]$/g, '');
-    if (key && !(key in process.env)) process.env[key] = value;
+const loadedEnvRoots = new Set();
+
+/**
+ * Idempotently loads project environment variables (.env.local and .env).
+ * Precedence: existing process.env > .env.local > .env.
+ * Does not overwrite existing environment variables and never logs secrets.
+ *
+ * @param {string} [rootDir=ROOT]
+ */
+export function ensureProjectEnvLoaded(rootDir = ROOT) {
+  const resolved = path.resolve(rootDir || ROOT);
+  if (loadedEnvRoots.has(resolved)) return;
+
+  function loadFile(filename) {
+    const envPath = path.join(resolved, filename);
+    if (!fs.existsSync(envPath)) return;
+    const lines = fs.readFileSync(envPath, 'utf-8').split('\n');
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) continue;
+      const eqIdx = trimmed.indexOf('=');
+      if (eqIdx === -1) continue;
+      const key = trimmed.slice(0, eqIdx).trim();
+      const value = trimmed.slice(eqIdx + 1).trim().replace(/^['"]|['"]$/g, '');
+      if (key && !(key in process.env)) {
+        process.env[key] = value;
+      }
+    }
   }
+
+  loadFile('.env.local');
+  loadFile('.env');
+  loadedEnvRoots.add(resolved);
 }
 
 function parseArgs(argv) {
@@ -719,6 +738,7 @@ function compactCastMember(desc) {
     .replace(/,\s*8/g, '')
     .replace(/,\s*7/g, '')
     .replace(/,\s*6/g, '')
+    .replace(/,\s*5–6/g, '')
     .replace(/Vietnamese adult,\s*27–32,\s*distinct fixed soft facial design,\s*shoulder-length or tied black hair,\s*warm neutral clothing\.?/i, 'Vietnamese adult, soft face, tied black hair, neutral clothes.')
     .replace(/Vietnamese adult,\s*27–32,\s*fixed oval facial design,\s*short styled dark brown hair,\s*casual clothing\.?/i, 'Vietnamese adult, oval face, dark brown hair, casual clothes.')
     .replace(/distinct\s+fixed\s+/gi, '')
@@ -732,6 +752,19 @@ function compactCastMember(desc) {
     .replace(/casual\s+clothing/gi, 'clothes')
     .replace(/casual\s+attire/gi, 'clothes')
     .replace(/warm\s+neutral\s+clothing/gi, 'neutral clothes')
+    .replace(/,\s*straight\s+brows/gi, '')
+    .replace(/,\s*warm\s+almond\s+eyes/gi, '')
+    .replace(/,\s*warm\s+eyes/gi, '')
+    .replace(/,\s*clean-shaven/gi, '')
+    .replace(/short straight black hair with a neat side part/gi, 'short neat black hair')
+    .replace(/black hair in one fixed low bun with two subtle loose strands/gi, 'black hair in low bun')
+    .replace(/short slightly spiky black fringe/gi, 'short black hair')
+    .replace(/neat bob haircut with straight bangs/gi, 'bob haircut')
+    .replace(/sage overshirt,\s*cream T-shirt,\s*charcoal trousers/gi, 'sage overshirt, charcoal pants')
+    .replace(/warm beige cardigan,\s*cream dress/gi, 'beige cardigan, cream dress')
+    .replace(/sage cotton T-shirt/gi, 'sage tee')
+    .replace(/warm cream dress/gi, 'cream dress')
+    .replace(/,\s*round-soft\s+face/gi, ', round face')
     .trim();
 }
 
@@ -860,9 +893,11 @@ function buildWorldPrompt(scene) {
 
 function buildNegativeRules(scene) {
   const rules = [
-    'NEGATIVE EXCLUSIONS: NO WORDS, LETTERS, NUMBERS, LABELS, MARKS, WATERMARKS, TEXT POLLUTION.',
-    'STRICTLY BAN: NO speech bubbles, dialogue balloons, comic bubbles, thought bubbles, quotation text, captions, subtitles, signatures, pseudo-writing.',
-    'HARD EXCLUSIONS: NO photorealism, realistic skin/pores, individual hair strands, CGI, 3D render, anime, chibi, extra people.',
+    'NEGATIVE EXCLUSIONS: NO WORDS, LETTERS, NUMBERS, LABELS, MARKS, WATERMARKS, TEXT POLLUTION, SIGNATURES, PSEUDO-TEXT.',
+    'STRICTLY BAN: NO speech bubbles, dialogue balloons, comic bubbles, thought bubbles, quotation text, captions, subtitles, signatures, pseudo-writing, handwriting, calligraphy, fake characters.',
+    'NO ARTIST SIGNATURE: STRICTLY PROHIBIT artist signature, corner initials, creator mark, stamp, seal, watermark, copyright symbol, especially in bottom-right, bottom-left, poster corners, or picture-frame corners.',
+    'NO TEXT POLLUTION: ZERO readable poster text, signage text, book-cover text, package labels, clothing text, wall-art lettering, decorative typography, random glyphs, or fake Asian/Latin characters.',
+    'HARD EXCLUSIONS: NO photorealism, photographic interior, photographic lighting, lens blur, shallow DOF, skin pores, hair strands, CGI, 3D render, DSLR.',
   ];
 
   if (scene.storyRole === 'detail-action' || scene.scale === 'detail' || scene.scale === 'DETAIL') {
@@ -938,56 +973,39 @@ export function buildPrompt(scene, castId) {
       .replace(/, exactly one person in entire frame, no second body\.?$/i, '.');
   }
 
-  // 1. MEDIUM + STYLE LOCK
-  const styleHeader = 'MEDIUM / STYLE LOCK: HAY & ĐẸP.';
-  const styleBody = isZeroPeople
-    ? 'Clean 2D hand-drawn editorial illustration, charcoal/sepia lines, matte gouache fills, non-photorealistic.'
-    : 'Clean 2D hand-drawn editorial illustration, charcoal/sepia lines, simplified features, non-photorealistic.';
-  const section1 = `${styleHeader}\n${styleBody}`;
+  const rawPayload = (
+    scene.semanticAnchor?.rawSemantic ||
+    (Array.isArray(scene.mustShow) && scene.mustShow[0]) ||
+    scene.priorityVisualSource ||
+    ''
+  ).trim();
 
-  // 2. RENDERING RECIPE
-  const section2 = 'RENDERING RECIPE: Matte gouache fills. Clearly DRAWN, not photographed.';
+  const shouldAvoidPortrait = Boolean(
+    scene.semanticAnchor?.avoidGenericFallback ||
+    scene.avoidGenericFallback ||
+    scene.priorityVisualSource
+  );
 
-  // 3. PALETTE
-  const section3 = 'PALETTE: Ivory/cream, muted sage, warm wood, terracotta/amber accents.';
-
-  // 4. VISUAL MODE + SCALE
-  const rawScale =
-    scene.scale ||
-    scene.shotScale ||
-    (scene.type === 'hook'
-      ? 'wide'
-      : scene.type === 'ending'
-      ? 'close'
-      : 'medium');
-  const shotScale = String(rawScale).toLowerCase();
-  const scaleDescriptions = {
-    wide: 'SCALE LOCK: WIDE ENVIRONMENTAL ILLUSTRATION. Substantial room context (~50%+ environment), uncropped.',
-    medium: 'SCALE LOCK: MEDIUM. Torso and physical interaction with room context.',
-    close: 'SCALE LOCK: CLOSE REACTION ILLUSTRATION. One face and shoulders dominate frame. No two-person sofa framing.',
-    detail: isZeroPeople
-      ? 'SCALE LOCK: DETAIL INSERT. Quiet tabletop object detail dominates frame.'
-      : 'SCALE LOCK: DETAIL INSERT. Object or hand action dominates frame. No full seated two-person composition.',
-    release: 'SCALE LOCK: RELEASE. Quiet environmental breathing room. Zero people, zero hands.',
-  };
-  const scaleText = scaleDescriptions[shotScale] || scaleDescriptions.medium;
-  const section4 = [
-    'VISUAL MODE & SCALE LOCK:',
-    `VISUAL MODE: ${scene.visualMode || 'SOLO_MEDIUM'}. ${scaleText}`,
-  ].join('\n');
-
-  // 5. PEOPLE CONTRACT
-  let section5 = '';
-  if (isZeroPeople) {
-    section5 = 'PEOPLE LOCK: ZERO PEOPLE. Zero visible people.';
-  } else {
-    section5 = buildPresentCastPrompt(scene, castId, { compact: true });
+  if (rawPayload && shouldAvoidPortrait && !isZeroPeople) {
+    if (!actionLower.includes('face-down') && !actionLower.includes('phone') && !actionLower.includes('đặt điện thoại')) {
+      action = `A concrete domestic scene illustrating: "${rawPayload}". Visibly carry out this tangible action and object interaction; avoid generic family portrait fallback.`;
+    }
   }
 
-  // 6. ACTION / PHYSICAL END-STATE
-  const section6 = `ACTION / PHYSICAL END-STATE:\nACTION: ${action}`;
+  // 1. ACTION / PHYSICAL END-STATE (SEMANTIC-FIRST: lead with concrete visible action & object)
+  const leadSemantic = (rawPayload && !isZeroPeople)
+    ? `SCENE SEMANTIC PAYLOAD: "${rawPayload}". Focus directly on this tangible action, physical setting, and domestic objects.`
+    : (scene.semanticAnchor?.action && !isZeroPeople
+      ? `${scene.semanticAnchor.action}. Focus on ${scene.semanticAnchor.object || 'the central subject'}.`
+      : (sceneMeaning && sceneMeaning !== action ? `${sceneMeaning}.` : ''));
 
-  // 7. WORLD / OBJECTS
+  const sectionAction = [
+    'ACTION / PHYSICAL END-STATE:',
+    `ACTION: ${action}`,
+    leadSemantic ? `SCENE FOCUS: ${leadSemantic}` : null,
+  ].filter(Boolean).join('\n');
+
+  // 2. WORLD / OBJECTS & SETTING
   let worldText = '';
   if (scene.worldLock) {
     worldText = scene.worldLock
@@ -1006,17 +1024,79 @@ export function buildPrompt(scene, castId) {
     worldText = worldText.slice(0, 45).replace(/,[^,]*$/, '') + '.';
   }
   worldText = worldText.replace(/conversation area/i, 'space');
-  const section7 = `WORLD / OBJECTS: ${worldText}`;
+  const timeSetting = scene.semanticAnchor?.timeCue ? ` Time: ${scene.semanticAnchor.timeCue}.` : '';
+  const sectionWorld = `WORLD / OBJECTS: ${worldText}${timeSetting}`;
 
-  // 8. FRAMING
+  // 3. PEOPLE CONTRACT
+  let sectionPeople = '';
+  if (isZeroPeople) {
+    sectionPeople = 'PEOPLE LOCK: ZERO PEOPLE. Zero visible people.';
+  } else {
+    sectionPeople = buildPresentCastPrompt(scene, castId, { compact: true });
+  }
+
+  // 4. MEDIUM + STYLE LOCK
+  const styleHeader = 'MEDIUM / STYLE LOCK: HAY & ĐẸP.';
+  const styleBody = isZeroPeople
+    ? 'Clean 2D hand-drawn editorial illustration, charcoal/sepia lines, matte gouache fills, non-photorealistic.'
+    : 'Clean 2D hand-drawn editorial illustration, charcoal/sepia lines, simplified features, non-photorealistic.';
+  const sectionStyle = [
+    `${styleHeader}\n${styleBody}`,
+    'RENDERING RECIPE: Matte gouache fills. Clearly DRAWN, not photographed.',
+    'PALETTE: Ivory/cream, muted sage, warm wood, terracotta/amber accents.',
+  ].join('\n');
+
+  // 5. VISUAL MODE & SCALE LOCK
+  const rawScale =
+    scene.scale ||
+    scene.shotScale ||
+    (scene.type === 'hook'
+      ? 'wide'
+      : scene.type === 'ending'
+      ? 'close'
+      : 'medium');
+  const shotScale = String(rawScale).toLowerCase();
+  const scaleDescriptions = {
+    wide: 'SCALE LOCK: WIDE. Room context (~50%+ environment).',
+    medium: 'SCALE LOCK: MEDIUM. Torso and physical interaction with room context.',
+    close: 'SCALE LOCK: CLOSE. One face and shoulders dominate frame.',
+    detail: isZeroPeople
+      ? 'SCALE LOCK: DETAIL. Quiet tabletop object detail dominates frame.'
+      : 'SCALE LOCK: DETAIL. Object or hand action dominates frame.',
+    release: 'SCALE LOCK: RELEASE. Quiet environmental breathing room. Zero people, zero hands.',
+  };
+  const scaleText = scaleDescriptions[shotScale] || scaleDescriptions.medium;
   const sil = scene.silhouette ? ` Silhouette: ${scene.silhouette}.` : '';
-  const section8 = `FRAMING: Vertical 9:16.${sil}`;
+  const sectionScale = [
+    'VISUAL MODE & SCALE LOCK:',
+    `VISUAL MODE: ${scene.visualMode || 'SOLO_MEDIUM'}. ${scaleText}`,
+    `FRAMING: Vertical 9:16.${sil}`,
+  ].join('\n');
 
-  // 9. EXCLUSIONS
+  // 6. TEXT-BEARING OBJECT SUBSTITUTIONS (HARDENING)
+  const objectRules = [];
+  const textHaystack = `${actionLower} ${rawMeaning.toLowerCase()} ${String(scene.worldLock || '').toLowerCase()}`;
+  if (textHaystack.includes('phone') || textHaystack.includes('điện thoại') || textHaystack.includes('screen') || textHaystack.includes('màn hình')) {
+    objectRules.push('OBJECT SUBSTITUTION (PHONE/SCREEN): Physical device with blank screen; screen OFF or face-down; zero readable text, digits, or logos.');
+  }
+  if (textHaystack.includes('book') || textHaystack.includes('sách') || textHaystack.includes('notebook') || textHaystack.includes('sổ') || textHaystack.includes('paper') || textHaystack.includes('trang')) {
+    objectRules.push('OBJECT SUBSTITUTION (BOOK/PAPER): Plain blank covers, blank pages or soft abstract marks only; zero readable words, letters, or handwriting.');
+  }
+  if (textHaystack.includes('poster') || textHaystack.includes('wall art') || textHaystack.includes('tranh') || textHaystack.includes('decor') || textHaystack.includes('print')) {
+    objectRules.push('OBJECT SUBSTITUTION (WALL ART): Simple botanical shapes or plain empty frames; zero quotes, letters, typographic posters, or calligraphy.');
+  }
+  if (textHaystack.includes('package') || textHaystack.includes('packaging') || textHaystack.includes('hộp') || textHaystack.includes('gói') || textHaystack.includes('chai') || textHaystack.includes('lọ') || textHaystack.includes('label')) {
+    objectRules.push('OBJECT SUBSTITUTION (PACKAGING): Completely unlabeled packaging, plain container, zero brand labels or barcodes.');
+  }
+  const sectionObjects = objectRules.length > 0 ? objectRules.join('\n') : null;
+
+  // 7. EXCLUSIONS & NEGATIVE CONTRACT
   const exclusions = [
     'NEGATIVE EXCLUSIONS: NO WORDS, LETTERS, NUMBERS, LABELS, MARKS, WATERMARKS, TEXT POLLUTION.',
     'STRICTLY BAN: NO speech bubbles, dialogue balloons, comic bubbles, thought bubbles, quotation text, captions, subtitles, signatures, pseudo-writing.',
-    'HARD EXCLUSIONS: NO photorealism, photographic interior, photographic lighting, lens blur, shallow depth of field, realistic skin/pores, individual hair strands, CGI, 3D render, DSLR.',
+    'NO ARTIST SIGNATURE: STRICTLY PROHIBIT artist signature, corner initials, creator mark, stamp, seal, watermark in corners.',
+    'NO TEXT POLLUTION: ZERO readable poster text, signage text, book-cover text, package labels, clothing text, wall lettering, random glyphs, fake characters.',
+    'HARD EXCLUSIONS: NO photorealism, photographic interior, photographic lighting, lens blur, shallow depth of field, skin pores, hair strands, CGI, 3D render.',
   ];
   if (min === 0 && max === 0) {
     exclusions.push('PEOPLE NEGATIVES: NO PEOPLE, background people, extra/background faces, portraits, framed photos, human reflections.');
@@ -1029,21 +1109,112 @@ export function buildPrompt(scene, castId) {
   if (safetyRules.length > 0) {
     exclusions.push(...safetyRules);
   }
-  const section9 = exclusions.join('\n');
+  const sectionExclusions = exclusions.join('\n');
 
-  const sections = [
-    section1,
-    section2,
-    section3,
-    section4,
-    section5,
-    section6,
-    section7,
-    section8,
-    section9,
-  ].filter(Boolean);
+  let sections = scene.legacyOrder
+    ? [sectionStyle, sectionScale, sectionPeople, sectionAction, sectionWorld, sectionExclusions].filter(Boolean)
+    : [sectionAction, sectionWorld, sectionPeople, sectionStyle, sectionScale, sectionObjects, sectionExclusions].filter(Boolean);
 
-  const full = sections.join('\n\n');
+  let full = sections.join('\n\n');
+
+  if (full.length > 1380) {
+    let compactWorld = sectionWorld;
+    if (compactWorld.length > 35) {
+      const match = compactWorld.match(/WORLD \/ OBJECTS:\s*([^.]+)/i);
+      if (match) {
+        compactWorld = `WORLD / OBJECTS: ${match[1].slice(0, 30)}.`;
+      }
+    }
+    let compactScale = `SCALE LOCK: ${shotScale.toUpperCase()}. Vertical 9:16.${sil}`;
+    let compactAction = sectionAction;
+    if (compactAction.length > 180) {
+      compactAction = `ACTION / PHYSICAL END-STATE:\nACTION: ${action || leadSemantic}`;
+    }
+    const compactStyle = [
+      `${styleHeader}\n${styleBody}`,
+      'RENDERING: Matte gouache. Clearly DRAWN.',
+    ].join('\n');
+
+    sections = scene.legacyOrder
+      ? [compactStyle, compactScale, sectionPeople, compactAction, compactWorld, sectionExclusions].filter(Boolean)
+      : [compactAction, compactWorld, sectionPeople, compactStyle, compactScale, sectionObjects, sectionExclusions].filter(Boolean);
+    full = sections.join('\n\n');
+
+    if (full.length > 1400) {
+      let compactObj = sectionObjects;
+      if (compactObj && compactObj.length > 140) {
+        const compactRules = [];
+        if (textHaystack.includes('phone') || textHaystack.includes('điện thoại') || textHaystack.includes('screen') || textHaystack.includes('màn hình')) {
+          compactRules.push('OBJECT SUBSTITUTION: Blank phone/device screen face-down, zero text/digits/UI.');
+        }
+        if (textHaystack.includes('book') || textHaystack.includes('sách') || textHaystack.includes('notebook') || textHaystack.includes('sổ') || textHaystack.includes('paper') || textHaystack.includes('trang')) {
+          compactRules.push('OBJECT SUBSTITUTION: Plain blank book/pages, zero text/letters.');
+        }
+        if (textHaystack.includes('poster') || textHaystack.includes('wall art') || textHaystack.includes('tranh') || textHaystack.includes('decor') || textHaystack.includes('print')) {
+          compactRules.push('OBJECT SUBSTITUTION: Simple botanical shapes or empty frame, zero text/quotes.');
+        }
+        if (textHaystack.includes('package') || textHaystack.includes('packaging') || textHaystack.includes('hộp') || textHaystack.includes('gói') || textHaystack.includes('chai') || textHaystack.includes('lọ') || textHaystack.includes('label')) {
+          compactRules.push('OBJECT SUBSTITUTION: Plain unlabeled containers, zero logos/barcodes.');
+        }
+        compactObj = compactRules.join('\n');
+      }
+
+      const compactExclusionsList = [
+        'NEGATIVE EXCLUSIONS: NO WORDS, LETTERS, NUMBERS, LABELS, MARKS, WATERMARKS, TEXT POLLUTION.',
+        'STRICTLY BAN: NO speech bubbles, dialogue balloons, comic bubbles, thought bubbles, quotation text, captions, subtitles, signatures, pseudo-writing.',
+        'NO ARTIST SIGNATURE: STRICTLY PROHIBIT artist signature, corner initials, watermark in corners.',
+        'NO TEXT POLLUTION: ZERO readable text, signage, labels, wall lettering, fake characters.',
+        'HARD EXCLUSIONS: NO photorealism, photographic interior, photographic lighting, lens blur, shallow depth of field, skin pores, CGI, 3D render.',
+      ];
+      if (min === 0 && max === 0) {
+        compactExclusionsList.push('PEOPLE NEGATIVES: NO PEOPLE, background people, extra/background faces, portraits, framed photos.');
+      } else if (max === 1) {
+        compactExclusionsList.push('PEOPLE NEGATIVES: NO second person, background people, extra/background faces, human portraits, framed photos.');
+      } else if (max === 2) {
+        compactExclusionsList.push('PEOPLE NEGATIVES: NO third person, background people, extra/background faces, human portraits, framed photos.');
+      }
+      let compactExcl = compactExclusionsList.join('\n');
+
+      if (compactWorld.length > 20) {
+        const match = compactWorld.match(/WORLD \/ OBJECTS:\s*([^.]+)/i);
+        if (match) {
+          compactWorld = `WORLD / OBJECTS: ${match[1].slice(0, 15)}.`;
+        }
+      }
+      sections = scene.legacyOrder
+        ? [compactStyle, compactScale, sectionPeople, compactAction, compactWorld, compactExcl].filter(Boolean)
+        : [compactAction, compactWorld, sectionPeople, compactStyle, compactScale, compactObj, compactExcl].filter(Boolean);
+      full = sections.join('\n\n');
+
+      if (full.length > 1520) {
+        const tighterExcl = [
+          'NEGATIVE EXCLUSIONS: NO WORDS, LETTERS, NUMBERS, LABELS, MARKS, WATERMARKS, SIGNATURES, TEXT POLLUTION.',
+          'STRICTLY BAN: NO speech/thought bubbles, captions, subtitles, signatures, pseudo-writing, fake characters.',
+          'NO ARTIST SIGNATURE: STRICTLY PROHIBIT artist signature, corner initials, watermark in corners.',
+          'NO TEXT POLLUTION: ZERO readable text, signage, labels, wall lettering.',
+          'HARD EXCLUSIONS: NO photorealism, photographic interior, lens blur, shallow depth of field, skin pores, CGI, 3D render.',
+        ];
+        if (min === 0 && max === 0) {
+          tighterExcl.push('PEOPLE NEGATIVES: NO PEOPLE, background people, extra/background faces, portraits, framed photos.');
+        } else if (max === 1) {
+          tighterExcl.push('PEOPLE NEGATIVES: NO second person, background people, extra/background faces, portraits, framed photos.');
+        } else if (max === 2) {
+          tighterExcl.push('PEOPLE NEGATIVES: NO third person, background people, extra/background faces, portraits, framed photos.');
+        }
+        compactExcl = tighterExcl.join('\n');
+
+        let tightAction = compactAction
+          .replace(/; avoid generic family portrait fallback/gi, '')
+          .replace(/\. Visibly carry out this tangible action and object interaction/gi, '')
+          .replace(/\s*Focus directly on this tangible action, physical setting, and domestic objects\.?/gi, '');
+
+        sections = scene.legacyOrder
+          ? [compactStyle, compactScale, sectionPeople, tightAction, compactWorld, compactExcl].filter(Boolean)
+          : [tightAction, compactWorld, sectionPeople, compactStyle, compactScale, compactObj, compactExcl].filter(Boolean);
+        full = sections.join('\n\n');
+      }
+    }
+  }
 
   // Full Prompt Preflight Contract Validation:
   const contractRes = validateFinalImagePromptContract({
@@ -1187,34 +1358,14 @@ async function generateWithCloudflare(prompt, seed) {
   }
 
   const url = `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/${CLOUDFLARE_MODEL}`;
-  const payloadWithSeed = {
-    prompt,
-    seed: seed >>> 0,
-    steps: 4,
-  };
-  let requestBody = JSON.stringify(payloadWithSeed);
+  const requestBody = JSON.stringify({ prompt });
 
   try {
-    console.error('Calling Cloudflare with Node fetch (with seed/steps)...');
     return await callCloudflareWithFetch(url, token, requestBody);
   } catch (fetchErr) {
     if (fetchErr.isQuota429) {
       throw fetchErr;
     }
-    console.error(`Cloudflare rejected seed/steps payload: ${fetchErr.message}`);
-    if (fetchErr.message.includes('/seed') || fetchErr.message.includes('/steps') || fetchErr.message.includes('Additional or unevaluated properties')) {
-      console.error('⚠️ Cloudflare schema rejected seed/steps. Retrying with prompt-only payload...');
-      requestBody = JSON.stringify({ prompt });
-      try {
-        return await callCloudflareWithFetch(url, token, requestBody);
-      } catch (fallbackErr) {
-        if (fallbackErr.isQuota429) {
-          throw fallbackErr;
-        }
-        console.error(`Prompt-only fetch failed: ${fallbackErr.message}`);
-      }
-    }
-
     console.error('Retrying Cloudflare with curl...');
     try {
       return callCloudflareWithCurl(url, token, requestBody);
@@ -1296,8 +1447,7 @@ function appendGeneratedAsset(manifest, scene, reservedAsset, attempt = 1) {
 }
 
 async function main() {
-  loadEnvFile('.env.local');
-  loadEnvFile('.env');
+  ensureProjectEnvLoaded(ROOT);
 
   const args = parseArgs(process.argv);
   const character = inferCharacterFromText(args.text, args.character);
@@ -1447,6 +1597,150 @@ async function main() {
     asset: best.asset,
   }, null, 2));
 }
+
+/**
+ * Generates one candidate image for a human-insight shot using Cloudflare FLUX Schnell.
+ *
+ * @param {object} options
+ * @param {string} options.slug
+ * @param {object} options.shot - Shot or beat object from storyPlan
+ * @param {string} [options.shotId] - Shot identifier (e.g. shot-01)
+ * @param {number} [options.attempt=1] - 1-based attempt count (max 3)
+ * @param {string} [options.outputPath] - Output destination path for the candidate jpg
+ * @param {string} [options.rootDir=ROOT]
+ * @param {Function} [options.generatorAdapter] - Optional custom generator for tests/offline
+ * @param {string} [options.promptOverride]
+ * @returns {Promise<{
+ *   success: boolean,
+ *   shotId: string,
+ *   attempt: number,
+ *   outputPath: string,
+ *   sha256: string,
+ *   isQuota429?: boolean,
+ *   error?: string
+ * }>}
+ */
+export async function generateHumanInsightShot(options = {}) {
+  const rootDir = options.rootDir || ROOT;
+  ensureProjectEnvLoaded(rootDir);
+
+  const slug = options.slug || 'unknown-slug';
+  const shot = options.shot || {};
+  const shotId = options.shotId || shot.shotId || (shot.id ? shot.id.replace('beat-', 'shot-') : 'shot-01');
+  const attempt = options.attempt || 1;
+  const outputPath = options.outputPath || path.join(rootDir, 'videos', slug, 'candidates', `${shotId}.jpg`);
+
+  const destDir = path.dirname(outputPath);
+  fs.mkdirSync(destDir, { recursive: true });
+
+  const castId = shot.castId || inferCastId(shot.voiceClause || shot.audioText || shot.text, shot.category);
+  const prompt = options.promptOverride || buildPrompt({
+    ...shot,
+    text: shot.voiceClause || shot.audioText || shot.text || '',
+    action: shot.visualAction || shot.action || '',
+    visual: shot.visualIntent || shot.visual || '',
+    scale: shot.scale || shot.shotScale || 'medium',
+    silhouette: shot.silhouette || 'single-centered',
+    visualVerb: shot.visualVerb,
+    worldLock: shot.worldLock,
+    peopleContract: shot.peopleContract,
+    visiblePeopleContract: shot.visiblePeopleContract,
+    visibleMembers: shot.visibleMembers,
+    presentMembers: shot.presentMembers,
+    noPeople: shot.noPeople,
+    visualMode: shot.visualMode,
+  }, castId);
+
+  const seeds = computeSeeds({
+    slug,
+    text: shot.voiceClause || shot.audioText || shot.text || '',
+    castId,
+    sceneIndex: options.sceneIndex || 0,
+    explicitSeed: options.seed,
+  });
+  const seed = seeds.sceneSeed;
+
+  if (typeof options.generatorAdapter === 'function') {
+    const res = await options.generatorAdapter({
+      prompt,
+      seed,
+      shot,
+      shotId,
+      attempt,
+      slug,
+      outputPath,
+      rootDir,
+    });
+    if (res && res.isQuota429) {
+      const err = new Error(`PAUSED_QUOTA: HTTP 429 quota reached on shot ${shotId}`);
+      err.isQuota429 = true;
+      err.shotId = shotId;
+      throw err;
+    }
+    if (!fs.existsSync(outputPath)) {
+      if (res && res.imageBuffer) {
+        fs.writeFileSync(outputPath, res.imageBuffer);
+      } else {
+        throw new Error(`generatorAdapter did not produce output at ${outputPath}`);
+      }
+    }
+    const sha256 = crypto.createHash('sha256').update(fs.readFileSync(outputPath)).digest('hex');
+    return {
+      success: true,
+      shotId,
+      attempt,
+      outputPath,
+      sha256,
+    };
+  }
+
+  if (options.allowSynthetic) {
+    const dummyJpeg = Buffer.from(
+      '/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wgALCAABAAEBAREA/8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPxA=',
+      'base64'
+    );
+    fs.writeFileSync(outputPath, dummyJpeg);
+    const sha256 = crypto.createHash('sha256').update(dummyJpeg).digest('hex');
+    return {
+      success: true,
+      shotId,
+      attempt,
+      outputPath,
+      sha256,
+    };
+  }
+
+  // Real Cloudflare Workers AI generation
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'human-insight-shot-'));
+  const rawPath = path.join(tempDir, 'raw.jpg');
+  try {
+    const imageBuffer = await generateWithCloudflare(prompt, seed);
+    fs.writeFileSync(rawPath, imageBuffer);
+    compressJpeg(rawPath, outputPath);
+    const sha256 = crypto.createHash('sha256').update(fs.readFileSync(outputPath)).digest('hex');
+    return {
+      success: true,
+      shotId,
+      attempt,
+      outputPath,
+      sha256,
+    };
+  } catch (err) {
+    if (err.isQuota429 || err.message?.includes('429') || /rate limit|quota/i.test(err.message || '')) {
+      const quotaErr = new Error(`PAUSED_QUOTA: Cloudflare HTTP 429 quota reached on shot ${shotId}: ${err.message}`);
+      quotaErr.isQuota429 = true;
+      quotaErr.shotId = shotId;
+      throw quotaErr;
+    }
+    throw err;
+  } finally {
+    try {
+      if (fs.existsSync(tempDir)) fs.rmSync(tempDir, { recursive: true, force: true });
+    } catch {}
+  }
+}
+
+export { generateWithCloudflare };
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
   main().catch((err) => {

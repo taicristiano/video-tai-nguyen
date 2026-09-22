@@ -26,6 +26,8 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
+import { validateHumanQaReviewManifest } from './pipeline-state.mjs';
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export const ROOT = path.resolve(__dirname, '..');
 
@@ -128,67 +130,30 @@ export async function promoteApprovedImages(options = {}) {
     throw new Error(`Cannot promote images: 0 shots found in story plan or review manifest for slug "${slug}"`);
   }
 
-  // 3. Strict Human QA Gate: Validate every required shot has actual PASS_HUMAN_QA verdict
-  // AND exact reviewedAssetPath + reviewedAssetSha256 matching the file on disk.
-  const unapprovedShots = [];
-  const candidateFilesToPromote = [];
+  // 3. Strict Human QA Gate: Validate via shared validateHumanQaReviewManifest
+  const qaValidation = validateHumanQaReviewManifest(reviewManifest, {
+    rootDir,
+    requireAllPass: true,
+    checkDisk: true,
+    storyPlanBeats: beats,
+  });
 
+  if (!qaValidation.valid) {
+    const details = qaValidation.errors.join('; ');
+    throw new Error(`Human QA Promotion BLOCKED for "${slug}":\n  ${details}`);
+  }
+
+  const candidateFilesToPromote = [];
   for (let i = 0; i < totalShots; i++) {
     const beat = beats[i] || {};
     const shotId =
       beat.shotId ||
       (beat.id ? beat.id.replace('beat-', 'shot-') : `shot-${String(i + 1).padStart(2, '0')}`);
-
-    const rShot = reviewMap.get(shotId);
-    if (!rShot) {
-      unapprovedShots.push({ shotId, reason: 'Missing in Human QA review manifest' });
-      continue;
-    }
-
-    // Inspect actual Human QA verdict - strictly require humanQaVerdict === 'PASS_HUMAN_QA'
-    if (!rShot.humanQaVerdict) {
-      unapprovedShots.push({ shotId, reason: 'Missing or null humanQaVerdict in Human QA review manifest' });
-      continue;
-    }
-
-    if (rShot.humanQaVerdict !== 'PASS_HUMAN_QA') {
-      unapprovedShots.push({ shotId, reason: `Unapproved humanQaVerdict: "${rShot.humanQaVerdict}"` });
-      continue;
-    }
-
-    // Enforce exact reviewedAssetPath binding (no fallback guessing)
-    if (!rShot.reviewedAssetPath || typeof rShot.reviewedAssetPath !== 'string' || !rShot.reviewedAssetPath.trim()) {
-      unapprovedShots.push({ shotId, reason: 'Missing or empty reviewedAssetPath in Human QA review manifest' });
-      continue;
-    }
-    const reviewedAssetPath = rShot.reviewedAssetPath.trim();
-
-    // Enforce exact reviewedAssetSha256 binding (no unhashed approvals, no sha256 fallback)
-    if (!rShot.reviewedAssetSha256 || typeof rShot.reviewedAssetSha256 !== 'string' || !rShot.reviewedAssetSha256.trim()) {
-      unapprovedShots.push({ shotId, reason: 'Missing or empty reviewedAssetSha256 in Human QA review manifest' });
-      continue;
-    }
-    const reviewedAssetSha256 = rShot.reviewedAssetSha256.trim();
-
-    // Locate the EXACT reviewed image on disk
+    const rShot = reviewMap.get(shotId) || reviewShots[i];
+    const reviewedAssetPath = (rShot.reviewedAssetPath || rShot.candidatePath || '').trim();
     const candidateFile = path.isAbsolute(reviewedAssetPath)
       ? reviewedAssetPath
       : path.resolve(rootDir, reviewedAssetPath);
-
-    if (!fs.existsSync(candidateFile)) {
-      unapprovedShots.push({ shotId, reason: `Reviewed asset file not found on disk at exact path: "${reviewedAssetPath}"` });
-      continue;
-    }
-
-    // Verify SHA-256 matches exact approved hash
-    const actualSha256 = computeSha256(candidateFile);
-    if (actualSha256 !== reviewedAssetSha256) {
-      unapprovedShots.push({
-        shotId,
-        reason: `SHA-256 mismatch for ${shotId}: review recorded ${reviewedAssetSha256}, actual file has ${actualSha256}`,
-      });
-      continue;
-    }
 
     candidateFilesToPromote.push({
       shotId,
@@ -196,14 +161,8 @@ export async function promoteApprovedImages(options = {}) {
       rShot,
       candidateFile,
       reviewedAssetPath,
-      reviewedAssetSha256: actualSha256,
+      reviewedAssetSha256: rShot.reviewedAssetSha256 || rShot.sha256,
     });
-  }
-
-  // If any shot is unapproved, missing, or mismatched, HALT PROMOTION IMMEDIATELY
-  if (unapprovedShots.length > 0) {
-    const details = unapprovedShots.map((u) => `${u.shotId} (${u.reason})`).join('; ');
-    throw new Error(`Human QA Promotion BLOCKED for "${slug}":\n  ${details}`);
   }
 
   // 4. Assemble canonical approved manifest
@@ -213,6 +172,28 @@ export async function promoteApprovedImages(options = {}) {
     const ext = path.extname(candidateFile) || '.jpg';
     const canonicalImageSrc = `assets/human-insight/final/${slug}/${shotId}${ext}`;
     const relSourcePath = path.relative(path.join(rootDir, 'public'), candidateFile).replace(/\\/g, '/');
+
+    let selectedAttempt = rShot.selectedAttempt ?? rShot.attempt;
+    if (selectedAttempt !== undefined) {
+      if (
+        typeof selectedAttempt !== 'number' ||
+        !Number.isInteger(selectedAttempt) ||
+        selectedAttempt < 1 ||
+        selectedAttempt > 3
+      ) {
+        throw new Error(
+          `Human QA Promotion BLOCKED for "${slug}": shot "${shotId}" has invalid selectedAttempt (${selectedAttempt}). ` +
+          `selectedAttempt must be an integer between 1 and 3.`
+        );
+      }
+    } else {
+      if (options.strictAttemptLineage) {
+        throw new Error(
+          `Human QA Promotion BLOCKED for "${slug}": shot "${shotId}" is missing required "selectedAttempt" lineage.`
+        );
+      }
+      selectedAttempt = 1;
+    }
 
     approvedShots.push({
       shotId,
@@ -227,7 +208,7 @@ export async function promoteApprovedImages(options = {}) {
       canonicalImageSrc,
       canonicalSha256: reviewedAssetSha256,
       sha256: reviewedAssetSha256,
-      selectedAttempt: rShot.selectedAttempt || rShot.attempt || 1,
+      selectedAttempt,
       humanQaSource: path.relative(rootDir, reviewManifestPath).replace(/\\/g, '/'),
       voiceClause: beat.voiceClause || beat.audioText || rShot.voiceClause || '',
       visualMode: beat.visualMode || rShot.visualMode || 'INTERACTION_MEDIUM',

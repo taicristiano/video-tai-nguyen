@@ -1,8 +1,0 @@
-{
-  "model": "@cf/black-forest-labs/flux-1-schnell",
-  "candidateCount": 8,
-  "seedSupported": false,
-  "stepsRequested": 4,
-  "probeSucceeded": true,
-  "apiCalls": 8
-}

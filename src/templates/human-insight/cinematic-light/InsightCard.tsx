@@ -6,6 +6,7 @@ export interface InsightCardProps {
   /** The insight statement to highlight */
   statement: string;
   authorOrContext?: string;
+  subtitle?: string;
   durationFrames?: number;
   framing?: 'standard' | 'focus';
   variant?: 'overlay' | 'card';
@@ -14,6 +15,7 @@ export interface InsightCardProps {
 export const InsightCard: React.FC<InsightCardProps> = ({
   statement,
   authorOrContext,
+  subtitle,
   durationFrames = 66, // 0.3s enter (9f) + 1.47s clean still hold (44f) + 4f text fade + 9f card exit = 2.20s total
   framing = 'standard',
   variant = 'overlay',

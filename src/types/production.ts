@@ -16,8 +16,23 @@ export interface OutroConfig {
   enabled: boolean;
   durationFrames?: number;
   artworkSrc?: string;
+  brandMarkSrc?: string;
   brandName?: string;
   slogan?: string;
+}
+
+export interface ProductionShotCard {
+  kind: 'statement' | 'question' | 'section';
+  text: string;
+  subtitle?: string;
+  durationFrames?: number;
+}
+
+export interface ProductionEntrySfx {
+  name: string;
+  src?: string;
+  volume?: number;
+  reason?: string;
 }
 
 export interface ProductionShot {
@@ -38,6 +53,8 @@ export interface ProductionShot {
   hasInsightCard?: boolean;
   hasSectionCard?: boolean;
   cardDuration?: number;
+  card?: ProductionShotCard;
+  entrySfx?: ProductionEntrySfx;
   isOutro?: boolean;
   type?: 'hook' | 'body' | 'ending' | 'outro';
   layout?: 'standard' | 'focus' | 'statement' | 'chapter';
@@ -59,6 +76,9 @@ export interface ProductionRenderSpec {
   height?: number;
   audioSrc?: string;
   bgMusic?: string | null;
+  audioMode?: 'full' | 'music' | 'sfx' | 'voice-only';
+  templateId?: string;
+  productionLockVersion?: string;
   watermarkSrc?: string;
   timelineSrc?: string;
   shots: ProductionShot[];

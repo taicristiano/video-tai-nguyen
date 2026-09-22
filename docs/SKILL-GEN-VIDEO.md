@@ -9,11 +9,13 @@ Run when the user types:
 /gen-video --template <template-id> <context>
 /gen-video --audio=<mode> <context>
 /gen-video --template <template-id> --audio=<mode> <context>
+/gen-video --resume=<slug>
 ```
 
 `<mode>` must be one of `full`, `music`, `sfx`, or `voice-only`. Flags may
-appear before the context in either order. Strip recognized flags before
-validating or writing the context.
+appear before the context in either order. `--resume=<slug>` resumes a previously
+paused generation from its next valid lifecycle gate (e.g. after Human QA approval).
+Strip recognized flags before validating or writing the context.
 
 The selected template document defines any additional input contract, such as a
 required public URL, article page, media source, or demo target. Do not encode
@@ -128,6 +130,58 @@ Do not load every template document or every Remotion rule.
 
 ## Execution
 
+### Preflight Validation
+
+If the selected template registers a `productionLockPath` in `src/templates/registry.ts`
+(such as `human-insight/cinematic-light`), run the production lock preflight check
+before running Step 1:
+
+```bash
+node scripts/validate-production-lock.mjs
+```
+
+If the preflight check fails (exit code !== 0), halt immediately and resolve any
+schema or token drift before proceeding.
+
+### Resumable Human QA Lifecycle
+
+For production workflows requiring human-in-the-loop review (such as `human-insight/cinematic-light`),
+the generation follows a safe, resumable state machine tracked in `videos/<slug>/pipeline-state.json`
+(with candidate image reviews in `videos/<slug>/review-manifest.json`):
+
+```text
+[Generate Candidate Assets]
+          ↓
+[PENDING_HUMAN_IMAGE_QA] ────→ (AI MUST STOP and wait for External Human Review)
+          ↓
+  (Human reviews & records approval: node scripts/record-human-review.mjs --slug=<slug> --action=image-pass-all)
+          ↓
+  /gen-video --resume=<slug>
+          ↓
+[Promote & Materialize Approved Assets]
+          ↓
+[Derive Spec & Render Remotion MP4]
+          ↓
+[PENDING_HUMAN_VIDEO_QA] ────→ (AI MUST STOP and wait for External Human Video QA)
+          ↓
+  (Human reviews & records approval: node scripts/record-human-review.mjs --slug=<slug> --action=video-pass)
+          ↓
+  /gen-video --resume=<slug>
+          ↓
+[Package Clean Distribution & COMPLETE]
+```
+
+> [!CRITICAL]
+> **No AI Auto-Pass Invariant**:
+> AI coding agents and automated checks are strictly forbidden from authoring or fabricating
+> `PASS_HUMAN_QA` or `PASS_HUMAN_VIDEO_QA`. The pipeline must execute a mandatory STOP at
+> `PENDING_HUMAN_IMAGE_QA` and `PENDING_HUMAN_VIDEO_QA`. Approval must come from an external human
+> and be recorded with `reviewSource: 'EXTERNAL_HUMAN'` via `node scripts/record-human-review.mjs`.
+> Video approvals are SHA-256 hash-bound to `video.mp4` and automatically invalidated upon re-render.
+
+At any pause gate, resume execution using `/gen-video --resume=<slug>`.
+Do not bypass Human QA approval or silently re-generate unapproved assets.
+
 ### Steps 1-5: Content And Audio
 
 Follow `docs/gen-video/common-pipeline.md`:
@@ -140,6 +194,9 @@ Follow `docs/gen-video/common-pipeline.md`:
    common Planner contract.
 3. Create `script/script.json`. Apply the selected template's Teller override,
    if present; otherwise use the common Teller contract.
+   *Canonical Voice Zero-Rewrite Contract:* When the input context supplies a
+   canonical voice script (e.g. `VOICE — CANONICAL`), the script must preserve
+   the exact voice text verbatim with zero rewriting, summarization, or truncation.
 4. Generate or reuse `voice.mp3`. Reuse is mandatory when the file already
    exists; do not regenerate audio to fix duration.
 5. Generate `timeline.json`.
@@ -165,7 +222,9 @@ Process:
 5. If registry `behavior` is `creative` or `hybrid`, also read
    `docs/gen-video/creative-quality-contract.md`.
 6. Derive timing using the shared timing contract in
-   `docs/gen-video/common-pipeline.md`.
+   `docs/gen-video/common-pipeline.md`. Note that templates with a
+   production lock (e.g. `human-insight/cinematic-light`) override the common
+   duration target with their own locked target (e.g. 70–85s).
 7. Apply the Audio Mode Contract after template-specific spec rules so an
    explicit `--audio` value wins over conflicting template defaults.
    Do not ask the AI to choose background music by story mood; copy the
@@ -176,10 +235,10 @@ Process:
 Verify that every scene has audio-derived timing and that scene durations sum to
 `totalFrames`.
 
-If `timeline.json` reports a duration outside the desired 2-3 minute target,
-adapt the video to the existing audio instead of going back to Step 4. Adjust
-scene grouping, visual pacing, and `defaultDuration`; never regenerate
-`voice.mp3` unless the user explicitly requested an audio overwrite.
+If `timeline.json` reports a duration outside the desired target, adapt the
+video to the existing audio instead of going back to Step 4. Adjust scene
+grouping, visual pacing, and `defaultDuration`; never regenerate `voice.mp3`
+unless the user explicitly requested an audio overwrite.
 
 ### Step 7: Coder
 
@@ -198,12 +257,17 @@ Process:
    subtitles, transitions, images, or fonts.
 4. Remove stale generated scene files only when the selected template workflow
    requires regenerating `src/scenes/`.
-5. Implement the spec.
+5. Implement the spec:
+   *Shared Source Immutability Contract:* For data-driven templates (e.g.
+   `human-insight/cinematic-light`), all per-video customizations are provided
+   purely via spec props and assets. Do NOT edit `src/Root.tsx`, `src/Video.tsx`,
+   or `src/VideoContent.tsx` per video run.
 6. Enforce the resolved audio policy from `audio.txt`: render exactly the
    requested music/SFX layers and do not infer audio behavior only from a
    template ID suffix or legacy `audioDesign.mode`.
-7. Update only `defaultSlug` and `defaultDuration` in `src/Root.tsx`, unless the
-   selected template explicitly requires another change.
+7. For custom scene templates, update only `defaultSlug` and `defaultDuration`
+   in `src/Root.tsx`. For data-driven production templates, pass props directly
+   to the Remotion CLI without source mutation.
 8. Run `npx tsc --noEmit`.
 
 Template behavior:
@@ -223,15 +287,25 @@ Template behavior:
 
 ## Completion Contract
 
-A generation is complete only when:
+The completion contract is template-aware:
 
-- `videos/<slug>/audio.txt` exists and contains the resolved audio policy.
-- `videos/<slug>/spec.json` exists.
-- `public/<slug>/voice.mp3` and `public/<slug>/timeline.json` exist.
-- TypeScript compiles.
-- Required representative frames were inspected when required by verification rules.
-- Scene timing matches the audio-derived total duration.
-- `videos/<slug>/video.mp4` exists.
+- **For human-insight/cinematic-light (Human QA Lifecycle):**
+  1. Audio & Duration Stage: Generates/reuses voice narration. Planned duration must meet the 70–85s contract (preferred 75–80s, target 77.5s). Out-of-range audio is automatically calibrated via pitch-preserving audio time-stretch (`ffmpeg atempo`) with 100% immutable canonical voice text.
+  2. Visual Semantics & Planning Stage: Priority visuals (`VISUAL SEMANTICS:` / `Ưu tiên visual:`) define WHAT is represented and must be covered across feasible narrative beats (`priorityVisualCoverage`). Spoken phrase semantics strictly outrank generic family/relationship portraits.
+  3. Image Stage: Candidate images generated with semantic-first prompts and strict text-pollution bans (zero readable text, lettering, pseudo-text, signatures, watermarks; blank/unlabeled objects for screens, books, posters, packaging) -> review manifest created (recording `selectedAttempt` 1..3) -> status `PENDING_HUMAN_IMAGE_QA` -> MANDATORY STOP. AI auto-pass is forbidden.
+  4. Image Resume: `--resume=<slug>` -> validates explicit `PASS_HUMAN_QA` with `reviewSource: 'EXTERNAL_HUMAN'` on all shots -> promotes (strict `selectedAttempt` lineage 1..3) -> materializes -> builds `production-render-spec.json` -> renders `video.mp4` -> verifies actual rendered MP4 duration is within 70–85s -> creates Video QA Pack (contact sheet, transition strip) -> status `PENDING_HUMAN_VIDEO_QA` -> MANDATORY STOP.
+     - *Attempt-3 Terminal Policy*: If a shot fails Human QA on Attempt 3, the pipeline halts permanently at `BLOCKED` (`blockedReason: 'MAX_IMAGE_ATTEMPTS_EXHAUSTED'`). Attempt 4 is strictly forbidden. Normal automatic resume is rejected on `BLOCKED`.
+  5. Video Resume: `--resume=<slug>` -> validates explicit External Human video QA approval (`PASS_HUMAN_VIDEO_QA`, SHA-256 hash-bound to `video.mp4`) -> packages production -> status `COMPLETE`.
+  *(Rendering `video.mp4` alone does NOT equal COMPLETE for reviewed production templates. All pipeline state writes are atomic, transition-validated, and guarded by per-episode execution locks).*
+
+- **For templates without Human QA hooks:**
+  - `videos/<slug>/audio.txt` exists and contains the resolved audio policy.
+  - `videos/<slug>/spec.json` or `production-render-spec.json` exists.
+  - `public/<slug>/voice.mp3` and `public/<slug>/timeline.json` exist.
+  - TypeScript compiles.
+  - Required representative frames were inspected when required by verification rules.
+  - Scene timing matches the audio-derived total duration.
+  - `videos/<slug>/video.mp4` exists.
 
 On success, report:
 
@@ -239,11 +313,13 @@ On success, report:
 Pipeline complete. Output: videos/<slug>/video.mp4
 ```
 
-## Error Handling
+## Error Handling & Directory Lifecycle
 
 - Empty context: report correct usage and halt.
 - Unknown template ID: list IDs from `src/templates/registry.ts` and halt.
 - Unknown or repeated `--audio` value: report the four accepted values and halt.
-- Existing generation directory: report the conflict and halt.
+- **Directory Lifecycle & Collision Policy**:
+  - **New generation:** If `videos/<slug>` already exists and has files without `--resume=<slug>`, report collision and halt.
+  - **Resume (`--resume=<slug>`):** Existing directory and `videos/<slug>/pipeline-state.json` required. Resumes execution strictly from the valid next lifecycle stage (`PENDING_HUMAN_IMAGE_QA` -> `READY_TO_RENDER`, `PENDING_HUMAN_VIDEO_QA` -> `COMPLETE`).
 - Failed pipeline step: report the step and relevant stderr, then halt.
 - Do not silently skip failed verification or rendering.

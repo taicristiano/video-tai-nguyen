@@ -107,15 +107,11 @@ const BeatLayer: React.FC<BeatLayerProps> = ({
   const profile = (rawProfile === 'STILL' && durationFrames > 45) ? 'AMBIENT_STILL' : rawProfile;
   const motion = computeMotionGrammar(profile, progress);
 
-  // Perceived Motion Policy (HAY & ĐẸP. 1.1):
-  // Ensure subject is not frozen at transformOrigin. Add subtle monotonic focal drift:
-  // x drift: <= 10px (0.85% of 900px = ~7.65px), y drift: <= 8px (0.65% of 1080px = ~7.02px)
-  const driftDirX = (sceneIndex % 2 === 0 ? 1 : -1);
-  const driftDirY = (sceneIndex % 3 === 0 ? 1 : -1);
-  const activeTranslateX = motion.translateX !== 0
-    ? motion.translateX
-    : (driftDirX * (progress - 0.5) * 0.85);
-  const activeTranslateY = (driftDirY * (progress - 0.5) * 0.65);
+  // Motion Grammar Lock Compliance (HAY & ĐẸP. Production Lock V3.7):
+  // Strictly obey resolved motion profile from computeMotionGrammar.
+  // translateY = 0 contract enforced; zero undeclared vertical or horizontal drift.
+  const activeTranslateX = motion.translateX;
+  const activeTranslateY = motion.translateY; // strictly 0
 
   const scaleMultiplier = cropScale ?? (shotScale ? SHOT_SCALE[shotScale] : 1.0) ?? 1.0;
   const finalScale = (motion.scale * scaleMultiplier).toFixed(5);
@@ -361,8 +357,11 @@ export const ImageScene: React.FC<ImageSceneProps> = ({
   // ── Entrance transition (default: hard cut, 0 frames) ────────────────
   let enterOpacity = 1;
 
-  if (hasOverlayCard) {
-    const cardRevealDuration = hasInsightCard ? 12 : 9;
+  if (hasInsightCard) {
+    // Overlay card: keep underlying illustration visible at full opacity to prevent blank background
+    enterOpacity = 1;
+  } else if (hasSectionCard) {
+    const cardRevealDuration = 9;
     const cardRevealStart = Math.max(0, cardDuration - cardRevealDuration);
     if (frame < cardRevealStart) {
       enterOpacity = 0;

@@ -4,6 +4,15 @@ Read this document before running Step 6 (Spec) and Step 7 (Coder) when `--templ
 
 ---
 
+## Production Lock Single Source of Truth (SSOT)
+
+This template operates under a locked production specification defined in:
+- **Machine SSOT**: [`docs/HAY_DEP_PRODUCTION_LOCK.json`](../../HAY_DEP_PRODUCTION_LOCK.json)
+- **Rendered Spec**: [`docs/HAY_DEP_PRODUCTION_LOCK.md`](../../HAY_DEP_PRODUCTION_LOCK.md)
+- **Preflight Verification**: `node scripts/validate-production-lock.mjs`
+
+Any modification to background music or template settings automatically synchronizes through the single SSOT.
+
 ## What this template is: Editorial Engine V2
 
 Philosophy, life wisdom, editorial lifestyle, and personal growth videos. Built as a multi-layout **Editorial Engine V2** to prevent slideshow feel while preserving the quiet, tactile minimalism of `HAY & ĐẸP.`:
@@ -16,9 +25,9 @@ Philosophy, life wisdom, editorial lifestyle, and personal growth videos. Built 
   - `canvas` (Default ~60–70%): Seamless borderless canvas integration with soft natural frame.
   - `paper` (~20–30%): Tactile paper card with washi tape accent (`#FFFCF7`), subtle natural tilt (`±1.1°`).
   - `statement` (≤10%): Full quote/milestone card.
-- **Micro-Motion Contract**: Every normal image scene has deterministic micro-motion (scale 1.010–1.035, max pan ±8px, translateY ±4px).
-- **9 Deterministic Motion Presets**:
-  `still-breathe`, `slow-push`, `slow-pull`, `drift-left`, `drift-right`, `rise-soft`, `foreground-parallax`, `focus-shift`, `emotional-hold`.
+- **Motion Grammar Contract**: Hard cuts between scenes (0-frame transition fades); strictly `translateY = 0` (zero undeclared vertical or horizontal drift).
+- **7 Deterministic Motion Profiles**:
+  `STILL`, `AMBIENT_STILL`, `PUSH_IN_SOFT`, `PULL_OUT_SOFT`, `DRIFT_LEFT`, `DRIFT_RIGHT`, `DETAIL_PUSH`.
 - **Secondary Framing Shift**: Scenes > 3.5s (105f) feature an intentional mid-scene reframe over 18f using Hermite smoothstep (`3x² - 2x³`), keeping scenes dynamic without aggressive zoom.
 - **Visual Beats (`visualBeats`)**: Backward-compatible multi-beat clauses per narration segment (1.5–3.2s standard beat, 3.2–4.5s emotional hold).
 - **Character Universe & Cast Lock**: 8 registered cast IDs (`family-young-01`, `couple-young-01`, `parents-middleage-01`, etc.) with deterministic seed hierarchy (`videoSeed -> castSeed -> sceneSeed`).
@@ -29,34 +38,92 @@ Philosophy, life wisdom, editorial lifestyle, and personal growth videos. Built 
   - `outro`: Header dissolves 20f before outro.
 - **Dedicated 9:16 Outro V2**: Branded vertical artwork (`public/assets/human-insight/brand/outro-9-16.png`) held for 60 frames (2.0s), 8–10f fade-in, scale 1.02 -> 1.00, no voiceover. Fallback to React typography if missing.
 - **Asset Tiers Priority**: `HAYDEP_CORE` (+25) → `HAYDEP_COMPATIBLE` (+10) → generate → `LEGACY_NEP` (0). `REJECT_OFFSTYLE` excluded.
-- **Duration Policy**: Never artificially stretch scenes. Render duration = `voice + natural pauses + question + 60f outro`.
+- **Duration Policy**: Never artificially stretch scenes. Render duration = `voice + natural pauses + question + 60f outro` (locked target: 70–85s).
 
 ---
 
-## Content Format Contract: HAY & ĐẸP.
+## Content Format Contract & Unified Content Parser
 
-| Format | Recommended Duration | Word Count | Use Case |
-|---|---|---|---|
-| **Family / Emotional Insight** | **30–50s** | ~80–130 words | Intimate personal reflection, family dinner, home values |
-| **Practical HAY.** | **45–65s** | ~120–170 words | Daily life habits, practical wisdom, work-life balance |
-| **Explanatory / Deep** | **65–85s** | ~170–230 words | Multi-part perspectives, philosophical essays |
+The template uses `src/templates/human-insight/cinematic-light/contentParserRuntime.mjs` to parse input contexts. It supports:
+1. **Concise Format**: structured blocks (`VOICE — CANONICAL`, `INSIGHT CHÍNH`, `VISUAL SEMANTICS`, `STATEMENT GẦN CUỐI`, `FINAL QUESTION — CANONICAL`).
+2. **Legacy Format**: labeled sections (`Kịch bản voice:`, `Ưu tiên visual:`, `Yêu cầu dựng:`, `Statement:`).
 
-*Voice & Ending Rule*: Natural voice pacing. Interactive question ending. Slogan and branding are never spoken in voiceover; they appear visually in the layout and OutroCard.
+*Strict Invariant:* The canonical voice narration is extracted verbatim with zero rewriting, omission, or hallucination.
 
-## Step 6 Output (Spec)
+## Canonical Duration & Voice Policy
 
-Create `videos/<slug>/spec.json`:
+- **Duration Contract**:
+  - **Allowed Duration**: **70–85 seconds** (strictly enforced).
+  - **Preferred Target**: **75–80 seconds** (target midpoint: **77.5s**).
+- **Narration Pacing Calibration**:
+  - If raw narration duration produces an estimated video duration outside 70–85s, the orchestrator applies bounded pitch-preserving audio time-stretch (`ffmpeg atempo`) to calibrate pacing toward the 77.5s midpoint.
+  - **Zero Voice Rewrite**: Canonical voice text remains 100% byte/normalized equal before and after calibration. Zero filler words, zero rewriting.
+  - If duration cannot be calibrated within 70–85s, the pipeline halts with `BLOCKED` (`AUDIO_DURATION_OUT_OF_RANGE`).
+- **Ending & Outro**: The final scene ends with the unnumbered canonical question card, followed by the 60-frame (2.0s) tranquil outro. Slogan and branding are never spoken in voiceover; they appear visually in the layout and OutroCard.
+
+## Visual Semantics & Text-Pollution Hardening Contract
+
+- **WHAT vs. HOW Separation**:
+  - Content specifies **WHAT** (`VISUAL SEMANTICS:` / `Ưu tiên visual:` concrete actions, objects, settings).
+  - Template specifies **HOW** (editorial illustration style, cream/sage/wood palette, framing, composition, motion).
+- **Concrete Voice Semantics > Generic Portrait Fallback**:
+  - When the aligned spoken voice span mentions a concrete action or object, the planner must illustrate that specific action/object rather than defaulting to generic relationship/family portraits.
+  - Quiet contextual or domestic fallbacks are reserved for abstract lines without concrete objects/actions.
+- **Priority Visuals Consumption & Coverage**:
+  - Supplied priority visuals are normalized and mapped to the closest corresponding voice spans.
+  - Story plan tracks `priorityVisualCoverage` with status `DIRECT`, `PARTIAL`, or `UNMATCHED`.
+  - Unmatched feasible priority visuals trigger replanning or a validation error before candidate generation.
+- **Strict Text-Pollution Ban**:
+  - Generated illustrations must be completely free of readable text, letters, digits, typography, signage, book-cover text, packaging labels, clothing text, pseudo-text, handwriting, or calligraphy.
+  - **Signatures & Watermarks Forbidden**: Artist signatures, initials, creator stamps, seals, or corner marks are strictly banned (especially in corners).
+- **Text-Bearing Object Substitutions**:
+  - Screens/phones: rendered blank or face-down; zero readable text or UI digits.
+  - Books/paper: rendered with plain blank covers and text-free pages.
+  - Wall art: simple botanical shapes, geometric color blocks, or empty frames; zero typographic prints or quotes.
+  - Packaging: plain unlabeled containers with zero barcodes or logos.
+- **Human QA as Final Authority**:
+  - Automated pre-flight checks may reject invalid prompts or images, but only Human QA (`EXTERNAL_HUMAN`) can approve candidates for production render.
+
+## Step 6 Output (Production Spec)
+
+Create `videos/<slug>/production-render-spec.json`:
 
 ```json
 {
-  "templateId": "human-insight/cinematic-light",
   "slug": "<slug>",
+  "title": "<Vietnamese title — concise, max 8 words>",
+  "fps": 30,
   "totalFrames": <number>,
-  "video": {
-    "title": "<Vietnamese title — concise, max 8 words>",
-    "bgMusic": "<defaultBgMusic from src/templates/registry.ts>"
-  },
-  "scenes": [...]
+  "width": 1080,
+  "height": 1920,
+  "brand": "HAY & ĐẸP.",
+  "slogan": "Điều hay để biết. Điều đẹp để giữ.",
+  "watermarkSrc": "assets/hay-dep/brand/logo-full-horizontal-with-slogan.png",
+  "audioSrc": "<slug>/voice.mp3",
+  "timelineSrc": "<slug>/timeline.json",
+  "audioMode": "full",
+  "shots": [
+    {
+      "shotId": "shot-01",
+      "startFrame": 0,
+      "endFrame": 75,
+      "durationFrames": 75,
+      "imageSrc": "assets/human-insight/images/...",
+      "framing": "standard",
+      "composition": "portrait-focus",
+      "shotScale": "medium",
+      "motionPreset": "AMBIENT_STILL",
+      "storyRole": "establish"
+    }
+  ],
+  "outro": {
+    "enabled": true,
+    "durationFrames": 60,
+    "artworkSrc": "assets/human-insight/brand/outro-9-16.png",
+    "brandMarkSrc": "assets/human-insight/brand/hay-dep-mark-sage.png",
+    "brandName": "HAY & ĐẸP.",
+    "slogan": "Điều hay để biết. Điều đẹp để giữ."
+  }
 }
 ```
 
@@ -77,12 +144,14 @@ Create `videos/<slug>/spec.json`:
    - 20% `plain` (transitional/calm sentences without bold jumping)
    - 10% `statement` (scenes with central quote cards)
    - Inactive text opacity: `0.52` (+15% legibility increase), allowing users to read the whole sentence comfortably.
-7. **Question Card Timing Contract (MANDATORY)**:
-   - Question cards (`01`, `02`, `03`) are deliberate thought pauses, never quick flashes.
-   - Total duration: 2.53s (76 frames) for Q1 & Q2; 2.87s (86 frames) for Q3 (+0.2s breathing room).
-   - Breakdown: 0.30s enter (9 frames) → 1.80s (Q3: 2.13s) clean still hold → 4 frames text fade out → 9 frames blank card dissolve (zero text ghosting over illustration).
-   - Typography: 45px bold 700 uppercase, letterSpacing 0.07em, formatted into 2 concise lines (e.g. `MÌNH SẼ DÙNG\nNÓ Ở ĐÂU?`), without subtitle.
-   - Voice narration reads the question synchronously with the card. Subtitles are suppressed during the card pause to prevent split attention.
+7. **Question Card & Zero Blank Transition Invariant (MANDATORY)**:
+   - **Dedicated QuestionCard**: For concluding reflection or standalone thought pauses, render the dedicated unnumbered `QuestionCard`. Do not force artificial `01/02/03` numbering or generic filler (like "Bạn nghĩ sao?").
+   - **Zero Blank Boundary Invariant**: Underlying illustration canvas remains visible at full opacity behind frosted overlay cards, eliminating 0-opacity canvas dips at scene boundaries.
+   - **Timing & Transitions**:
+     * Total duration: 2.53s (76 frames) for standard questions; 2.87s (86 frames) for extended reflection (+0.2s breathing room).
+     * Breakdown: 0.30s enter (9 frames) → 1.80s clean still hold → 4 frames text fade out → 9 frames blank card dissolve (zero text ghosting over illustration).
+     * Typography: 45px bold 700 uppercase, letterSpacing 0.07em, formatted into 2 concise lines (e.g. `MÌNH SẼ DÙNG\nNÓ Ở ĐÂU?`), without subtitle.
+     * Voice narration reads the question synchronously with the card. Subtitles are suppressed during the card pause to prevent split attention.
 8. **Camera Shot Reframe Rules for Long Scenes (MANDATORY)**:
    - **No continuous creeping zoom**: The viewer must experience distinct, steady held shots separated by intentional mid-scene reframes ("camera vừa đổi framing" chứ không phải "ảnh đang từ từ phóng to").
    - **Scenes > 6.0s**: 2 Distinct Editorial Shots:
@@ -114,201 +183,83 @@ If the resolved audio policy disables music, set `"bgMusic": null`.
 
 ---
 
-## Image Selection (REQUIRED)
+## Production Lifecycle & Orchestration Architecture
 
-1. Read `public/assets/human-insight/manifest.json`.
-2. For every narration scene, run the selector below. Do not manually choose an
-   image by scanning the manifest because the selector applies semantic scoring
-   across `keywordsVi`, `tags`, description, mood, and character continuity.
+Production for `human-insight/cinematic-light` is owned end-to-end by the canonical orchestrator (`scripts/human-insight-production-orchestrator.mjs`).
+
+### Resumable Lifecycle & Human QA Gating
+
+1. **Initial Start (`/gen-video`)**:
+   - Production lock preflight check (`scripts/validate-production-lock.mjs`).
+   - Content parsed via `contentParserRuntime.mjs` (`canonicalVoice`, `statementText`, `finalQuestionText`).
+   - Voice and Timeline synthesis via `ensureVoiceAudio` and `ensureTimeline`. Duration verified against 70–85s contract; automatic pitch-preserving pacing calibration applied if needed.
+   - Story planning via `buildStoryPlan` (`story-plan.json`).
+   - Candidate image generation via shared `generateHumanInsightShot` (`@cf/black-forest-labs/flux-1-schnell`).
+   - Assembly of `review-manifest.json` (`HUMAN_QA_REVIEW_V1`).
+   - Transitions to `PENDING_HUMAN_IMAGE_QA` and **MANDATORY STOP**. AI auto-pass is strictly forbidden.
+   - Human reviews candidates and records approval via:
+     `node scripts/record-human-review.mjs --slug=<slug> --action=image-pass-all`
+
+2. **Resume after Human Image QA (`/gen-video --resume=<slug>`)**:
+   - **Selective Retry on FAIL**: If any shot has `FAIL_HUMAN_QA`, only the failed shots are selectively regenerated (Attempt 2 or Attempt 3, max 3 attempts). Attempt counter is incremented (Human rejection consumes 1 attempt; 429 quota pause does not). Approved (`PASS_HUMAN_QA`) shots are preserved untouched. Candidates reset to `PENDING_HUMAN_QA` and halts at `PENDING_HUMAN_IMAGE_QA`.
+   - **Promotion & Materialization on PASS**: When all shots have `PASS_HUMAN_QA` with `reviewSource: 'EXTERNAL_HUMAN'`, approved assets are promoted (`approved-image-manifest.json`), materialized into canonical paths (`public/assets/human-insight/final/<slug>/`), and official spec is built via `buildProductionRenderSpec`.
+   - Remotion render executes via `renderProductionVideo.mjs`. Render checks actual MP4 duration in [70, 85]s.
+   - Review artifacts generated (contact sheet, transition strip).
+   - Transitions to `PENDING_HUMAN_VIDEO_QA` and **MANDATORY STOP**. AI auto-pass is strictly forbidden.
+   - Human reviews video and records approval via:
+     `node scripts/record-human-review.mjs --slug=<slug> --action=video-pass`
+
+3. **Resume after Human Video QA (`/gen-video --resume=<slug>`)**:
+   - Verifies explicit `PASS_HUMAN_VIDEO_QA` approval recorded from `EXTERNAL_HUMAN`, SHA-256 hash-bound to `video.mp4`.
+   - Packages distribution zip (`packageProduction.mjs`).
+   - Transitions to `COMPLETE`.
+
+### Canonical Motion Profiles
+
+The template supports strictly the 7 canonical motion profiles:
+- `STILL`: Steady contemplative hold.
+- `AMBIENT_STILL`: Subtle organic breathing hold.
+- `PUSH_IN_SOFT`: Gentle forward push for intimacy.
+- `PULL_OUT_SOFT`: Gentle pull out for perspective.
+- `DRIFT_LEFT`: Slow lateral drift to the left.
+- `DRIFT_RIGHT`: Slow lateral drift to the right.
+- `DETAIL_PUSH`: Slow push focusing on an action or object detail.
+
+*(Legacy preset names such as `still-breathe`, `slow-zoom-in`, `slow-zoom-out`, `pan-right` remain supported at runtime as backward-compatibility aliases only, not for active authoring).*
+
+---
+
+## Step 7 (Coder / Production Renderer)
+
+The `human-insight/cinematic-light` template uses an **immutable, generic data-driven Remotion renderer**.
+
+> [!IMPORTANT]
+> **Zero Shared-Source Mutation Invariant**:
+> `src/Root.tsx`, `src/Video.tsx`, `src/VideoContent.tsx`, and template components (`Layout.tsx`, `ImageScene.tsx`, `QuestionCard.tsx`) MUST NEVER be modified per video run.
+> All per-video configuration, timing, assets, cards, and audio modes flow strictly through runtime props passed via `props.json` (`{ "spec": <production-render-spec> }`).
+
+Rendering command:
 ```bash
-npm run human-insight:image -- \
-  --text "<audioSegment.text>" \
-  --type "<hook|body|stat|ending>" \
-  --mood "<overall mood>" \
-  --character "<male|female|neutral>" \
-  --visual "<one concrete sentence describing what should visibly appear in this scene>" \
-  --generate
-```
-3. `--visual` is required for every scene. Describe concrete visible content
-   (person/action/place/objects/composition), not an abstract emotion. This same
-   description is used both for semantic matching and as the Cloudflare image
-   generation prompt when no existing asset is confident enough.
-4. Reuse an existing manifest image only when the selector reports a confident
-   semantic match. Mood, stress, sadness, hope, or other emotion-only overlap is
-   not enough. When confidence is low, let `--generate` create a scene-specific
-   Cloudflare image instead of forcing a vaguely related library image.
-5. Use the returned `image.assetId` and `image.path` in `spec.json`.
-6. Never use the same `assetId` for two consecutive scenes. Pass the previous
-   scene asset through `--exclude <assetId>` when selecting the next scene.
-7. Alternate Ken Burns direction between `zoom-in` and `zoom-out`.
-
----
-
-## Scene Format in spec.json
-
-```json
-{
-  "type": "body",
-  "layout": "standard" | "focus" | "statement" | "chapter",
-  "headerMode": "full" | "dimmed" | "logo-only" | "hidden",
-  "captionMode": "phrase" | "plain" | "statement",
-  "startFrame": 310,
-  "durationFrames": 279,
-  "audioSegment": {
-    "start": 10.32,
-    "end": 19.62,
-    "text": "..."
-  },
-  "image": {
-    "assetId": "digital-distraction-01",
-    "path": "assets/human-insight/images/digital-distraction-01.png",
-    "kenBurns": {
-      "direction": "zoom-out",
-      "startScale": 1.08,
-      "endScale": 1.0
-    }
-  },
-  "sectionCard": {
-    "number": "01",
-    "title": "CÂU HỎI ĐẦU TIÊN",
-    "subtitle": "mình sẽ dùng nó ở đâu?"
-  },
-  "insightText": "MỘT MÓN ĐỒ KHÔNG BAO GIỜ CHỈ LÀ GIÁ TIỀN"
-}
+npx remotion render src/Root.tsx Video --output "videos/<slug>/video.mp4" --codec h264 --props "videos/<slug>/props.json"
 ```
 
-*(Note: `sectionCard` is used when `layout === "chapter"`; `insightText` is used when `layout === "statement"`).*
-
----
-
-## Step 7 (Coder)
-
-Coder agent uses the standard pattern below to build `src/VideoContent.tsx`:
-
-```tsx
-import React from 'react';
-import { AbsoluteFill, Audio, Sequence, Series, staticFile } from 'remotion';
-import {
-  Layout,
-  ImageScene,
-  SectionCard,
-  InsightCard,
-  OutroCard,
-  type HumanInsightSpec,
-  type SceneWindowInfo,
-} from './templates/human-insight/cinematic-light';
-import { TRANSITION_SFX, type TransitionSfxName } from './templates/creative/free-style-sfx';
-import specData from '../videos/<slug>/spec.json';
-
-interface SpecWithSfx extends HumanInsightSpec {
-  scenes: (HumanInsightSpec['scenes'][number] & {
-    entrySfx?: {
-      name: TransitionSfxName;
-      volume?: number;
-      reason: string;
-    };
-  })[];
-}
-
-const spec = specData as SpecWithSfx;
-
-// Automatically map scene windows for dynamic title & header hierarchy
-const sceneWindows: SceneWindowInfo[] = spec.scenes.map((scene) => ({
-  startFrame: scene.startFrame,
-  durationFrames: scene.durationFrames,
-  layout: scene.layout ?? 'standard',
-  headerMode: scene.headerMode,
-  captionMode: scene.captionMode,
-  hasSectionCard: Boolean(scene.sectionCard),
-  hasInsightCard: Boolean(scene.insightText),
-  isOutro: scene.isOutro,
-}));
-
-export const VideoContent: React.FC<{ slug: string }> = ({ slug }) => (
-  <Layout
-    slug={slug}
-    title={spec.video.title}
-    bgMusic={spec.video.bgMusic ?? null}
-    scenes={sceneWindows}
-  >
-    <Audio src={staticFile(`${slug}/voice.mp3`)} />
-    {spec.scenes.map((scene, i) =>
-      scene.entrySfx ? (
-        <Sequence
-          key={`sfx-${i}`}
-          from={scene.startFrame}
-          durationInFrames={90}
-        >
-          <Audio
-            src={TRANSITION_SFX[scene.entrySfx.name]}
-            volume={Math.min(scene.entrySfx.volume ?? 0.2, 0.25)}
-          />
-        </Sequence>
-      ) : null,
-    )}
-    <AbsoluteFill>
-      {spec.scenes.map((scene, i) => {
-        const isLast = i === spec.scenes.length - 1;
-        // Keep previous scene alive for 12 frames during the transition to eliminate black/murky dips
-        const extraFrames = isLast ? 0 : 12;
-        return (
-          <Sequence
-            key={i}
-            from={scene.startFrame}
-            durationInFrames={scene.durationFrames + extraFrames}
-          >
-            {scene.isOutro ? (
-              <OutroCard durationFrames={scene.durationFrames} />
-            ) : (
-              <>
-                <ImageScene
-                  src={scene.image.path}
-                  durationFrames={scene.durationFrames + extraFrames}
-                  kenBurns={scene.image.kenBurns}
-                  sceneIndex={i}
-                  framing={scene.layout === 'focus' ? 'focus' : 'standard'}
-                  hasSectionCard={Boolean(scene.sectionCard)}
-                  hasInsightCard={Boolean(scene.insightText)}
-                  fadeInFrames={scene.sectionCard || scene.insightText ? 40 : 12}
-                  fadeOutFrames={12}
-                />
-                {scene.sectionCard ? (
-                  <SectionCard
-                    number={scene.sectionCard.number}
-                    title={scene.sectionCard.title}
-                    subtitle={scene.sectionCard.subtitle}
-                    durationFrames={40}
-                  />
-                ) : null}
-                {scene.insightText ? (
-                  <InsightCard
-                    statement={scene.insightText}
-                    durationFrames={40}
-                    framing={scene.layout === 'focus' ? 'focus' : 'standard'}
-                  />
-                ) : null}
-              </>
-            )}
-          </Sequence>
-        );
-      })}
-    </AbsoluteFill>
-  </Layout>
-);
+Or execute the complete generic production render and video QA pack generator:
+```bash
+node scripts/render-production-video.mjs --slug=<slug>
 ```
 
 ---
 
-## Checklist before submitting spec.json
+## Production Spec & Verification Checklist
 
 - [ ] `templateId` = `"human-insight/cinematic-light"`
-- [ ] `video.title` ≤ 8 Vietnamese words
-- [ ] `video.bgMusic` configured
-- [ ] Layout variation applied (`standard`, `focus`, `statement`, `chapter`)
-- [ ] No more than 2 consecutive scenes share the same layout
-- [ ] Chapter cards configured for numbered milestones
-- [ ] Outro scene configured at end if requested
-- [ ] `totalFrames` = last scene's `startFrame` + last scene's `durationFrames`
+- [ ] `title` ≤ 8 Vietnamese words
+- [ ] Canonical voice text preserved verbatim (zero rewriting, zero CTA/brand injection)
+- [ ] Statement card and unnumbered QuestionCard preserved from parsed content
+- [ ] All candidate assets pass Human image QA (`PASS_HUMAN_QA` in `review-manifest.json`)
+- [ ] Official spec generated via `build-production-render-spec.mjs`
+- [ ] Outro configured at end (60 frames / 2.0s)
+- [ ] Human video QA approval recorded before packaging
 
 ---
 

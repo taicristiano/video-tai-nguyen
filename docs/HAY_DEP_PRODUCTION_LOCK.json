@@ -1,26 +1,56 @@
-﻿{
+{
   "status": "LOCKED",
-  "lockDate": "2026-09-20",
-  "version": "V3.6",
+  "lockDate": "2026-09-21",
+  "version": "V3.7",
+  "templateId": "human-insight/cinematic-light",
   "imageModel": {
     "modelId": "@cf/black-forest-labs/flux-1-schnell",
     "provider": "cloudflare",
-    "policy": "STRICT_EXCLUSIVE"
+    "policy": "STRICT_EXCLUSIVE",
+    "allowModelSwitch": false
   },
   "imageStyle": {
     "genre": "clean 2D illustrated / cartoon editorial",
     "photorealism": false,
     "palette": {
-      "background": ["#FDFBF7", "#FFFBE7", "#F6F1E8"],
-      "clothing": ["#8A9A86", "#738670"],
+      "background": [
+        "#FDFBF7",
+        "#FFFBE7",
+        "#F6F1E8",
+        "#FAECD2"
+      ],
+      "clothing": [
+        "#8A9A86",
+        "#738670",
+        "#465B49",
+        "#71806C"
+      ],
       "wood": "warm medium wood",
       "linework": "charcoal / soft sepia",
-      "accents": ["terracotta", "amber"]
+      "accents": [
+        "terracotta",
+        "amber",
+        "#E07A5F",
+        "#C79A72"
+      ]
     }
   },
+  "hardExclusions": [
+    "photorealism",
+    "3d_render",
+    "cgi",
+    "glossy_textures",
+    "photographic_skin",
+    "anime",
+    "chibi",
+    "speech_bubbles",
+    "text_pollution"
+  ],
   "identityContract": {
     "crossShotConsistencyRequired": false,
-    "evaluation": "independent_per_shot"
+    "evaluation": "independent_per_shot",
+    "roleAndWorldSemanticsAllowed": true,
+    "retryForBiometricsForbidden": true
   },
   "perImageQa": {
     "requiredDimensions": [
@@ -30,7 +60,8 @@
       "ANATOMY",
       "TEXT_POLLUTION"
     ],
-    "machineIntegrityOnlyRequiresVisualQa": true
+    "machineIntegrityOnlyRequiresVisualQa": true,
+    "noFakePass": true
   },
   "retryPolicy": {
     "maxRealAttempts": 3,
@@ -39,40 +70,93 @@
     "deterministicRasterCleanupAllowedAfterAttempts": 3,
     "cleanedAssetReturnsToPending": true
   },
+  "durationContract": {
+    "allowedSeconds": [
+      70,
+      85
+    ],
+    "preferredSeconds": [
+      75,
+      80
+    ],
+    "voiceCanonical": true,
+    "rewriteForbidden": true
+  },
   "framing": {
     "cleanSquareAssetsComposition": "portrait-focus",
     "focalPoint": null,
-    "prohibitAsymmetricForSquare": true
+    "prohibitAsymmetricForSquare": true,
+    "defaultDimensions": {
+      "width": 900,
+      "height": 1040,
+      "radius": 36,
+      "top": 360,
+      "left": 90
+    }
   },
   "motionGrammar": {
     "version": "V3.4A",
-    "allowed": ["subtle_push_in_1_04", "breathing", "static_hold"],
+    "allowed": [
+      "STILL",
+      "AMBIENT_STILL",
+      "PUSH_IN_SOFT",
+      "PULL_OUT_SOFT",
+      "DRIFT_LEFT",
+      "DRIFT_RIGHT",
+      "DETAIL_PUSH"
+    ],
     "hardCuts": true,
-    "forbidden": ["bounce", "spring", "rotation", "cut_opacity_dip", "decorative_motion"]
+    "translateY": 0,
+    "forbidden": [
+      "bounce",
+      "spring",
+      "rotation",
+      "cut_opacity_dip",
+      "decorative_motion"
+    ]
   },
   "brandWatermark": {
-    "assetPath": "public/assets/hay-dep/brand/logo-full-horizontal-with-slogan.png",
+    "assetPath": "assets/hay-dep/brand/logo-full-horizontal-with-slogan.png",
     "position": "top-right",
-    "insetTop": 40,
-    "insetRight": 40,
-    "width": 250,
-    "opacity": 0.24,
-    "animated": false
+    "insetTop": 28,
+    "insetRight": 32,
+    "minEdgeInset": 24,
+    "maxEdgeInset": 40,
+    "width": 270,
+    "opacity": 0.34,
+    "minOpacity": 0.3,
+    "maxOpacity": 0.38,
+    "safeBottom": 120,
+    "animated": false,
+    "dropShadow": "0 1px 2px rgba(44, 40, 32, 0.08)"
   },
   "typography": {
+    "fontFamily": "Be Vietnam Pro",
     "title": {
-      "maxWidth": 820,
-      "fontSize": 44,
-      "lineHeight": 1.32,
+      "maxWidth": 880,
+      "fontSize": 58,
+      "minFontSize": 56,
+      "maxFontSize": 60,
+      "lineHeight": 1.18,
+      "letterSpacing": "-0.015em",
+      "fontWeight": "700",
       "maxLines": 2,
-      "top": 170
+      "top": 145
     },
     "subtitle": {
-      "maxWidth": 860,
-      "fontSize": 38,
-      "lineHeight": 1.4,
-      "bottomPlacement": "14%",
-      "maxWords": 7
+      "maxWidth": 920,
+      "fontSize": 44,
+      "minFontSize": 42,
+      "maxFontSize": 46,
+      "lineHeight": 1.3,
+      "bottomPlacement": "10.5%",
+      "maxWords": 7,
+      "fontWeight": "500",
+      "colors": {
+        "text": "#766D66",
+        "active": "#2C1A0E",
+        "past": "#8A817A"
+      }
     }
   },
   "safeZones": {
@@ -80,14 +164,46 @@
       "width": 1080,
       "height": 1920
     },
-    "topZone": [0, 300],
-    "centerArtworkZone": [300, 1380],
-    "bottomSubtitleZone": [1380, 1920]
+    "topZone": [
+      0,
+      330
+    ],
+    "centerArtworkZone": [
+      360,
+      1400
+    ],
+    "bottomSubtitleZone": [
+      1400,
+      1920
+    ]
+  },
+  "audioContract": {
+    "dependencyContractPath": "src/templates/human-insight/cinematic-light/templateDependenciesRuntime.mjs",
+    "defaultBgMusic": "assets/human-insight/music/music-bg-2.mp3",
+    "sfxPolicy": "restrained_semantic",
+    "modes": [
+      "full",
+      "music",
+      "sfx",
+      "voice-only"
+    ]
+  },
+  "humanQa": {
+    "required": true,
+    "imageManifestType": "HUMAN_QA_REVIEW_V1",
+    "approvedManifestType": "APPROVED_IMAGE_MANIFEST_V1",
+    "noAutomaticPass": true
   },
   "evidence": {
     "videosCount": 5,
     "shotsCount": 30,
-    "verifiedVideos": ["video001", "video005", "video007", "video013", "video028"],
+    "verifiedVideos": [
+      "video001",
+      "video005",
+      "video007",
+      "video013",
+      "video028"
+    ],
     "overallStatus": "PASS"
   }
 }

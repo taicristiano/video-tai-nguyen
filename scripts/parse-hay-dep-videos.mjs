@@ -2,6 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+import { parseHumanInsightContent } from '../src/templates/human-insight/cinematic-light/contentParserRuntime.mjs';
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 
@@ -31,47 +33,31 @@ export function parseHayDepVideos() {
     const fullPrompt = promptMatch[1].trim();
     const cleanContext = fullPrompt.replace(/^\/gen-video[^\n]*\n+/i, '').trim();
 
-    // Parse specific fields from prompt
-    const partMatch = fullPrompt.match(/(?:phần|phan|part)\s*:\s*([a-zA-Z0-9_-]+)/i);
-    const part = partMatch ? partMatch[1] : String(videoIndex);
-
-    const titleMatch = fullPrompt.match(/Tiêu đề:\s*\r?\n([^\r\n]+)/i);
-    const title = titleMatch ? titleMatch[1].trim() : rawTitle;
-
     // Category info from markdown section header (e.g., **Nhóm nội dung:** Gia đình & tình thân)
     const catMatch = sec.match(/\*\*Nhóm nội dung:\*\*\s*([^\r\n]+)/i);
     const category = catMatch ? catMatch[1].trim() : '';
 
-    // Series info (ĐẸP. or HAY.)
-    const seriesMatch = fullPrompt.match(/Series:\s*([^\r\n]+)/i);
-    const series = seriesMatch ? seriesMatch[1].trim() : '';
-
-    // Parse voice script
-    const voiceMatch = fullPrompt.match(/Kịch bản voice:\s*\r?\n([\s\S]*?)(?=\r?\n\r?\n(?:Visual direction|Ưu tiên visual|Yêu cầu dựng):|$)/i);
-    const voiceScriptText = voiceMatch ? voiceMatch[1].trim() : '';
-
-    // Parse statement
-    const statementMatch = fullPrompt.match(/Statement[^\n]*:\s*["“]?([^"”\r\n]+)["”]?/i);
-    const statementText = statementMatch ? statementMatch[1].trim() : '';
-
-    // Parse visual priorities
-    const visualPrioMatch = fullPrompt.match(/Ưu tiên visual:\s*\r?\n([\s\S]*?)(?=\r?\n\r?\nYêu cầu dựng:|$)/i);
-    const visualPriorities = visualPrioMatch
-      ? visualPrioMatch[1].split('\n').map(l => l.replace(/^[-*•]\s*/, '').trim()).filter(Boolean)
-      : [];
+    // Parse via canonical content parser SSOT
+    const parsed = parseHumanInsightContent(cleanContext, {
+      index: videoIndex,
+      rawTitle,
+      category,
+    });
 
     videos.push({
       index: videoIndex,
-      part,
+      part: parsed.part || String(videoIndex),
       rawTitle,
-      title,
-      series,
+      title: parsed.title || rawTitle,
+      series: parsed.series,
       category,
       fullPrompt,
       cleanContext,
-      voiceScriptText,
-      statementText,
-      visualPriorities,
+      voiceScriptText: parsed.canonicalVoice,
+      statementText: parsed.statementText,
+      finalQuestionText: parsed.finalQuestionText,
+      visualPriorities: parsed.visualSemantics,
+      durationPreference: parsed.durationPreference,
     });
   }
 

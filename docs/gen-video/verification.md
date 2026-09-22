@@ -65,11 +65,42 @@ Redesign a scene when:
 - Empty space appears accidental.
 - The scene only changes copy while reusing another scene's full layout.
 
+## Production Lock & Human QA Gates
+
+For locked production templates (e.g. `human-insight/cinematic-light`):
+
+1. **Preflight Lock Check**:
+   `node scripts/validate-production-lock.mjs` must exit with code 0 before starting.
+2. **Audio Pacing & Duration Contract Pre-Check**:
+   - Planned total duration (`voice + outro`) must be within 70–85s (preferred 75–80s, target midpoint 77.5s).
+   - If out of range, narration pacing is calibrated via pitch-preserving `ffmpeg atempo` without mutating canonical voice text.
+   - Durations that cannot be brought within [70, 85]s halt immediately with `BLOCKED` (`AUDIO_DURATION_OUT_OF_RANGE`).
+3. **Image QA Review Gate (`PENDING_HUMAN_IMAGE_QA`)**:
+   - Verify candidate image count equals required shot count.
+   - Independent shot semantics: `crossShotConsistencyRequired = false`. Different faces between shots alone MUST NOT fail QA; verify people count, role semantics, style, anatomy, and zero text pollution.
+   - **No AI Auto-Pass**: Automated/heuristic checks CANNOT author `PASS_HUMAN_QA`. The pipeline must execute a MANDATORY STOP at `PENDING_HUMAN_IMAGE_QA`.
+   - Approval must come from an external human (`reviewSource: 'EXTERNAL_HUMAN'`) recorded via:
+     `node scripts/record-human-review.mjs --slug=<slug> --action=image-pass-all`
+     before asset promotion to `approved/` and materialization to `public/<slug>/`.
+4. **Transition & Boundary Invariant**:
+   - Inspect boundary frames (frame 0, scene start, scene end) to ensure zero
+     unintended blank or 0-opacity canvas dips between scenes.
+5. **Video QA Review Gate (`PENDING_HUMAN_VIDEO_QA`)**:
+   - Probed `video.mp4` duration must be within [70, 85] seconds. Any render outside this range triggers `RENDER_DURATION_OUT_OF_RANGE` and blocks QA.
+   - Play back rendered `videos/<slug>/video.mp4`.
+   - Verify narration and card typography alignment.
+   - **No AI Auto-Pass**: Automated checks CANNOT author `PASS_HUMAN_VIDEO_QA`. The pipeline must execute a MANDATORY STOP at `PENDING_HUMAN_VIDEO_QA`.
+   - Explicit human approval must be recorded via:
+     `node scripts/record-human-review.mjs --slug=<slug> --action=video-pass`
+   - Video approval is SHA-256 hash-bound to `video.mp4` and automatically invalidated upon re-render. Approval is required before clean packaging and marking `COMPLETE`.
+
 ## Final Render Gate
 
 Do not render the final video until:
 
-- TypeScript passes.
+- TypeScript passes (`npx tsc --noEmit`).
+- Preflight production lock check passes (if template has a lock).
+- Image QA gate is approved (if template requires human QA).
 - Required stills were inspected, when still inspection is required.
 - Weak scenes and collisions were fixed.
 - Scene durations sum exactly to `totalFrames`.

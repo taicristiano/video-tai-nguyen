@@ -45,9 +45,35 @@ export interface TemplateRegistryEntry {
     /** Gemini TTS voice name for this template (fallback if ElevenLabs unavailable) */
     geminiVoice?: string;
   };
+  /**
+   * Path to machine-readable production lock JSON.
+   */
+  productionLockPath?: string;
+  /**
+   * Path to dependency contract runtime module.
+   */
+  dependencyContractPath?: string;
 }
 
 export const TEMPLATE_REGISTRY: TemplateRegistryEntry[] = [
+  {
+    id: "human-insight/cinematic-light",
+    behavior: "fixed",
+    name: "Cinematic Light",
+    category: "human-insight",
+    description:
+      "HAY & ĐẸP. video triết lý, nhân sinh. Nền kem ấm, typography tối giản, micro-motion tinh tế, Human-QA gate.",
+    aspectRatio: "9:16",
+    assetManifestPath: "public/assets/human-insight/manifest.json",
+    defaultBgMusic: "assets/human-insight/music/music-bg-2.mp3",
+    specDocPath: "docs/templates/human-insight/cinematic-light.md",
+    voice: {
+      elevenLabsVoiceId: "K7ewtjKRNtwwt3lKQ6M0",
+      geminiVoice: "Achird",
+    },
+    productionLockPath: "docs/HAY_DEP_PRODUCTION_LOCK.json",
+    dependencyContractPath: "src/templates/human-insight/cinematic-light/templateDependenciesRuntime.mjs",
+  },
   {
       id: "creative/free-style",
       behavior: "creative",
@@ -574,23 +600,27 @@ export const TEMPLATE_REGISTRY: TemplateRegistryEntry[] = [
         geminiVoice: "Achird",
       },
     },
-
-  {
-      id: "human-insight/cinematic-light",
-      behavior: "fixed",
-      name: "Cinematic Light",
-      category: "human-insight",
-      description: "Video triet ly, nhan sinh. Nen kem am #FAECD2, chu dam, subtitle amber.",
-      aspectRatio: "9:16",
-      assetManifestPath: "public/assets/human-insight/manifest.json",
-      defaultBgMusic: "assets/human-insight/music/music-bg-2.mp3",
-      specDocPath: "docs/templates/human-insight/cinematic-light.md",
-      voice: {
-        elevenLabsVoiceId: "K7ewtjKRNtwwt3lKQ6M0",
-        geminiVoice: "Achird",
-      },
-    },
 ];
+
+export const TEMPLATES = TEMPLATE_REGISTRY;
+
+/** Asserts that all template IDs in the registry are strictly unique */
+export function assertRegistryIdsUnique(): void {
+  const seen = new Set<string>();
+  const duplicates: string[] = [];
+  for (const t of TEMPLATE_REGISTRY) {
+    if (seen.has(t.id)) {
+      duplicates.push(t.id);
+    }
+    seen.add(t.id);
+  }
+  if (duplicates.length > 0) {
+    throw new Error(`Duplicate template IDs found in registry: ${duplicates.join(', ')}`);
+  }
+}
+
+// Enforce uniqueness on module load
+assertRegistryIdsUnique();
 
 /** Look up a template entry by ID. Returns undefined if not found. */
 export function getTemplate(id: string): TemplateRegistryEntry | undefined {

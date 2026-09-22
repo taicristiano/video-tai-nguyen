@@ -1,0 +1,14 @@
+{
+  "slug": "v56-test-18-duration-passes-qa",
+  "dryRun": true,
+  "totalShots": 1,
+  "totalFrames": 2325,
+  "durationAudit": {
+    "plannedDurationSeconds": 77.5,
+    "actualMp4DurationSeconds": 77.5,
+    "allowedRange": "70–85s",
+    "preferredRange": "75–80s",
+    "durationVerdict": "PASS"
+  },
+  "renderedAt": "2026-09-22T14:17:38.229Z"
+}

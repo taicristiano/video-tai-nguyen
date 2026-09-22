@@ -1,0 +1,12 @@
+{
+  "slug": "v56-test-18-duration-passes-qa",
+  "expectedTotalFrames": 2325,
+  "expectedDurationSeconds": 77.5,
+  "probedContainerDuration": 77.5,
+  "probedVideoDuration": 77.5,
+  "probedAudioDuration": 77.5,
+  "probedVideoFrames": 2325,
+  "videoWidth": 1080,
+  "videoHeight": 1920,
+  "totalShots": 1
+}

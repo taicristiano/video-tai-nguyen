@@ -22,8 +22,20 @@ export type { SectionCardProps } from './SectionCard';
 export { InsightCard } from './InsightCard';
 export type { InsightCardProps } from './InsightCard';
 
+export { QuestionCard } from './QuestionCard';
+export type { QuestionCardProps } from './QuestionCard';
+
 export { OutroCard } from './OutroCard';
 export type { OutroCardProps } from './OutroCard';
+
+export {
+  parseHumanInsightContent,
+  normalizeCanonicalVoice,
+} from './contentParser';
+export type {
+  ParsedHumanInsightContent,
+  HumanInsightDurationPreference,
+} from './contentParser';
 
 export {
   CINEMATIC_LIGHT_DEPENDENCIES,

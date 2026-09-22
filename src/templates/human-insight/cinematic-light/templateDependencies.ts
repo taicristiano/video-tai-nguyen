@@ -14,6 +14,7 @@ export type {
 
 export {
   CINEMATIC_LIGHT_DEPENDENCIES,
+  CINEMATIC_LIGHT_DURATION_CONTRACT,
   resolveEffectiveTemplateConfig,
   resolveTemplateDependencies,
 } from './templateDependenciesRuntime.mjs';

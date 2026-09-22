@@ -12,6 +12,11 @@ import {
 import { buildStoryPlan } from './human-insight-story-planner.mjs';
 import { CHANNEL_BRAND_CONFIG } from '../src/templates/human-insight/cinematic-light/storyPlannerRuntime.mjs';
 import { mapPlannerScaleToRendererScale } from '../src/templates/human-insight/cinematic-light/referenceShotGrammarRuntime.mjs';
+import { chooseSemanticEntrySfx } from '../src/templates/human-insight/cinematic-light/semanticSfxRuntime.mjs';
+import { parseHumanInsightContent } from '../src/templates/human-insight/cinematic-light/contentParserRuntime.mjs';
+import { runHumanInsightOrchestrator } from './human-insight-production-orchestrator.mjs';
+
+export { chooseSemanticEntrySfx, parseHumanInsightContent, runHumanInsightOrchestrator };
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
@@ -124,85 +129,6 @@ export function resolveCanonicalAsset(beat, canonicalAssets) {
   throw new Error(
     `${roleLabel} beat ${beat.id} requires canonical reuse, but no canonical asset exists for ${beat.castId || 'no-cast'} / ${beat.worldId || 'no-world'}.`,
   );
-}
-
-export function chooseSemanticEntrySfx({
-  storyRole,
-  role,
-  visualContainer,
-  container,
-  contentMode,
-  voiceClause = '',
-  narration = '',
-  text = '',
-  visualIntent = '',
-  intent = '',
-  isHook = false,
-  isStatement = false,
-  isEnding = false,
-  previousSceneHadSfx = false,
-} = {}) {
-  const effectiveRole = storyRole || role;
-  const effectiveContainer = visualContainer || container || 'canvas';
-  const effectiveVoice = voiceClause || narration || text || '';
-  const effectiveIntent = visualIntent || intent || '';
-
-  // Always suppress on ending, question, release
-  if (isEnding || effectiveRole === 'question' || effectiveRole === 'release') {
-    return null;
-  }
-
-  // Rule 1: Memory / paper
-  if (effectiveRole === 'memory' && effectiveContainer === 'paper') {
-    return {
-      name: 'pageTurn',
-      volume: 0.12,
-      reason: 'memory-paper semantic transition',
-    };
-  }
-
-  // Rule 2: Book / page detail
-  const bookVoiceKeywords = /(?:lật trang|trang sách|cuốn sách|ghi chép|notebook|\bpage\b|\bbook\b)/i;
-  const voiceHasKeywords = bookVoiceKeywords.test(effectiveVoice);
-  const intentHasTurningKeywords = /(?:lật trang|turning page|turn the page|flipping page|open book)/i.test(effectiveIntent);
-
-  if (
-    (voiceHasKeywords || intentHasTurningKeywords) &&
-    (effectiveRole === 'detail-action' || effectiveRole === 'action' || effectiveRole === 'detail')
-  ) {
-    return {
-      name: 'pageTurn',
-      volume: 0.12,
-      reason: 'book-page semantic action',
-    };
-  }
-
-  // Rule 3: Major statement emphasis
-  if (isStatement) {
-    if (previousSceneHadSfx) {
-      return null;
-    }
-    return {
-      name: 'whoosh',
-      volume: 0.10,
-      reason: 'statement emphasis transition',
-    };
-  }
-
-  // Rule 4: Optional opening reveal
-  if (isHook) {
-    if (previousSceneHadSfx) {
-      return null;
-    }
-    return {
-      name: 'whoosh',
-      volume: 0.08,
-      reason: 'opening reveal transition',
-    };
-  }
-
-  // Rule 5: Everything else
-  return null;
 }
 
 function resolveBeatAsset({
@@ -665,23 +591,49 @@ export async function processVideo(videoData, options = {}) {
     statementText,
     visualPriorities,
   } = videoData;
+
+  // Step 0: Canonical Content Parser Execution
+  const parsedContent = parseHumanInsightContent(cleanContext, {
+    index,
+    part,
+    title,
+    series,
+    category,
+  });
+
+  const effectiveVoice = parsedContent.canonicalVoice || voiceScriptText;
+  const effectiveStatement = parsedContent.statementText || statementText;
+  const effectiveVisualPriorities = (parsedContent.visualSemantics && parsedContent.visualSemantics.length > 0)
+    ? parsedContent.visualSemantics
+    : visualPriorities;
+  const effectiveTitle = parsedContent.title || title;
+  const effectivePart = parsedContent.part || part;
+  const effectiveSeries = parsedContent.series || series;
+
   console.log(`\n======================================================`);
-  console.log(`▶ [Video ${index}/100] (Part ${part}): ${title}`);
+  console.log(`▶ [Video ${index}/100] (Part ${effectivePart}): ${effectiveTitle}`);
   console.log(`======================================================`);
 
   const slug = deriveSlug(cleanContext);
   console.log(`Slug: ${slug}`);
 
+  // In production mode, delegate immediately to canonical orchestrator
+  // with ZERO pre-creation of files in videos/<slug> or public/<slug>!
+  if (!planOnly) {
+    console.log(`⚙ Delegating production orchestration for ${slug} to canonical orchestrator...`);
+    return runHumanInsightOrchestrator({
+      slug,
+      context: cleanContext,
+      title: effectiveTitle,
+      audioMode: options.audioMode || 'full',
+      skipRender,
+      force,
+      ...options,
+    });
+  }
+
   const videosDir = path.join(ROOT, 'videos', slug);
   const videoMp4Path = path.join(videosDir, 'video.mp4');
-
-  if (!force && !planOnly && fs.existsSync(videoMp4Path)) {
-    const stat = fs.statSync(videoMp4Path);
-    if (stat.size > 1000000) {
-      console.log(`✅ video.mp4 already exists (${(stat.size / 1024 / 1024).toFixed(1)} MB). Skipping to next video.`);
-      return { slug, videoMp4Path, skipped: true };
-    }
-  }
 
   const publicDir = path.join(ROOT, 'public', slug);
   const scriptDir = path.join(videosDir, 'script');
@@ -694,7 +646,7 @@ export async function processVideo(videoData, options = {}) {
   fs.writeFileSync(path.join(videosDir, 'audio.txt'), 'full', 'utf-8');
 
   // Step 2 & 3: Planner & Teller
-  const rawParas = voiceScriptText
+  const rawParas = effectiveVoice
     .split(/\n\s*\n/)
     .map(p => p.replace(/\r/g, '').trim())
     .filter(Boolean);
@@ -716,7 +668,7 @@ export async function processVideo(videoData, options = {}) {
   fs.writeFileSync(scriptPath, JSON.stringify({ script: scriptItems }, null, 2), 'utf-8');
 
   const planData = {
-    title,
+    title: effectiveTitle,
     hook: rawParas[0] || '',
     segments: rawParas.slice(1, -1).map((text, i) => ({
       title: `Ý ${i + 1}`,
@@ -938,14 +890,14 @@ export async function processVideo(videoData, options = {}) {
   const storyResult = buildStoryPlan(
     {
       index,
-      part,
-      title,
-      series,
+      part: effectivePart,
+      title: effectiveTitle,
+      series: effectiveSeries,
       category,
       cleanContext,
-      voiceScriptText,
-      statementText,
-      visualPriorities,
+      voiceScriptText: effectiveVoice,
+      statementText: effectiveStatement,
+      visualPriorities: effectiveVisualPriorities,
     },
     segments,
     {
@@ -1084,37 +1036,52 @@ export async function processVideo(videoData, options = {}) {
     };
   }
 
-  // Step 7: Update Remotion source files
-  console.log(`⚙ Updating Remotion config files for ${slug}...`);
-  const videoContentPath = path.join(ROOT, 'src', 'VideoContent.tsx');
-  let vcContent = fs.readFileSync(videoContentPath, 'utf-8');
-  vcContent = vcContent.replace(/import specData from '\.\.\/videos\/[^']+\/spec\.json';/, `import specData from '../videos/${slug}/spec.json';`);
-  writeFileSyncWithRetry(videoContentPath, vcContent);
+  // Step 7: Delegate production orchestration to canonical orchestrator
+  // Zero manual production spec assembly, zero direct Remotion render before Human QA, zero shared-source mutation
+  console.log(`⚙ Delegating production orchestration for ${slug} to canonical orchestrator...`);
+  return runHumanInsightOrchestrator({
+    slug,
+    context: cleanContext,
+    title: effectiveTitle,
+    storyPlan,
+    audioMode: options.audioMode || 'full',
+    skipRender,
+    force,
+  });
+}
 
-  const rootPath = path.join(ROOT, 'src', 'Root.tsx');
-  let rootContent = fs.readFileSync(rootPath, 'utf-8');
-  rootContent = rootContent
-    .replace(/const defaultSlug = '[^']+';/, `const defaultSlug = '${slug}';`)
-    .replace(/const defaultDuration = \d+;/, `const defaultDuration = ${totalFrames};`);
-  writeFileSyncWithRetry(rootPath, rootContent);
-
-  // Step 8: Render
-  console.log(`🎬 Rendering ${slug} via Remotion...`);
-  execWithRetry(`npx remotion render src/Root.tsx Video --output "videos/${slug}/video.mp4" --codec h264 --props "videos/${slug}/props.json"`);
-
-  const stat = fs.statSync(videoMp4Path);
-  console.log(`🎉 SUCCESS: Rendered Video ${index} (${(stat.size / 1024 / 1024).toFixed(1)} MB) to:`);
-  console.log(`   ${videoMp4Path}\n`);
-
-  return { slug, videoMp4Path, totalFrames, size: stat.size };
+/**
+ * @deprecated Legacy shared source mutation is strictly forbidden in production.
+ * Calling this throws an error in production mode.
+ */
+export function legacyMutateSharedSource() {
+  throw new Error('MUTATION_FORBIDDEN: Shared source files (Root.tsx, VideoContent.tsx) must NEVER be modified per video run.');
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const args = process.argv.slice(2);
-  const force = args.includes('--force');
-  const planOnly = args.includes('--plan-only');
-  const skipRender = args.includes('--skip-render');
-  const nonFlagArgs = args.filter((a) => !a.startsWith('--'));
+  const resumeArg = args.find((a) => a.startsWith('--resume='));
+  if (resumeArg) {
+    const resumeSlug = resumeArg.slice('--resume='.length).trim();
+    console.log(`[BATCH-ENGINE] Delegating --resume=${resumeSlug} to canonical orchestrator...`);
+    const audioArg = args.find((a) => a.startsWith('--audio=') || a.startsWith('--audio-mode='));
+    const audioMode = audioArg ? audioArg.split('=')[1].trim() : undefined;
+    const skipRender = args.includes('--skip-render');
+    const skipPlaywright = args.includes('--skip-playwright');
+    (async () => {
+      try {
+        const res = await runHumanInsightOrchestrator({ resume: resumeSlug, audioMode, skipRender, skipPlaywright });
+        console.log(`Resumed successfully: ${res.status || res.state}`);
+      } catch (err) {
+        console.error(`❌ Resume error:`, err.message || err);
+        process.exit(1);
+      }
+    })();
+  } else {
+    const force = args.includes('--force');
+    const planOnly = args.includes('--plan-only');
+    const skipRender = args.includes('--skip-render');
+    const nonFlagArgs = args.filter((a) => !a.startsWith('--'));
 
   const vids = parseHayDepVideos();
 
@@ -1167,4 +1134,5 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     }
     console.log(`\n🏆 ALL REQUESTED VIDEOS PROCESSED!`);
   })();
+  }
 }

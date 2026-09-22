@@ -37,7 +37,9 @@ At least one STT key is required. Provider priority is Groq, then api.stt.ai.
    - remove non-`[a-z0-9-]`
    - keep the first 8 tokens
    - prefix `YYYY-MM-DD` (resulting in `phan-{i}-{YYYY-MM-DD}-{slug}` or `{YYYY-MM-DD}-{slug}`)
-3. Halt if `videos/<slug>/` already exists.
+3. Directory collision & resume policy:
+   - For a new generation, halt if `videos/<slug>/` already exists without `--resume=<slug>`.
+   - For `--resume=<slug>`, require `videos/<slug>/pipeline-state.json` and resume strictly from the next valid lifecycle stage.
 4. Create:
 
 ```text
@@ -52,6 +54,8 @@ public/<slug>/
 6. Select a template:
    - explicit `--template`: validate it in `src/templates/registry.ts`
    - no flag: use `creative/free-style`
+   - if the template registers a `productionLockPath`, execute preflight validation:
+     `node scripts/validate-production-lock.mjs`
 7. Write the selected ID to `videos/<slug>/template.txt`.
 8. Resolve the audio policy and write it to `videos/<slug>/audio.txt`:
    - explicit `--audio=<mode>`: write `<mode>`
@@ -59,6 +63,10 @@ public/<slug>/
 
 `audio.txt` is the durable source of truth for Steps 6-8. The accepted contents
 are `template`, `full`, `music`, `sfx`, and `voice-only`.
+
+For resumable runs initiated via `/gen-video --resume=<slug>`, skip steps that
+already have validated artifacts and continue from the pending gate (e.g.
+promoting approved assets or packaging clean release).
 
 Templates that acquire article media may add template-specific artifacts after
 this step. Follow the selected template document before starting Planner.
@@ -84,9 +92,14 @@ Output: `videos/<slug>/plan.json`
 Rules:
 
 - Vietnamese, informative, and neutral unless context requires another tone.
-- Target 120-180 seconds (2 - 3 minutes).
-- Use 7-12 body segments, excluding hook and ending, providing deep, detailed, and structured explanations.
+- Target 120-180 seconds (2 - 3 minutes), unless overridden by the selected
+  template (e.g. `human-insight/cinematic-light` specifies 70-85s).
+- Use 7-12 body segments, excluding hook and ending, providing deep, detailed, and structured explanations (or template-specific segment count).
 - The hook must create immediate curiosity.
+- **Visual Semantics Priority (WHAT vs. HOW)**:
+  When context provides `VISUAL SEMANTICS:` / `Ưu tiên visual:`, treat them as concrete scene requirements (WHAT). Spoken phrase semantics outrank generic relationship/portrait fallbacks. Feasible priority visuals must be planned and covered.
+- **Text-Pollution Hardening**:
+  Generated illustrations must not contain readable text, lettering, pseudo-text, signage, book/package labels, signatures, or corner watermarks. Text-bearing objects must be substituted with blank/unlabeled variants.
 
 ## Step 3: Teller
 
@@ -108,7 +121,8 @@ Rules:
 
 - `type` is `hook`, `body`, or `ending`.
 - Every text entry is non-empty Vietnamese.
-- Total spoken duration must remain 120-180 seconds (2 - 3 minutes, approximately 280-450 words in Vietnamese).
+- Total spoken duration must remain 120-180 seconds (2 - 3 minutes, approximately 280-450 words in Vietnamese), unless overridden by the template (e.g. `human-insight/cinematic-light` targets ~170-230 words for 70-85s).
+- *Canonical Voice Zero-Rewrite Contract:* When context provides canonical narration (e.g., `VOICE — CANONICAL`), the teller MUST preserve the canonical script verbatim with zero rewriting, omission, or distortion.
 
 ## Step 4: Audio
 
@@ -121,6 +135,12 @@ node scripts/tts.mjs "videos/<slug>/script/script.json" "<slug>"
 The script automatically selects the first configured provider. A template voice
 from `src/templates/registry.ts` overrides the generic environment voice.
 
+*(Template Orchestration Hook Note: Templates such as `human-insight/cinematic-light`
+own their TTS and transcription lifecycle directly inside their canonical orchestrator,
+including automatic reuse of existing audio and timeline files. Callers and batch
+engines delegate directly to the template orchestrator rather than performing duplicate
+audio work outside).*
+
 Verify `public/<slug>/voice.mp3` exists.
 
 ### Audio Reuse Guard
@@ -130,6 +150,11 @@ exists. Never regenerate voiceover merely because the duration is longer or
 shorter than the target range. If the generated narration duration is outside the
 120-180 second target, continue with the existing audio and adapt Step 6 timing,
 scene count, pacing, and final render duration to `timeline.json`.
+
+*(For templates with a strict duration contract such as `human-insight/cinematic-light`
+targeting 70–85s, the orchestrator calibrates narration pacing via pitch-preserving
+audio time-stretch (`ffmpeg atempo`) without mutating canonical voice text. Durations
+that cannot be calibrated within the safe window halt with `BLOCKED`).*
 
 Only overwrite `voice.mp3` when the user explicitly asks to regenerate the
 voiceover, for example after changing the voice, script, or provider. In that
@@ -218,10 +243,14 @@ Run from project root:
 npx remotion render src/Root.tsx Video \
   --output "videos/<slug>/video.mp4" \
   --codec h264 \
-  --props '{"slug":"<slug>"}'
+  --props "videos/<slug>/props.json"
 ```
 
-Verify `videos/<slug>/video.mp4` exists.
+Where `videos/<slug>/props.json` contains `{"spec": <ProductionRenderSpec>}`.
+
+Verify `videos/<slug>/video.mp4` exists and its duration satisfies template contracts (70–85s for `human-insight/cinematic-light`).
+
+*(Note for reviewed production templates: AI agents are strictly forbidden from auto-passing video QA. The pipeline halts at `PENDING_HUMAN_VIDEO_QA` awaiting explicit approval from an external human via `node scripts/record-human-review.mjs --slug=<slug> --action=video-pass`. Video approvals are SHA-256 hash-bound to `video.mp4` and invalidated upon re-render).*
 
 ## Shared Failure Rules
 

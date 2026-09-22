@@ -1,13 +1,13 @@
 {
   "name": "Generate Video",
   "version": "1.0.0",
-  "description": "Auto-triggers when user types /gen-video with optional template and audio flags",
+  "description": "Auto-triggers when user types /gen-video with optional template, audio, and resume flags",
   "when": {
     "type": "promptSubmit",
     "patterns": ["/gen-video*"]
   },
   "then": {
     "type": "askAgent",
-    "prompt": "The user has issued a /gen-video command. The video-gen skill (SKILL.md) is already loaded in context — execute all 8 pipeline steps defined there in order. Halt immediately on any failure and report which step failed. The full user prompt is: {{prompt}}"
+    "prompt": "The user has issued a /gen-video command. The video-gen skill (SKILL.md) is already loaded in context — execute the pipeline steps defined there in order. For gated templates, AI auto-pass is strictly forbidden: execute mandatory STOP at PENDING_HUMAN_IMAGE_QA and PENDING_HUMAN_VIDEO_QA awaiting external human review. Enforce 70–85s duration contract. Halt immediately on any failure and report which step failed. The full user prompt is: {{prompt}}"
   }
 }

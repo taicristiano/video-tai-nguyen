@@ -16,6 +16,8 @@ import { execSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
 import { loadProductionSpec, ROOT } from './production-spec-adapter.mjs';
+import { CINEMATIC_LIGHT_DURATION_CONTRACT } from '../src/templates/human-insight/cinematic-light/templateDependenciesRuntime.mjs';
+import { probeMediaDuration } from './audio-pacing.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -44,12 +46,17 @@ export function parseCliArgs() {
 }
 
 export async function renderProductionVideo(config = {}) {
-  const specInput = config.spec || config.slug;
-  if (!specInput) {
-    throw new Error('Missing required input: specify --slug=<slug> or --spec=<path>');
+  const rootDir = config.rootDir || ROOT;
+  let spec = null;
+  if (config.spec && typeof config.spec === 'object') {
+    spec = config.spec;
+  } else {
+    const specInput = config.spec || config.slug;
+    if (!specInput) {
+      throw new Error('Missing required input: specify --slug=<slug> or --spec=<path>');
+    }
+    spec = loadProductionSpec(specInput, { rootDir });
   }
-
-  const spec = loadProductionSpec(specInput, { rootDir: ROOT });
   const slug = spec.slug;
   const totalShots = spec.shots.length;
   const totalFrames = spec.totalFrames;
@@ -72,6 +79,12 @@ export async function renderProductionVideo(config = {}) {
 
   fs.mkdirSync(reviewOutputDir, { recursive: true });
   fs.mkdirSync(canonicalOutputDir, { recursive: true });
+
+  // Invalidate any prior video approval on render start
+  const priorVerdictPath = path.join(canonicalOutputDir, 'video-qa-verdict.json');
+  if (fs.existsSync(priorVerdictPath)) {
+    try { fs.unlinkSync(priorVerdictPath); } catch {}
+  }
 
   // --------------------------------------------------------------------------
   // STEP A: PRE-RENDER ASSET INTEGRITY & HASH AUDIT
@@ -134,19 +147,50 @@ export async function renderProductionVideo(config = {}) {
   // --------------------------------------------------------------------------
   console.log('\n[B. REMOTION RENDER EXECUTION]');
 
-  // Write transient spec props file for Remotion CLI
-  const tempPropsPath = path.join(reviewOutputDir, 'temp-render-props.json');
-  fs.writeFileSync(tempPropsPath, JSON.stringify({ spec }, null, 2), 'utf8');
+  let renderDurationSec = '0.00';
 
-  const renderStartTime = Date.now();
-  const renderCommand = `npx remotion render src/Root.tsx Video --props="${tempPropsPath.replace(/\\/g, '/')}" --codec h264 --output "${outputMp4.replace(/\\/g, '/')}"`;
-  console.log(`Executing Remotion render: ${outputMp4}`);
+  if (config.dryRun) {
+    console.log('⚡ [DRY-RUN RENDER] Executing dry-run render branch...');
+    if (typeof config.renderAdapter === 'function') {
+      await config.renderAdapter({
+        spec,
+        outputMp4,
+        canonicalMp4,
+        reviewOutputDir,
+        rootDir: ROOT,
+      });
+    } else if (!fs.existsSync(outputMp4)) {
+      const minimalMp4 = Buffer.from([
+        0x00, 0x00, 0x00, 0x18, 0x66, 0x74, 0x79, 0x70,
+        0x69, 0x73, 0x6f, 0x6d, 0x00, 0x00, 0x02, 0x00,
+        0x69, 0x73, 0x6f, 0x6d, 0x69, 0x73, 0x6f, 0x32,
+        0x00, 0x00, 0x00, 0x08, 0x66, 0x72, 0x65, 0x65
+      ]);
+      fs.writeFileSync(outputMp4, minimalMp4);
+    }
+  } else if (
+    fs.existsSync(outputMp4) &&
+    fs.statSync(outputMp4).size > 1000000 &&
+    !config.forceRender &&
+    Math.abs(probeMediaDuration(outputMp4, { rootDir: ROOT }) - (totalFrames / fps)) <= 1.0
+  ) {
+    console.log(`♻️ [REUSE RENDER] Using existing rendered MP4 at: ${outputMp4}`);
+    renderDurationSec = '0.00';
+  } else {
+    // Write transient spec props file for Remotion CLI
+    const tempPropsPath = path.join(reviewOutputDir, 'temp-render-props.json');
+    fs.writeFileSync(tempPropsPath, JSON.stringify({ spec }, null, 2), 'utf8');
 
-  execSync(renderCommand, { stdio: 'inherit', cwd: ROOT });
+    const renderStartTime = Date.now();
+    const renderCommand = `npx remotion render src/Root.tsx Video --props="${tempPropsPath.replace(/\\/g, '/')}" --codec h264 --output "${outputMp4.replace(/\\/g, '/')}"`;
+    console.log(`Executing Remotion render: ${outputMp4}`);
 
-  const renderEndTime = Date.now();
-  const renderDurationSec = ((renderEndTime - renderStartTime) / 1000).toFixed(2);
-  console.log(`✅ Remotion render completed in ${renderDurationSec}s`);
+    execSync(renderCommand, { stdio: 'inherit', cwd: ROOT });
+
+    const renderEndTime = Date.now();
+    renderDurationSec = ((renderEndTime - renderStartTime) / 1000).toFixed(2);
+    console.log(`✅ Remotion render completed in ${renderDurationSec}s`);
+  }
 
   if (!fs.existsSync(outputMp4)) {
     throw new Error(`STOP: Rendered MP4 not found at ${outputMp4}`);
@@ -185,18 +229,26 @@ export async function renderProductionVideo(config = {}) {
   // STEP D: PROBING AUDIO & VIDEO STREAMS
   // --------------------------------------------------------------------------
   console.log('\n[D. AUDIO & VIDEO STREAM PROBE]');
-  const probeOutput = execSync(
-    `ffprobe -v error -show_entries format=duration -show_entries stream=index,codec_type,duration,nb_frames,width,height,r_frame_rate -of json "${outputMp4}"`,
-    { cwd: ROOT }
-  ).toString();
-  const probeData = JSON.parse(probeOutput);
+  let videoStream = { width: 1080, height: 1920, nb_frames: totalFrames, duration: totalFrames / fps };
+  let audioStream = { duration: totalFrames / fps };
+  let formatDuration = totalFrames / fps;
+  let videoFrames = totalFrames;
+  let videoWidth = 1080;
+  let videoHeight = 1920;
 
-  const videoStream = probeData.streams?.find((s) => s.codec_type === 'video');
-  const audioStream = probeData.streams?.find((s) => s.codec_type === 'audio');
-  const formatDuration = parseFloat(probeData.format?.duration || '0');
-  const videoFrames = parseInt(videoStream?.nb_frames || '0', 10);
-  const videoWidth = parseInt(videoStream?.width || '0', 10);
-  const videoHeight = parseInt(videoStream?.height || '0', 10);
+  if (!config.dryRun) {
+    const probeOutput = execSync(
+      `ffprobe -v error -show_entries format=duration -show_entries stream=index,codec_type,duration,nb_frames,width,height,r_frame_rate -of json "${outputMp4}"`,
+      { cwd: ROOT }
+    ).toString();
+    const probeData = JSON.parse(probeOutput);
+    videoStream = probeData.streams?.find((s) => s.codec_type === 'video') || videoStream;
+    audioStream = probeData.streams?.find((s) => s.codec_type === 'audio') || audioStream;
+    formatDuration = parseFloat(probeData.format?.duration || String(formatDuration));
+    videoFrames = parseInt(videoStream?.nb_frames || String(videoFrames), 10);
+    videoWidth = parseInt(videoStream?.width || '1080', 10);
+    videoHeight = parseInt(videoStream?.height || '1920', 10);
+  }
 
   console.log(`Video Stream: ${videoWidth}x${videoHeight}, ${videoFrames} frames, duration: ${videoStream?.duration}s`);
   console.log(`Audio Stream: duration: ${audioStream?.duration}s`);
@@ -219,6 +271,80 @@ export async function renderProductionVideo(config = {}) {
     }, null, 2),
     'utf8'
   );
+
+  const plannedDurationSeconds = parseFloat((totalFrames / fps).toFixed(2));
+  const actualMp4DurationSeconds = parseFloat(formatDuration.toFixed(2));
+  const contract = CINEMATIC_LIGHT_DURATION_CONTRACT;
+  const isCinematicLight = spec.templateId === 'human-insight/cinematic-light';
+  const durationWithinContract =
+    actualMp4DurationSeconds >= contract.minDurationSec &&
+    actualMp4DurationSeconds <= contract.maxDurationSec;
+
+  const durationAudit = {
+    plannedDurationSeconds,
+    actualMp4DurationSeconds,
+    allowedRange: `${contract.minDurationSec}–${contract.maxDurationSec}s`,
+    preferredRange: `${contract.preferredMinDurationSec}–${contract.preferredMaxDurationSec}s`,
+    durationVerdict: durationWithinContract ? 'PASS' : 'FAIL_OUT_OF_RANGE',
+  };
+
+  if (config.dryRun) {
+    if (config.enforceDurationContract && isCinematicLight && !durationWithinContract) {
+      throw new Error(
+        `RENDER_DURATION_OUT_OF_RANGE: Actual MP4 duration (${actualMp4DurationSeconds}s) is outside allowed ${contract.minDurationSec}–${contract.maxDurationSec}s range.`
+      );
+    }
+
+    const qaChecklist = {
+      slug,
+      dryRun: true,
+      passedAutomatedCriteria: durationWithinContract || !config.enforceDurationContract,
+      automatedChecks: {
+        durationAudit,
+        plannedDurationSeconds,
+        actualMp4DurationSeconds,
+        allowedRange: `${contract.minDurationSec}–${contract.maxDurationSec}s`,
+        preferredRange: `${contract.preferredMinDurationSec}–${contract.preferredMaxDurationSec}s`,
+        durationVerdict: durationWithinContract ? 'PASS' : 'FAIL_OUT_OF_RANGE',
+      },
+      durationAudit,
+      humanReviewCriteria: {
+        motionCalmness: 'PENDING_HUMAN_REVIEW',
+        typographyLegibility: 'PENDING_HUMAN_REVIEW',
+        subtitleTimingAndSync: 'PENDING_HUMAN_REVIEW',
+        compositionAndCentering: 'PENDING_HUMAN_REVIEW',
+        overallVisualNarrative: 'PENDING_HUMAN_REVIEW',
+      },
+      reviewPackLocation: path.relative(ROOT, reviewOutputDir).replace(/\\/g, '/'),
+      timestamp: new Date().toISOString(),
+    };
+    fs.writeFileSync(path.join(reviewOutputDir, 'video-qa-checklist.json'), JSON.stringify(qaChecklist, null, 2), 'utf8');
+
+    const renderReport = {
+      slug,
+      dryRun: true,
+      totalShots,
+      totalFrames,
+      durationAudit,
+      renderedAt: new Date().toISOString(),
+    };
+    fs.writeFileSync(path.join(reviewOutputDir, 'render-report.json'), JSON.stringify(renderReport, null, 2), 'utf8');
+
+    console.log('\n======================================================================');
+    console.log('✅ GENERIC PRODUCTION RENDER COMPLETE (DRY RUN) — READY FOR HUMAN QA');
+    console.log(`Video: ${outputMp4}`);
+    console.log(`Review Pack: ${reviewOutputDir}`);
+    console.log('======================================================================\n');
+
+    return {
+      outputMp4,
+      canonicalMp4,
+      reviewOutputDir,
+      renderReport,
+      qaChecklist,
+      dryRun: true,
+    };
+  }
 
   // --------------------------------------------------------------------------
   // STEP E: GENERIC RENDER-SEGMENT MODEL & TRANSITION BOUNDARY AUDIT
@@ -673,6 +799,7 @@ export async function renderProductionVideo(config = {}) {
     outroVisualVerification,
     imageGenerationCalls: 0,
     imageEditCalls: 0,
+    durationAudit,
     timestamp: new Date().toISOString(),
   };
 
@@ -698,6 +825,7 @@ export async function renderProductionVideo(config = {}) {
         shotsCount: spec.shots.length,
         shots: spec.shots,
         outro: spec.outro,
+        durationAudit,
         timestamp: new Date().toISOString(),
       },
       null,
@@ -706,11 +834,24 @@ export async function renderProductionVideo(config = {}) {
     'utf8'
   );
 
+  if (isCinematicLight && config.skipDurationCheck !== true && !durationWithinContract) {
+    throw new Error(
+      `RENDER_DURATION_OUT_OF_RANGE: Actual MP4 duration (${actualMp4DurationSeconds}s) is outside allowed ${contract.minDurationSec}–${contract.maxDurationSec}s range.`
+    );
+  }
+
   const qaChecklist = {
     title: spec.title,
     slug,
     status: 'PENDING_HUMAN_VIDEO_QA',
+    durationAudit,
     automatedChecks: {
+      durationAudit,
+      plannedDurationSeconds,
+      actualMp4DurationSeconds,
+      allowedRange: `${contract.minDurationSec}–${contract.maxDurationSec}s`,
+      preferredRange: `${contract.preferredMinDurationSec}–${contract.preferredMaxDurationSec}s`,
+      durationVerdict: durationWithinContract ? 'PASS' : 'FAIL_OUT_OF_RANGE',
       specIntegrity: 'PASS',
       sourceImageHashParity: 'PASS',
       videoStreamDimensions: `${videoWidth}x${videoHeight}`,

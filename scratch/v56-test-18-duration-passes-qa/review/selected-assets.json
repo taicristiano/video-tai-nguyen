@@ -1,0 +1,12 @@
+[
+  {
+    "shotId": "shot-01",
+    "imageSrc": "assets/human-insight/brand/hay-dep-mark-sage.png",
+    "fullPath": "public/assets/human-insight/brand/hay-dep-mark-sage.png",
+    "startFrame": 0,
+    "endFrame": 2325,
+    "durationFrames": 2325,
+    "sha256": "d2c715d0fa5b6beb24ce027ac48481509d50d967d66b0b65743c5e053b491122",
+    "status": "VERIFIED_PRE_RENDER"
+  }
+]
